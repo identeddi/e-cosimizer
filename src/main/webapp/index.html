@@ -135,6 +135,7 @@
     </script>
 </head>
 <body>
+
     <div id="container">
         <section>
             <article id="intro-art" data-role="page" data-title="Home">
@@ -143,18 +144,31 @@
                     <h3>e-costimizer, bald auch als iPhone und Android App</h3>
                     <a href="#info-aside" class="ui-btn ui-btn-right ui-icon-info ui-btn-icon-notext ui-corner-all" data-rel="popup" data-position-to="window">About</a>
                 </div>
-                <!-- /Header -->
+<script>
+function checkPLZ()
+{
+	if (document.forms.wechselnsmallgas.zipcode.value == '' || 
+			document.forms.wechselnsmallgas.zipcode.value < 1000 || 
+			document.forms.wechselnsmallgas.zipcode.value > 99999) 
+		{ 
+		alert('Bitte geben Sie zuerst eine g&uuml;ltige Postleitzahl ein.'); 
+		return false;
+		}
+}
+</script>            <!-- /Header -->
 <div style="border: 1px solid #8AC3E7;float:left;margin: 2px;padding: 3px;">
 
-    <table width="210" border="0" cellpadding="0" cellspacing="0" style="color:#000000; font-family:Verdana,Arial,Tahoma; font-size:11px;">
-            <form method="get" onsubmit="if (document.forms.wechselnsmallgas.zipcode.value == '' || document.forms.wechselnsmallgas.zipcode.value < 1000 || document.forms.wechselnsmallgas.zipcode.value > 99999) { alert('Bitte geben Sie zuerst eine g&uuml;ltige Postleitzahl ein.'); return false;}"; target="_blank" name="wechselnsmallgas" enctype="application/x-www-form-urlencoded" action="http://vergleich.check24.de/app/form/result.html">
-            <input type="hidden" name="product_id" value="2">
-            <input type="hidden" name="style" value="blue">
-            <input type="hidden" name="pid" value="92489">
+             <form method="get" onsubmit="checkPLZ()" target="_blank" name="wechselnsmallgas" enctype="application/x-www-form-urlencoded" action="http://vergleich.check24.de/app/form/result.html">
+ 
+    <table border="1" style="color:#000000; font-family:Verdana,Arial,Tahoma; font-size:11px">
 
             <tr>
+             <input type="hidden" name="product_id" value="2">
+            <input type="hidden" name="style" value="blue">
+            <input type="hidden" name="pid" value="92489">
+   
                 <td width="55%">Ihre Postleitzahl</td>
-                <td width="45%"><input type="text" style="background-color:#FFFFFF; color:#000000; font-size:11px; padding:1px 1px 1px 4px; font-family:Arial,Helvetica,sans-serif; margin:0px;" name="zipcode" size="5" maxlength="5" value=""/></td>
+                <td width="45%"><input type="text" style="background-color:#FFFFFF; color:#000000; font-size:11px; padding:1px 1px 1px 4px; font-family:Arial,Helvetica,sans-serif; margin:0px;" name="zipcode" size="5" maxlength="5" value="" aria-describedby="name-format" required aria-required=”true” pattern="[A-Za-z-0-9]+\s[A-Za-z-'0-9]+" /></td>
             </tr>
             <tr>
                 <td colspan="2" height="10"></td>
@@ -176,14 +190,14 @@
             <tr><td colspan="2" height="10"></td></tr>
             <tr>
                 <td colspan="2" align="right">
-                    <input name="submit" style="font-size:10px; background-color:#8AC3E7; border:1px solid #8AC3E7; color:#FFFFFF; cursor:pointer; padding:1px; font-family:Arial,Helvetica,sans-serif;" type="submit" value="Vergleich starten" />
+                    <button name="submit" style="font-size:10px; background-color:#8AC3E7; border:1px solid #8AC3E7; color:#FFFFFF; cursor:pointer; padding:1px; font-family:Arial,Helvetica,sans-serif;" type="submit" value="Vergleich starten" >
+                    </button>
                 </td>
             </tr>
-        </form>
     </table>
+        </form>
 
-</div>
-                <!-- New HTML5 aside tag -->
+</div>                <!-- New HTML5 aside tag -->
                 <aside id="info-aside" data-role="popup">
                     <!-- Header -->
                     <div data-role="header">
