@@ -17,7 +17,7 @@
 -->
 <html>
 <head>
-    <title>HTML5 QuickStart</title>
+    <title>e-costimizer</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <!-- Disable phone number detection on iOS.  -->
     <meta name="format-detection" content="telephone=no" />
@@ -140,30 +140,49 @@
             <article id="intro-art" data-role="page" data-title="Home">
                 <!-- Header -->
                 <div data-role="header" class="header">
-                    <h3>HTML5 Quickstart</h3>
+                    <h3>e-costimizer, bald auch als iPhone und Android App</h3>
                     <a href="#info-aside" class="ui-btn ui-btn-right ui-icon-info ui-btn-icon-notext ui-corner-all" data-rel="popup" data-position-to="window">About</a>
                 </div>
                 <!-- /Header -->
+<div style="border: 1px solid #8AC3E7;float:left;margin: 2px;padding: 3px;">
 
-                <div class="ui-content" role="main">
-                    <div class="wrap">
-                        <img src="img/wildflylogo_200x60.png" class="mobileicon"/>
-                        <p>You have successfully deployed a Java EE 7 web application.</p>
-                        <p>This quickstart demonstrates the use of various Mobile, HTML5, CSS3 and JavaScript techniques.</p>
+    <table width="210" border="0" cellpadding="0" cellspacing="0" style="color:#000000; font-family:Verdana,Arial,Tahoma; font-size:11px;">
+            <form method="get" onsubmit="if (document.forms.wechselnsmallgas.zipcode.value == '' || document.forms.wechselnsmallgas.zipcode.value < 1000 || document.forms.wechselnsmallgas.zipcode.value > 99999) { alert('Bitte geben Sie zuerst eine g&uuml;ltige Postleitzahl ein.'); return false;}"; target="_blank" name="wechselnsmallgas" enctype="application/x-www-form-urlencoded" action="http://vergleich.check24.de/app/form/result.html">
+            <input type="hidden" name="product_id" value="2">
+            <input type="hidden" name="style" value="blue">
+            <input type="hidden" name="pid" value="92489">
 
-                        <ul id="features">
-                            <li class="feature">Pure HTML client</li>
-                            <li class="feature">JAX-RS GET &amp; POST end points</li>
-                            <li class="feature">HTML5 based page structure</li>
-                            <li class="feature">HTML5 form element &amp; validation</li>
-                            <li class="feature">CSS3 selectors used for styling</li>
-                            <li class="feature">JAX-RS validation handling</li>
-                            <li class="feature">jQuery Mobile integration</li>
-                            <li class="feature">QUnit test suite to validate JavaScript</li>
-                        </ul>
-                    </div>
-                </div>
+            <tr>
+                <td width="55%">Ihre Postleitzahl</td>
+                <td width="45%"><input type="text" style="background-color:#FFFFFF; color:#000000; font-size:11px; padding:1px 1px 1px 4px; font-family:Arial,Helvetica,sans-serif; margin:0px;" name="zipcode" size="5" maxlength="5" value=""/></td>
+            </tr>
+            <tr>
+                <td colspan="2" height="10"></td>
+            </tr>
+            <tr>
+                <td>Gasverbrauch</td>
+                <td><input type="text" style="background-color:#FFFFFF; color:#000000; font-size:11px; padding:1px 1px 1px 4px; font-family:Arial,Helvetica,sans-serif; margin:0px;" name="totalconsumption" size="5" maxlength="5" value="12000"/> <strong>kWh</strong></td>
+            </tr>
+            <tr><td colspan="2" height="10"></td></tr>
+            <tr>
+                <td>Nutzung</td>
+                <td>
+                    <select id="select1" name="customertype" style="border:1px solid #D1D1D1; color:#000000; font-size:11px; font-family:Arial,Helvetica,sans-serif; margin:0px; padding:0px;">
+                        <option value="private">Privat</option>
+                        <option value="business">Gewerbe</option>
+                    </select>
+                </td>
+            </tr>
+            <tr><td colspan="2" height="10"></td></tr>
+            <tr>
+                <td colspan="2" align="right">
+                    <input name="submit" style="font-size:10px; background-color:#8AC3E7; border:1px solid #8AC3E7; color:#FFFFFF; cursor:pointer; padding:1px; font-family:Arial,Helvetica,sans-serif;" type="submit" value="Vergleich starten" />
+                </td>
+            </tr>
+        </form>
+    </table>
 
+</div>
                 <!-- New HTML5 aside tag -->
                 <aside id="info-aside" data-role="popup">
                     <!-- Header -->
