@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateful;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -52,6 +53,7 @@ import org.jboss.tools.example.html5.service.MemberRegistration;
  */
 @Path("/members")
 @RequestScoped
+@RolesAllowed("admin")
 @Stateful
 public class MemberService {
     @Inject
