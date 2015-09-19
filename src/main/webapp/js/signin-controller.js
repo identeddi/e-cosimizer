@@ -28,10 +28,11 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
     me.$txtEmailAddress.removeClass(invalidInputStyle);
     me.$txtPassword.removeClass(invalidInputStyle);
 
-
+    callurl="http://" + window.location.host + BookIt.Settings.signInUrl
+    
     $.ajax({
         type: 'POST',
-        url: BookIt.Settings.signInUrl,
+        url: callurl,
         headers: {
             "Authorization": "Basic " + btoa(emailAddress + ":" + password)
           },
