@@ -39,6 +39,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -52,11 +53,13 @@ import org.jboss.tools.example.html5.service.MemberRegistration;
  * <p/>
  * This class produces a RESTful service to read/write the contents of the members table.
  */
-@Path("/members")
+@Path("/account")
 //@RequestScoped
-//@RolesAllowed("admin")
+@RolesAllowed("admin")
 @Stateless
-public class MemberService {
+public class AccountService {
+	
+	static Logger LOG = Logger.getLogger(AccountService.class.getName()); 
     @Inject
     private Logger log;
 
@@ -69,12 +72,23 @@ public class MemberService {
     @Inject
     MemberRegistration registration;
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Member> listAllMembers() {
-        return repository.findAllOrderedByName();
+    @POST
+    @Path("/register")
+    public String register(@QueryParam("email") String email,
+    		@QueryParam("firstName") String firstName,
+    		@QueryParam("lastName") String lastName,
+    		@QueryParam("password") String password,
+    		@QueryParam("passwordConfirm") String passwordConfirm) {
+    	LOG.info("email: " + email + " firstname" + firstName + " lastName: " + lastName + "password: " + password + " passwortconfirmed: " + passwordConfirm);
+        return "super";
     }
-
+    @POST
+    @Path("/login")
+    public String registerget(@QueryParam("email") String email,
+    		@QueryParam("password") String password) {
+    	LOG.info("logged in - email: " + email  + "password: " + password );
+        return "successfully logged in";
+    }
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
