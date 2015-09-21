@@ -150,7 +150,7 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jndi-name="java:jboss/datasources/MySQLDS" enabled="${mysql.enabled}" use-java-context="true" pool-name="MySQLDS" use-ccm="true">
+                <datasource jndi-name="java:jboss/datasources/ecostimizer" enabled="${mysql.enabled}" use-java-context="true" pool-name="MySQLDS" use-ccm="true">
                     <connection-url>jdbc:mysql://${env.OPENSHIFT_MYSQL_DB_HOST}:${env.OPENSHIFT_MYSQL_DB_PORT}/${env.OPENSHIFT_APP_NAME}</connection-url>
                     <driver>mysql</driver>
                     <security>
@@ -484,11 +484,12 @@
             <security-domains>
                 <security-domain name="other" cache-type="default">
                     <authentication>
-                        <login-module code="Remoting" flag="optional">
-                            <module-option name="password-stacking" value="useFirstPass"/>
-                        </login-module>
-                        <login-module code="RealmDirect" flag="required">
-                            <module-option name="password-stacking" value="useFirstPass"/>
+                        <login-module code="Database" flag="required">
+                            <module-option name="dsJndiName" value="java:jboss/datasources/ecostimizer"/>
+                            <module-option name="principalsQuery" value="select password from User where username=?"/>
+                            <module-option name="rolesQuery" value="select rolename, 'Roles' from User_Role ur,User u,Role r where ur.roles_id=r.id AND ur.User_id=u.id AND u.username=?"/>
+                            <module-option name="hashAlgorithm" value="SHA-256"/>
+                            <module-option name="hashEncoding" value="base64"/>
                         </login-module>
                     </authentication>
                 </security-domain>
