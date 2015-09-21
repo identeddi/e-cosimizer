@@ -131,9 +131,12 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
         return;
     }
 
+
+    callurl="http://" + window.location.host + BookIt.Settings.signUpUrl+"?"+"email=" + emailAddress + "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm
+    
     $.ajax({
         type: 'POST',
-        url: BookIt.Settings.signUpUrl,
+        url: callurl,
         data: "email=" + emailAddress + "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm,
         success: function (resp) {
 

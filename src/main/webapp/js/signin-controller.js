@@ -42,6 +42,8 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
             return;
         },
         error: function (e) {
+        	
+        	$( "#dlg-invalid-credentials" ).popup( "open", options );
             console.log(e.message);
             // TODO: Use a friendlier error message below.
             me.$ctnErr.html("<p>Oops! BookIt had a problem and could not register you.  Please try again in a few minutes.</p>");

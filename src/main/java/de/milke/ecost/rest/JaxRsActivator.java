@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tools.example.html5.rest;
+package de.milke.ecost.rest;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +38,6 @@ public class JaxRsActivator extends Application {
 		Set<Class<?>> classes = new HashSet<>();
 		
 		classes.add(AccountService.class);
-		classes.add(MemberService.class);
 	
 		return classes;
 	}

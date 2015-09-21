@@ -14,47 +14,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.tools.example.html5.data;
+package de.milke.ecost.dao;
 
-import org.jboss.tools.example.html5.model.Member;
-
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import de.milke.ecost.model.Role;
+import de.milke.ecost.model.User;
+
 import java.util.List;
 
-@ApplicationScoped
-public class MemberRepository {
+@Stateless
+public class AccountDao {
 
     @Inject
     private EntityManager em;
 
-    public Member findById(Long id) {
-        return em.find(Member.class, id);
+    public User findById(Long id) {
+        return em.find(User.class, id);
+    }
+    
+    public User persist(User user)
+    {   	
+    	em.persist(user);
+    	return user;	
+    }
+    
+    public Role getOrCreateRole(String roleName)
+    {
+    	TypedQuery<Role> lQuery = em.createQuery("from Role where rolename=:rolename", Role.class);
+    	lQuery.setParameter("rolename", roleName);
+try
+{
+    	Role foundRole = lQuery.getSingleResult();
+        return foundRole;
+}
+catch(NoResultException e)
+{
+	Role role = new Role(roleName);
+	
+	em.persist(role);
+	return role;
+
+}
+    	
     }
 
-    public Member findByEmail(String email) {
+   
+    public List<User> findAllRoledByName(String rolename) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
-        // Swap criteria statements if you would like to try out type-safe criteria queries, a new
-        // feature in JPA 2.0
-        // criteria.select(member).where(cb.equal(member.get(Member_.name), email));
-        criteria.select(member).where(cb.equal(member.get("email"), email));
-        return em.createQuery(criteria).getSingleResult();
-    }
-
-    public List<Member> findAllOrderedByName() {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Member> criteria = cb.createQuery(Member.class);
-        Root<Member> member = criteria.from(Member.class);
+        CriteriaQuery<User> criteria = cb.createQuery(User.class);
+        Root<User> member = criteria.from(User.class);
         // Swap criteria statements if you would like to try out type-safe criteria queries, a new
         // feature in JPA 2.0
         // criteria.select(member).orderBy(cb.asc(member.get(Member_.name)));
         criteria.select(member).orderBy(cb.asc(member.get("name")));
         return em.createQuery(criteria).getResultList();
     }
+
+	public User save(User user) {
+
+		em.persist(user);
+		return user;
+		
+	}
 }
