@@ -18,12 +18,17 @@ package de.milke.ecost.rest;
 
 import java.util.logging.Logger;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validator;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.xml.ws.WebServiceContext;
 
 import org.jboss.security.auth.spi.Util;
 
@@ -50,6 +55,17 @@ public class AccountService {
 
 	@Inject
 	private AccountDao accountDao;
+
+	@Resource
+	WebServiceContext webServiceContext;
+
+	@DELETE
+	@Path("/session")
+	public void deleteSession(@Context HttpServletRequest request) {
+		LOG.info("Delete session: " + request.getSession().getId());
+		request.getSession().invalidate();
+		return;
+	}
 
 	@POST
 	@Path("/register")

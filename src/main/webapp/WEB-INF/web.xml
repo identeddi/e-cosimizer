@@ -44,8 +44,10 @@
         <web-resource-collection>
             <web-resource-name>protected pages</web-resource-name>
             <url-pattern>/rest/account/login</url-pattern>
-            <http-method>GET</http-method>
+            <url-pattern>/rest/account/session</url-pattern>
+             <http-method>GET</http-method>
             <http-method>POST</http-method>
+            <http-method>DELETE</http-method>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>
@@ -56,7 +58,7 @@
     </security-role>
 
 <login-config>
-  <auth-method>FORM</auth-method>
+  <auth-method>BASIC</auth-method>
   <form-login-config>
     <form-login-page>/info.html</form-login-page>
     <form-error-page>/login_error.html</form-error-page>

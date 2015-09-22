@@ -14,6 +14,22 @@ BookIt.SignInController.prototype.init = function () {
     this.$txtPassword = $("#txt-password", this.$signInPage);
 };
 
+BookIt.SignInController.prototype.resetSessionForm = function () {
+
+    callurl="http://" + window.location.host + BookIt.Settings.deleteSessionUrl
+    
+    $.ajax({
+        type: 'DELETE',
+        url: callurl,
+        success: function (resp) {
+            return;
+        },
+        error: function (e) {
+        	return;
+        }
+    });
+};
+
 BookIt.SignInController.prototype.onSigninCommand = function () {
 
     var me = this,
