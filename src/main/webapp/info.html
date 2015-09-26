@@ -32,10 +32,10 @@
 	   		<a href="#popupMenu" data-rel="popup" class="ui-btn-right" data-iconpos="notext" data-icon="grid" data-theme="a">Actions</a>
 	   		<div data-role="popup" id="popupMenu" data-inset="true"  data-theme="d"  data-history="false" >
 	   			<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="d" >
-	   				<li data-role="divider" data-theme="e">Choose an action</li>
-	   				<li><a href="#dialog-zaehler_erfassen" data-rel="dialog" data-transition="flip	">Zähler erfassen</a></li>
-	   				<li><a href="gas.html">Übersicht</a></li>
-	   				<li><a href="#">Löschen</a></li>
+	   				<li data-role="divider" data-theme="e">Zähler auswählen</li>
+	   				<li><a href="info.html" data-rel="dialog" data-transition="flip	">Übersicht</a></li>
+	   				<li><a href="power.html">Strom</a></li>
+	   				<li><a href="gas.html">Gas</a></li>
 	 			</ul>
 	 		</div>
 	       <h1>Info</h1>
@@ -46,28 +46,9 @@
 		<div data-role="footer" data-position="fixed" data-theme="a"  id="basic_footer">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="info.html" data-prefetch="true" data-transition="fade" class="ui-btn-active">Info</a></li>
-					<li><a href="power.html" data-prefetch="true" data-transition="flip">Strom</a></li>
-					<li><a href="gas.html" data-prefetch="true" data-transition="turn">Gas</a></li>
+					<li><a href="#aktuell" data-prefetch="true" data-transition="fade" class="ui-btn-active">Aktuell</a></li>
 				</ul>
 			</div><!-- /navbar -->
-		</div><!-- /footer -->
-
-	</div><!-- /page -->
-
- 	<div id="dialog-zaehler_erfassen" data-role="page" data-dialog="true" data-close-btn="right"  data-title="Zähler erfassen" data-theme="a" >
-   		<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-	       <h1>Zähler erfassen</h1>
-	    </div><!-- /header -->
-	    <div class="ui-content" role="main">
-	    <label>Zähler-Stand</label>
-		<input type="text" id="zaehler_stand" name="Zähler-Stand">
-	    <label>Erfassungs-Datum</label>
-	    
-		<input type="text" data-role="date" class="auto-adjustable-date" id="zaehler_datum" name="Erfassungs-Datum" data-theme="a" >
-		<button data-rel="back" type="button"  id="btn-submit" >OK</button>
-		</div><!-- /content -->
-		<div data-role="footer" data-position="fixed" data-theme="a">
 		</div><!-- /footer -->
 
 	</div><!-- /page -->

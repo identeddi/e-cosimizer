@@ -17,17 +17,5 @@ $(document).on("pagebeforeshow","#main",function(event){
 	});
 
 
-$(document).on("pagebeforeshow","#dialog-zaehler_erfassen",function(event){
-    app.powerController.resetStromErfassenForm();
- 		});
 
-$(document).delegate("#dialog-zaehler_erfassen", "pagebeforecreate", function () {
-
-    app.powerController.init();
-
-    app.powerController.$btnSubmit.off("tap").on("tap", function () {
-        app.powerController.onErfassenCommand();
-    });
-
-});
 

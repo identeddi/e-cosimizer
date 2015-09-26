@@ -4,7 +4,7 @@ BookIt.PowerController = function () {
 };
 
 BookIt.PowerController.prototype.init = function () {
-    this.$dialogzaehlerErfassen = $("#dialog-zaehler_erfassen");
+    this.$dialogzaehlerErfassen = $("#power_zaehler_erfassen");
     this.$btnSubmit = $("#btn-submit", this.$dialogzaehlerErfassen);
     this.$zaehlerStand = $("#zaehler_stand", this.$dialogzaehlerErfassen);
     this.$zaehlerDatum = $("#zaehler_datum", this.$dialogzaehlerErfassen);

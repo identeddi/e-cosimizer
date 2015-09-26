@@ -1,53 +1,191 @@
 ﻿<!DOCTYPE html>
 <html>
-	<head>
-   <title>e-costimizer - entgegen der steigenden Energiekosten</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"/>
-    <link rel="stylesheet" href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css">
+<head>
+<title>e-costimizer - entgegen der steigenden Energiekosten</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css"
+	rel="stylesheet" />
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet"
+	href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css">
 
-        <script src="lib/jquery/jquery-2.1.4.min.js"></script>
-    <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script> 
-   <script id="mobile-datepicker" src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
-    <script src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">    
-    <script src="lib/fastclick/fastclick.min.js"></script>
-    
-    <script src="js/power-controller.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/util.js"></script>
-  <script src="js/api-messages.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/signup-controller.js"></script>
-    <script src="js/signin-controller.js"></script>
-      <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/info.js"></script>
-    <script type="text/javascript" src="js/power.js"></script>
+<script src="lib/jquery/jquery-2.1.4.min.js"></script>
+<script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script>
+<script id="mobile-datepicker"
+	src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
+<script
+	src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script src="lib/fastclick/fastclick.min.js"></script>
+
+<script src="js/power-controller.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/util.js"></script>
+<script src="js/api-messages.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/signup-controller.js"></script>
+<script src="js/signin-controller.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/info.js"></script>
+<script type="text/javascript" src="js/power.js"></script>
 </head>
 <body>
- 	<div id="page_power_list" data-role="page" data-title="Strom">
-   <div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-        <h1>Strom</h1>
-    </div><!-- /header -->
-
-
-	    <div class="ui-content" role="main">
-
-				<ul id="power_list" data-role="listview" data-theme="a" data-dividertheme="e" data-filter="true" data-filter-theme="a">
-					
+	<div id="page_power_aktuell" data-role="page" data-title="Strom">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#popupMenu" data-rel="popup" class="ui-btn-right"
+				data-iconpos="notext" data-icon="grid" data-theme="a">Actions</a>
+			<div data-role="popup" id="popupMenu" data-inset="true"
+				data-theme="d" data-history="false">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					data-theme="d">
+					<li data-role="divider" data-theme="e">Zähler auswählen</li>
+					<li><a href="info.html"
+						data-transition="flip	">Übersicht</a></li>
+					<li><a href="power.html">Strom</a></li>
+					<li><a href="gas.html">Gas</a></li>
 				</ul>
+			</div>
+			<h1>Aktuell</h1>
+		</div>
+		<!-- /header -->
 
-		</div><!-- /content -->
-		<div data-role="footer" data-position="fixed" data-theme="a" data-id="basic_footer">
+
+		<div class="ui-content" role="main">
+
+			<h3 id="power-last">Letzte Stromablesung</h3>
+			<a href="#power_zaehler_erfassen" data-role="button">Erfassen</a>
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-position="fixed" data-theme="a">
 			<div data-role="navbar">
 				<ul>
-					<li><a href="info.html" data-prefetch="true" data-transition="fade">Info</a></li>
-					<li><a href="power.html" data-prefetch="true" data-transition="flip" class="ui-btn-active">Strom</a></li>
-					<li><a href="gas.html" data-prefetch="true" data-transition="turn">Gas</a></li>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade">Verlauf</a></li>
+					<li><a href="#page_power_vertrag" data-prefetch="true"
+						data-transition="fade">Vertrag</a></li>
 				</ul>
-			</div><!-- /navbar -->
-		</div><!-- /footer -->
-	</div><!-- /page -->
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	<div id="page_power_verlauf" data-role="page" data-title="Strom">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#popupMenu" data-rel="popup" class="ui-btn-right"
+				data-iconpos="notext" data-icon="grid" data-theme="a">Actions</a>
+			<div data-role="popup" id="popupMenu" data-inset="true"
+				data-theme="d" data-history="false">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					data-theme="d">
+					<li data-role="divider" data-theme="e">Zähler auswählen</li>
+					<li><a href="info.html"
+						data-transition="flip	">Übersicht</a></li>
+					<li><a href="power.html">Strom</a></li>
+					<li><a href="gas.html">Gas</a></li>
+				</ul>
+			</div>
+			<h1>Verlauf</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+
+			<ul id="power_list" data-role="listview" data-theme="a"
+				data-dividertheme="e" data-filter="true" data-filter-theme="a">
+
+			</ul>
+
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Verlauf</a></li>
+					<li><a href="#page_power_vertrag" data-prefetch="true"
+						data-transition="fade">Vertrag</a></li>
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	<div id="page_power_vertrag" data-role="page" data-title="Vetrag">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#popupMenu" data-rel="popup" class="ui-btn-right"
+				data-iconpos="notext" data-icon="grid" data-theme="a">Actions</a>
+			<div data-role="popup" id="popupMenu" data-inset="true"
+				data-theme="d" data-history="false">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					data-theme="d">
+					<li data-role="divider" data-theme="e">Zähler auswählen</li>
+					<li><a href="info.html"
+						data-transition="flip	">Übersicht</a></li>
+					<li><a href="power.html">Strom</a></li>
+					<li><a href="gas.html">Gas</a></li>
+				</ul>
+			</div>
+			<h1>Vertrag</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+
+			<h3 id="power-last">Vetragsdaten</h3>
+
+		</div>
+		<!-- /content -->
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade">Verlauf</a></li>
+					<li><a href="#page_power_vertrag" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Vertrag</a></li>
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	<div id="power_zaehler_erfassen" data-role="page" data-dialog="true"
+		data-close-btn="right" data-title="Zähler erfassen" data-theme="a">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<h1>Zähler erfassen</h1>
+		</div>
+		<!-- /header -->
+		<div class="ui-content" role="main">
+			<label>Zähler-Stand</label> <input type="text" id="zaehler_stand"
+				name="Zähler-Stand"> <label>Erfassungs-Datum</label> <input
+				type="text" data-role="date" class="auto-adjustable-date"
+				id="zaehler_datum" name="Erfassungs-Datum" data-theme="a">
+			<button data-rel="back" type="button" id="btn-submit">OK</button>
+		</div>
+		<!-- /content -->
+
+	</div>
+	<!-- /page -->
+
 </body>
 </html>
