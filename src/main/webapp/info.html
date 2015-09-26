@@ -1,42 +1,76 @@
 ﻿<!DOCTYPE html>
 <html>
-	<head>
+<head>
+    <title>e-costimizer - entgegen der steigenden Energiekosten</title>
      <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/themes/1/conf-room1.min.css" rel="stylesheet" />
-    <link href="css/themes/1/jquery.mobile.icons.min.css" rel="stylesheet" />
     <link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet" />
-    <link href="css/app.css" rel="stylesheet" />
-    <script src="lib/jquery/jquery-2.1.4.min.js"></script>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"/>
+    <link rel="stylesheet" href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css">
+
+        <script src="lib/jquery/jquery-2.1.4.min.js"></script>
     <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script> 
+   <script id="mobile-datepicker" src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
+    <script src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">    
+    <script src="lib/fastclick/fastclick.min.js"></script>
+    
+    <script src="js/power-controller.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/util.js"></script>
+  <script src="js/api-messages.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/signup-controller.js"></script>
+    <script src="js/signin-controller.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/info.js"></script>
+    <script type="text/javascript" src="js/power.js"></script>
 </head>
+
 <body>
- 	<div data-role="page" data-title="Info">
-   <div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
-       <h1>Info</h1>
-    </div><!-- /header -->
-
-
+ 	<div data-role="page" data-title="Info" id="main">
+   		<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
+	   		<a href="#popupMenu" data-rel="popup" class="ui-btn-right" data-iconpos="notext" data-icon="grid" data-theme="a">Actions</a>
+	   		<div data-role="popup" id="popupMenu" data-inset="true"  data-theme="d"  data-history="false" >
+	   			<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="d" >
+	   				<li data-role="divider" data-theme="e">Choose an action</li>
+	   				<li><a href="#dialog-zaehler_erfassen" data-rel="dialog" data-transition="flip	">Zähler erfassen</a></li>
+	   				<li><a href="gas.html">Übersicht</a></li>
+	   				<li><a href="#">Löschen</a></li>
+	 			</ul>
+	 		</div>
+	       <h1>Info</h1>
+	    </div><!-- /header -->
 	    <div class="ui-content" role="main">
-
-				<ul data-role="listview" data-theme="a" data-dividertheme="e" data-filter="true" data-filter-theme="a" data-filter-placeholder="Search friends...">
-					<li data-role="list-divider">A</li>
-					<li><a href="#">Adam Kinkaid</a></li>
-
-				</ul>
-
+				 <h3 id="power-last">Letzte Stromablesung</h3>
 		</div><!-- /content -->
-		<div data-role="footer" data-position="fixed" data-theme="a"  data-id="basic_footer">
+		<div data-role="footer" data-position="fixed" data-theme="a"  id="basic_footer">
 			<div data-role="navbar">
 				<ul>
 					<li><a href="info.html" data-prefetch="true" data-transition="fade" class="ui-btn-active">Info</a></li>
-					<li><a href="strom.html" data-prefetch="true" data-transition="flip">Strom</a></li>
+					<li><a href="power.html" data-prefetch="true" data-transition="flip">Strom</a></li>
 					<li><a href="gas.html" data-prefetch="true" data-transition="turn">Gas</a></li>
 				</ul>
 			</div><!-- /navbar -->
 		</div><!-- /footer -->
+
 	</div><!-- /page -->
 
+ 	<div id="dialog-zaehler_erfassen" data-role="page" data-dialog="true" data-close-btn="right"  data-title="Zähler erfassen" data-theme="a" >
+   		<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
+	       <h1>Zähler erfassen</h1>
+	    </div><!-- /header -->
+	    <div class="ui-content" role="main">
+	    <label>Zähler-Stand</label>
+		<input type="text" id="zaehler_stand" name="Zähler-Stand">
+	    <label>Erfassungs-Datum</label>
+	    
+		<input type="text" data-role="date" class="auto-adjustable-date" id="zaehler_datum" name="Erfassungs-Datum" data-theme="a" >
+		<button data-rel="back" type="button"  id="btn-submit" >OK</button>
+		</div><!-- /content -->
+		<div data-role="footer" data-position="fixed" data-theme="a">
+		</div><!-- /footer -->
 
-
+	</div><!-- /page -->
+	
 </body>
 </html>

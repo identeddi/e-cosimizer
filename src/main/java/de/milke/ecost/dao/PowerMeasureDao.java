@@ -16,62 +16,58 @@
  */
 package de.milke.ecost.dao;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-import de.milke.ecost.model.Role;
+import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.User;
 
 @Stateless
-public class AccountDao {
+public class PowerMeasureDao {
 
 	@Inject
 	private EntityManager em;
 
-	public User findById(Long id) {
-		return em.find(User.class, id);
+	public PowerMeasure findById(Long id) {
+		return em.find(PowerMeasure.class, id);
 	}
 
-	public User persist(User user) {
-		em.persist(user);
-		return user;
+	public PowerMeasure persist(PowerMeasure Power) {
+		em.persist(Power);
+		return Power;
 	}
 
-	public Role getOrCreateRole(String roleName) {
-		TypedQuery<Role> lQuery = em.createQuery("from Role where rolename=:rolename", Role.class);
-		lQuery.setParameter("rolename", roleName);
+	public List<PowerMeasure> getByUser(User user) {
+		TypedQuery<PowerMeasure> lQuery = em.createQuery("from PowerMeasure where user=:user order by measureDate desc",
+				PowerMeasure.class);
+		lQuery.setParameter("user", user);
+		return lQuery.getResultList();
+
+	}
+
+	public PowerMeasure save(PowerMeasure Power) {
+
+		em.persist(Power);
+		return Power;
+
+	}
+
+	public PowerMeasure getLastByUser(User user) {
+
 		try {
-			Role foundRole = lQuery.getSingleResult();
-			return foundRole;
-		} catch (NoResultException e) {
-			Role role = new Role(roleName);
-
-			em.persist(role);
-			return role;
-
-		}
-
-	}
-
-	public User getByUsername(String userName) {
-		TypedQuery<User> lQuery = em.createQuery("from User where username=:username", User.class);
-		lQuery.setParameter("username", userName);
-		try {
+			TypedQuery<PowerMeasure> lQuery = em
+					.createQuery("from PowerMeasure where user=:user order by measureDate desc", PowerMeasure.class);
+			lQuery.setParameter("user", user);
+			lQuery.setMaxResults(1);
 			return lQuery.getSingleResult();
 		} catch (NoResultException e) {
 			return null;
-
 		}
-
-	}
-
-	public User save(User user) {
-
-		em.persist(user);
-		return user;
 
 	}
 }

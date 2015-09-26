@@ -45,6 +45,7 @@
             <web-resource-name>protected pages</web-resource-name>
             <url-pattern>/rest/account/login</url-pattern>
             <url-pattern>/rest/account/session</url-pattern>
+            <url-pattern>/rest/power/*</url-pattern>
              <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>DELETE</http-method>
@@ -60,7 +61,7 @@
 <login-config>
   <auth-method>BASIC</auth-method>
   <form-login-config>
-    <form-login-page>/info.html</form-login-page>
+    <form-login-page>/sign-in.html</form-login-page>
     <form-error-page>/login_error.html</form-error-page>
   </form-login-config>
 </login-config>

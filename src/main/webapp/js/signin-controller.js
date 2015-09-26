@@ -54,9 +54,10 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
           },
         data: "email=" + emailAddress + "&password=" + password,
         success: function (resp) {
-            $.mobile.navigate("info.html");
-            return;
-        },
+        	$.mobile.pageContainer.pagecontainer('change', "info.html", {
+        		  transition: 'flow',
+        		  reload    : true
+        		});       },
         error: function (e) {
         	
         	$( "#dlg-invalid-credentials" ).popup( "open", options );

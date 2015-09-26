@@ -2,21 +2,28 @@
 <html>
 <head>
     <title>e-costimizer - entgegen der steigenden Energiekosten</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/themes/1/conf-room1.min.css" rel="stylesheet" />
-    <link href="css/themes/1/jquery.mobile.icons.min.css" rel="stylesheet" />
+     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet" />
-    <link href="css/app.css" rel="stylesheet" />
-    <script src="lib/jquery/jquery-2.1.4.min.js"></script>
-    <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script>
-    
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"/>
+    <link rel="stylesheet" href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css"/>
+
+        <script src="lib/jquery/jquery-2.1.4.min.js"></script>
+    <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script> 
+   <script id="mobile-datepicker" src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
+    <script src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"/>    
     <script src="lib/fastclick/fastclick.min.js"></script>
-    <script src="js/api-messages.js"></script>
+    
+    <script src="js/power-controller.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/util.js"></script>
+  <script src="js/api-messages.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/signup-controller.js"></script>
     <script src="js/signin-controller.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
- 	</script>
+      <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/info.js"></script>
+     <script type="text/javascript" src="js/power.js"></script>
 </head>
 
 <body>
@@ -27,7 +34,7 @@
         <div role="main" class="ui-content">
             <h2 class="mc-text-center">Welcome!</h2>
             <p class="mc-top-margin-1-5"><b>Existing Users</b></p>
-            <a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign In</a>
+            <a href="info.html" class="ui-btn ui-btn-b ui-corner-all">Sign In</a>
             <p class="mc-top-margin-1-5"><b>Don't have an account?</b></p>
             <a href="#page-signup" class="ui-btn ui-btn-b ui-corner-all">Sign Up</a>
             <p></p>

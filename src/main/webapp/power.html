@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+   <title>e-costimizer - entgegen der steigenden Energiekosten</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"/>
+    <link rel="stylesheet" href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css">
+
+        <script src="lib/jquery/jquery-2.1.4.min.js"></script>
+    <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script> 
+   <script id="mobile-datepicker" src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
+    <script src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">    
+    <script src="lib/fastclick/fastclick.min.js"></script>
+    
+    <script src="js/power-controller.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/util.js"></script>
+  <script src="js/api-messages.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/signup-controller.js"></script>
+    <script src="js/signin-controller.js"></script>
+      <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/info.js"></script>
+    <script type="text/javascript" src="js/power.js"></script>
+</head>
+<body>
+ 	<div id="page_power_list" data-role="page" data-title="Strom">
+   <div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
+        <h1>Strom</h1>
+    </div><!-- /header -->
+
+
+	    <div class="ui-content" role="main">
+
+				<ul id="power_list" data-role="listview" data-theme="a" data-dividertheme="e" data-filter="true" data-filter-theme="a">
+					
+				</ul>
+
+		</div><!-- /content -->
+		<div data-role="footer" data-position="fixed" data-theme="a" data-id="basic_footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="info.html" data-prefetch="true" data-transition="fade">Info</a></li>
+					<li><a href="power.html" data-prefetch="true" data-transition="flip" class="ui-btn-active">Strom</a></li>
+					<li><a href="gas.html" data-prefetch="true" data-transition="turn">Gas</a></li>
+				</ul>
+			</div><!-- /navbar -->
+		</div><!-- /footer -->
+	</div><!-- /page -->
+</body>
+</html>
