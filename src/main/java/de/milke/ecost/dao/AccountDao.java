@@ -16,6 +16,8 @@
  */
 package de.milke.ecost.dao;
 
+import java.util.logging.Logger;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -27,51 +29,56 @@ import de.milke.ecost.model.User;
 
 @Stateless
 public class AccountDao {
+    static Logger LOG = Logger.getLogger(AccountDao.class.getName());
 
-	@Inject
-	private EntityManager em;
+    @Inject
+    private EntityManager em;
 
-	public User findById(Long id) {
-		return em.find(User.class, id);
-	}
+    public User findById(Long id) {
+	return em.find(User.class, id);
+    }
 
-	public User persist(User user) {
-		em.persist(user);
-		return user;
-	}
+    public User persist(User user) {
+	em.persist(user);
+	return user;
+    }
 
-	public Role getOrCreateRole(String roleName) {
-		TypedQuery<Role> lQuery = em.createQuery("from Role where rolename=:rolename", Role.class);
-		lQuery.setParameter("rolename", roleName);
-		try {
-			Role foundRole = lQuery.getSingleResult();
-			return foundRole;
-		} catch (NoResultException e) {
-			Role role = new Role(roleName);
+    public Role getOrCreateRole(String roleName) {
+	TypedQuery<Role> lQuery = em.createQuery("from Role where rolename=:rolename", Role.class);
+	lQuery.setParameter("rolename", roleName);
+	try {
+	    Role foundRole = lQuery.getSingleResult();
+	    return foundRole;
+	} catch (NoResultException e) {
+	    Role role = new Role(roleName);
 
-			em.persist(role);
-			return role;
-
-		}
-
-	}
-
-	public User getByUsername(String userName) {
-		TypedQuery<User> lQuery = em.createQuery("from User where username=:username", User.class);
-		lQuery.setParameter("username", userName);
-		try {
-			return lQuery.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-
-		}
+	    em.persist(role);
+	    return role;
 
 	}
 
-	public User save(User user) {
+    }
 
-		em.persist(user);
-		return user;
+    public User getByUsername(String userName) {
+	TypedQuery<User> lQuery = em.createQuery("from User where username=:username", User.class);
+	lQuery.setParameter("username", userName);
+	try {
+	    User usr = lQuery.getSingleResult();
+	    LOG.info("User found " + usr.getUsername());
+	    return usr;
+	} catch (NoResultException e) {
+	    LOG.info("User not found " + userName);
+
+	    return null;
 
 	}
+
+    }
+
+    public User save(User user) {
+
+	em.persist(user);
+	return user;
+
+    }
 }

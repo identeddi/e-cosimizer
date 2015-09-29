@@ -16,6 +16,7 @@
  */
 package de.milke.ecost.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -24,50 +25,82 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
+import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.User;
 
 @Stateless
 public class PowerMeasureDao {
 
-	@Inject
-	private EntityManager em;
+    @Inject
+    private EntityManager em;
 
-	public PowerMeasure findById(Long id) {
-		return em.find(PowerMeasure.class, id);
+    public PowerMeasure findById(Long id) {
+	return em.find(PowerMeasure.class, id);
+    }
+
+    public PowerMeasure persist(PowerMeasure Power) {
+	em.persist(Power);
+	return Power;
+    }
+
+    public List<PowerMeasure> getByUser(User user) {
+	TypedQuery<PowerMeasure> lQuery = em.createQuery(
+		"from PowerMeasure where user=:user order by measureDate desc", PowerMeasure.class);
+	lQuery.setParameter("user", user);
+	return lQuery.getResultList();
+
+    }
+
+    public PowerMeasure save(PowerMeasure power) throws GeneralException {
+
+	List<PowerMeasure> listPM = getByUser(power.getUser());
+
+	if (power.getMeasureDate().after(new Date())) {
+	    // Ablesung höher aber Datum jünger, Fehler
+	    throw new GeneralException("Ablesung in der Zukunft nicht möglich");
 	}
 
-	public PowerMeasure persist(PowerMeasure Power) {
-		em.persist(Power);
-		return Power;
+	for (PowerMeasure pm : listPM) {
+	    if (pm.getMeasureDate().compareTo(power.getMeasureDate()) == 0) {
+		// update measure value
+		pm.setMeasureValue(power.getMeasureValue());
+		em.merge(pm);
+		return pm;
+
+	    }
+
+	    if (power.getMeasureDate().before(pm.getMeasureDate())
+		    && power.getMeasureValue() > pm.getMeasureValue()) {
+		// Ablesung höher aber Datum jünger, Fehler
+		throw new GeneralException("Ablesung höher aber Datum jünger, Fehler");
+	    }
+
+	    if (power.getMeasureDate().after(pm.getMeasureDate())
+		    && power.getMeasureValue() < pm.getMeasureValue()) {
+		// Ablesung höher aber Datum jünger, Fehler
+		throw new GeneralException("Ablesung niedriger aber Datum später, Fehler");
+	    }
 	}
 
-	public List<PowerMeasure> getByUser(User user) {
-		TypedQuery<PowerMeasure> lQuery = em.createQuery("from PowerMeasure where user=:user order by measureDate desc",
-				PowerMeasure.class);
-		lQuery.setParameter("user", user);
-		return lQuery.getResultList();
+	em.persist(power);
+	return power;
 
+    }
+
+    public PowerMeasure getLastByUser(User user) throws GeneralException {
+
+	try {
+	    TypedQuery<PowerMeasure> lQuery = em.createQuery(
+		    "from PowerMeasure where user=:user order by measureDate desc",
+		    PowerMeasure.class);
+	    lQuery.setParameter("user", user);
+	    lQuery.setMaxResults(1);
+	    return lQuery.getSingleResult();
+	} catch (NoResultException e) {
+	    throw new GeneralException(
+		    "Keine Zählerdaten für den User " + user.getUsername() + " gefunden");
 	}
 
-	public PowerMeasure save(PowerMeasure Power) {
-
-		em.persist(Power);
-		return Power;
-
-	}
-
-	public PowerMeasure getLastByUser(User user) {
-
-		try {
-			TypedQuery<PowerMeasure> lQuery = em
-					.createQuery("from PowerMeasure where user=:user order by measureDate desc", PowerMeasure.class);
-			lQuery.setParameter("user", user);
-			lQuery.setMaxResults(1);
-			return lQuery.getSingleResult();
-		} catch (NoResultException e) {
-			return null;
-		}
-
-	}
+    }
 }

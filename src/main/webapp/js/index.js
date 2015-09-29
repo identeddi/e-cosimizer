@@ -54,6 +54,11 @@ $(document).on("pagecontainerbeforeshow", function (event, ui) {
             // Reset the signup form.
             app.signinController.resetSessionForm();
             break;
+        case "page-index":
+            // Reset the signup form.
+            app.signinController.resetSessionForm();
+            break;
+        	
         }
     }
 });

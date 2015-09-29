@@ -3,8 +3,10 @@ resp = $.ajax({
     url: BookIt.Settings.getLastPowerMeasureURL,
     async: false
 });
-app.lastPowerMeasure = JSON.parse(resp.responseText);
-
+if(resp.status==200)
+{
+	app.lastPowerMeasure = JSON.parse(resp.responseText);
+}
 app.powerController = new BookIt.PowerController();
 
 

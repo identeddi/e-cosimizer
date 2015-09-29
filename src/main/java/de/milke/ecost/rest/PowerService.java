@@ -17,24 +17,28 @@
 package de.milke.ecost.rest;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.dao.PowerMeasureDao;
-import de.milke.ecost.model.DateParam;
+import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.User;
 
@@ -46,59 +50,78 @@ import de.milke.ecost.model.User;
  */
 @Path("/power")
 @Stateless
+@RolesAllowed("admin")
 public class PowerService {
 
-	static Logger LOG = Logger.getLogger(PowerService.class.getName());
+    static Logger LOG = Logger.getLogger(PowerService.class.getName());
 
-	@Resource
-	WebServiceContext webServiceContext;
+    @Resource
+    WebServiceContext webServiceContext;
 
-	@EJB
-	AccountDao accountDao;
+    @EJB
+    AccountDao accountDao;
 
-	@EJB
-	PowerMeasureDao powerMeasureDao;
+    @EJB
+    PowerMeasureDao powerMeasureDao;
 
-	@POST
-	@Path("/measure")
-	public String measure(@QueryParam("measureValue") Double measureValue,
-			@QueryParam("measureDate") DateParam measureDate) {
+    @POST
+    @Path("/measure")
+    public void measure(@QueryParam("measureValue") Double measureValue,
+	    @QueryParam("measureDate") Date measureDate) throws GeneralException {
 
-		LOG.info(getUser().getUsername() + ": measureValue: " + measureValue + " measureDate" + measureDate);
-		PowerMeasure powerMeasure = new PowerMeasure();
-		powerMeasure.setUser(getUser());
-		powerMeasure.setMeasureDate(measureDate.getDate());
-		powerMeasure.setMeasureValue(measureValue);
-		powerMeasureDao.save(powerMeasure);
-		return "super";
+	if (measureValue == null) {
+	    String msg = getUser().getUsername() + ": measureValue ist: " + measureValue;
+	    LOG.info(msg);
+	    throw new WebApplicationException(msg);
+
 	}
+	if (measureDate == null) {
+	    String msg = getUser().getUsername() + ": measureDate ist: " + measureDate;
+	    LOG.info(msg);
+	    throw new WebApplicationException(msg);
 
-	@GET
-	@Path("/measure")
-	@Produces("application/json")
-	public List<PowerMeasure> getMeasure() {
-
-		LOG.info(getUser().getUsername() + ": getMeasure");
-		return powerMeasureDao.getByUser(getUser());
 	}
+	LOG.info(getUser().getUsername() + ": measureValue: " + measureValue + " measureDate"
+		+ measureDate);
 
-	@GET
-	@Path("/measure/last")
-	@Produces("application/json")
-	public PowerMeasure getLastMeasure() {
+	// check measure valid
 
-		LOG.info(getUser().getUsername() + ": getMeasure last");
-		return powerMeasureDao.getLastByUser(getUser());
-	}
+	PowerMeasure powerMeasure = new PowerMeasure();
+	powerMeasure.setUser(getUser());
+	powerMeasure.setMeasureDate(measureDate);
+	powerMeasure.setMeasureValue(measureValue);
+	powerMeasureDao.save(powerMeasure);
+    }
 
-	private Principal principal;
+    @GET
+    @Path("/measure")
+    @Produces("application/json")
+    public List<PowerMeasure> getMeasure() {
 
-	@Context
-	public void setSecurityContext(SecurityContext context) {
-		principal = context.getUserPrincipal();
-	}
+	LOG.info(getUser().getUsername() + ": getMeasure");
+	return powerMeasureDao.getByUser(getUser());
+    }
 
-	protected User getUser() {
-		return accountDao.getByUsername(principal.getName());
-	}
+    @GET
+    @Path("/measure/last")
+    @Produces("application/json")
+    public PowerMeasure getLastMeasure(@Context HttpServletRequest request)
+	    throws GeneralException {
+
+	LOG.info(request.toString());
+	LOG.info(getUser().getUsername() + ": getMeasure last ");
+	LOG.info(getUser().getUsername() + ": session: " + request.getSession().getId());
+	return powerMeasureDao.getLastByUser(getUser());
+    }
+
+    private Principal principal;
+
+    @Context
+    public void setSecurityContext(SecurityContext context) {
+	principal = context.getUserPrincipal();
+    }
+
+    protected User getUser() {
+	return accountDao.getByUsername(principal.getName());
+    }
 }

@@ -139,27 +139,8 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
         url: callurl,
         data: "email=" + emailAddress + "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm,
         success: function (resp) {
-
-            if (resp.success === true) {
                 $.mobile.navigate("#page-signup-succeeded");
                 return;
-            } else {
-                if (resp.extras.msg) {
-                    switch (resp.extras.msg) {
-                        case BookIt.ApiMessages.DB_ERROR:
-                        case BookIt.ApiMessages.COULD_NOT_CREATE_USER:
-                            // TODO: Use a friendlier error message below.
-                            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not register you.  Please try again in a few minutes.</p>");
-                            me.$ctnErr.addClass("bi-ctn-err").slideDown();
-                            break;
-                        case BookIt.ApiMessages.EMAIL_ALREADY_EXISTS:
-                            me.$ctnErr.html("<p>The email address that you provided is already registered.</p>");
-                            me.$ctnErr.addClass("bi-ctn-err").slideDown();
-                            me.$txtEmailAddress.addClass(invalidInputStyle);
-                            break;
-                    }
-                }
-            }
         },
         error: function (e) {
             console.log(e.message);

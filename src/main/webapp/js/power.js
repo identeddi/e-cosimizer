@@ -49,7 +49,6 @@ $(document).delegate("#power_zaehler_erfassen", "pagebeforecreate", function () 
 
     app.powerController.$btnSubmit.off("tap").on("tap", function () {
         app.powerController.onErfassenCommand();
-        window.location.href = "power.html";
     });
 
 });
