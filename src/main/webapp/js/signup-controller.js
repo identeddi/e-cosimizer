@@ -150,3 +150,22 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
         }
     });
 };
+
+
+$(document).delegate("#page-signup", "pagebeforecreate", function () {
+
+    app.signupController.init();
+
+    app.signupController.$btnSubmit.off("tap").on("tap", function () {
+        app.signupController.onSignupCommand();
+    });
+
+});
+
+$(document).on(
+	"pagebeforeshow",
+	"#page-signup",
+	function(event) {
+		app.signupController.resetSignUpForm();
+	
+	})

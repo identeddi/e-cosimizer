@@ -33,14 +33,15 @@ import javax.ws.rs.core.Application;
  */
 @ApplicationPath("/rest")
 public class JaxRsActivator extends Application {
-	/* class body intentionally left blank */
-	@Override
-	public Set<Class<?>> getClasses() {
-		Set<Class<?>> classes = new HashSet<>();
+    /* class body intentionally left blank */
+    @Override
+    public Set<Class<?>> getClasses() {
+	Set<Class<?>> classes = new HashSet<>();
 
-		classes.add(AccountService.class);
-		classes.add(PowerService.class);
+	classes.add(AccountService.class);
+	classes.add(PowerService.class);
+	classes.add(LoginService.class);
 
-		return classes;
-	}
+	return classes;
+    }
 }

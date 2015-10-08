@@ -1,3 +1,5 @@
+var BookIt = BookIt || {};
+
 function runtimePopup(message, popupafterclose) {
   var template = "<div data-role='popup' class='ui-content messagePopup' style='max-width:280px'>" 
       + "<a href='#' data-role='button' data-theme='g' data-icon='check' data-iconpos='notext' " 

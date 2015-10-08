@@ -1,3 +1,5 @@
+var BookIt = BookIt || {};
+
 function toNiceDate(jsondate) {
   date = new Date(jsondate);
 	

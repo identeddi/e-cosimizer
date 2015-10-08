@@ -1,3 +1,4 @@
+var BookIt = BookIt || {};
 /*
  * JBoss, Home of Professional Open Source
  * Copyright 2014, Red Hat, Inc. and/or its affiliates, and individual

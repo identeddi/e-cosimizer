@@ -1,3 +1,4 @@
+var BookIt = BookIt || {};
 /**
  * MBP - Mobile boilerplate helper functions
  */

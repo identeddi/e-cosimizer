@@ -14,6 +14,7 @@ BookIt.SignInController.prototype.init = function () {
     this.$txtPassword = $("#txt-password", this.$signInPage);
 };
 
+
 BookIt.SignInController.prototype.resetSessionForm = function () {
 
     callurl="http://" + window.location.host + BookIt.Settings.deleteSessionUrl
@@ -29,6 +30,8 @@ BookIt.SignInController.prototype.resetSessionForm = function () {
         }
     });
 };
+
+
 
 BookIt.SignInController.prototype.onSigninCommand = function () {
 
@@ -54,10 +57,8 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
           },
         data: "email=" + emailAddress + "&password=" + password,
         success: function (resp) {
-        	$.mobile.pageContainer.pagecontainer('change', "info.html", {
-        		  transition: 'flow',
-        		  reload    : true
-        		});       },
+        	  $.mobile.changePage("#info-main", "flip", true, false);
+        	       },
         error: function (e) {
         	
         	$( "#dlg-invalid-credentials" ).popup( "open", options );
@@ -68,3 +69,21 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
         }
     });
 };
+
+$(document).delegate("#page-signin", "pagebeforecreate", function () {
+
+    app.signinController.init();
+
+    app.signinController.$btnSubmit.off("tap").on("tap", function () {
+        app.signinController.onSigninCommand();
+    });
+
+});
+
+$(document).on(
+	"pagebeforeshow",
+	"#page-signin",
+	function(event) {
+		app.signinController.resetSessionForm();
+	
+	});

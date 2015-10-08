@@ -1,112 +1,393 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>e-costimizer - entgegen der steigenden Energiekosten</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet" />
-	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"/>
-    <link rel="stylesheet" href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css"/>
+<title>e-costimizer - entgegen der steigenden Energiekosten</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css"
+	rel="stylesheet" />
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet"
+	href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css" />
 
-        <script src="lib/jquery/jquery-2.1.4.min.js"></script>
-    <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script> 
-   <script id="mobile-datepicker" src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
-    <script src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"/>    
-    <script src="lib/fastclick/fastclick.min.js"></script>
-    
-    <script src="js/power-controller.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/util.js"></script>
-  <script src="js/api-messages.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/signup-controller.js"></script>
-    <script src="js/signin-controller.js"></script>
-      <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/info.js"></script>
-     <script type="text/javascript" src="js/power.js"></script>
+<script src="lib/jquery/jquery-2.1.4.min.js"></script>
+<script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script>
+<script id="mobile-datepicker"
+	src="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.js"></script>
+<script
+	src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script src="lib/fastclick/fastclick.min.js"></script>
+
+<script src="js/settings.js"></script>
+<script src="js/power-controller.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/util.js"></script>
+<script src="js/api-messages.js"></script>
+<script src="js/signup-controller.js"></script>
+<script src="js/signin-controller.js"></script>
+<script type="text/javascript" src="js/runtimePopup.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/info.js"></script>
+<style>
+/*this block should go in the styles.css file*/
+.ui-panel-inner {
+	padding: 0px; /*make the buttons flush edge to edge*/
+}
+
+.ui-controlgroup {
+	margin: 0; /*make the buttons flush to the top*/
+}
+
+#header {
+	height: 54px;
+}
+
+#bars-button {
+	margin: 7px;
+}
+</style>
 </head>
 
 <body>
- <div data-role="page" id="page-index">
-        <div data-role="header" data-theme="c" data-position="fixed">
-            <h1>BookIt</h1>
-        </div><!-- /header -->
-        <div role="main" class="ui-content">
-            <h2 class="mc-text-center">Welcome!</h2>
-            <p class="mc-top-margin-1-5"><b>Existing Users</b></p>
-            <a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign In</a>
-            <p class="mc-top-margin-1-5"><b>Don't have an account?</b></p>
-            <a href="#page-signup" class="ui-btn ui-btn-b ui-corner-all">Sign Up</a>
-            <p></p>
-        </div><!-- /content -->
-    </div><!-- /page -->
-    <div data-role="page" id="page-signin">
-        <div data-role="header" data-theme="c" data-position="fixed" data-add-back-btn="true" >
-            <h1>BookIt</h1>
-        </div><!-- /header -->
-        <div role="main" class="ui-content">
-            <h3>Sign In</h3>
-            <label for="txt-email">Email Address</label>
-            <input type="text" name="txt-email" id="txt-email" value="">
-            <label for="txt-password">Password</label>
-            <input type="password" name="txt-password" id="txt-password" value="">
-            <fieldset data-role="controlgroup">
-                <input type="checkbox" name="chck-rememberme" id="chck-rememberme">
-                <label for="chck-rememberme">Remember me</label>
-            </fieldset>
-            <a id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</a>
-            <p class="mc-top-margin-1-5"><a href="begin-password-reset.html">Can't access your account?</a></p>
-            <div data-role="popup" id="dlg-invalid-credentials" data-dismissible="false" style="max-width:400px;">
-                <div role="main" class="ui-content">
-                    <h3 class="mc-text-danger">Login Failed</h3>
-                    <p>Did you enter the right credentials?</p>
-                    <div class="mc-text-center"><a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">OK</a></div>
-                </div>
-            </div>
-        </div><!-- /content -->
-    </div><!-- /page -->
-    <div data-role="page" id="page-signup"> 
-        <div class="bi-header" data-role="header" data-theme="c" data-position="fixed" data-add-back-btn="true">
-             <h1>BookIt</h1>
-        </div><!-- /header -->
-        <div role="main" class="ui-content">
-            <h3>Sign Up</h3>
-            <div id="ctn-err" class="bi-invisible"></div>
-            <label for="txt-first-name">First Name</label>
-            <input type="text" name="txt-first-name" id="txt-first-name" value="">
-            <label for="txt-last-name">Last Name</label>
-            <input type="text" name="txt-last-name" id="txt-last-name" value="">
-            <label for="txt-email-address">Email Address</label>
-            <input type="text" name="txt-email-address" id="txt-email-address" value="">
-            <label for="txt-password">Password</label>
-            <input type="password" name="txt-password" id="txt-password" value="">
-            <label for="txt-password-confirm">Confirm Password</label>
-            <input type="password" name="txt-password-confirm" id="txt-password-confirm" value="">
-            <!--<a href="#dlg-sign-up-sent" data-rel="popup" data-transition="pop" data-position-to="window" id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</a>-->
-            <button id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</button>
-            <div data-role="popup" id="dlg-sign-up-sent" data-dismissible="false" style="max-width:400px;">
-                <div data-role="header">
-                    <h1>Almost done...</h1>
-                </div>
-                <div role="main" class="ui-content">
-                    <h3>Confirm Your Email Address</h3>
-                    <p>We sent you an email with instructions on how to confirm your email address. Please check your inbox and follow the instructions in the email.</p>
-                    <div class="mc-text-center"><a href="sign-in.html" class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">OK</a></div>
 
-                </div>
-            </div>
-        </div><!-- /content -->
-    </div><!-- /page -->
-    <div data-role="page" id="page-signup-succeeded">
-        <div data-role="header" data-theme="c">
-            <h1>Book It</h1>
-        </div><!-- /header -->
-        <div role="main" class="ui-content">
-            <h2 class="mc-text-center">Registration Succeeded</h2>
-            <p class="mc-top-margin-1-5">Congratulations!  You are now registered with BookIt.</p>
-            <a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign In</a>
-            <p></p>
-        </div><!-- /content -->
-    </div><!-- /page -->
+	<div data-role="page" id="page-index">
+		<div data-role="header" data-theme="c" data-position="fixed">
+			<h1>BookIt</h1>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content">
+			<h2 class="mc-text-center">Welcome!</h2>
+			<p class="mc-top-margin-1-5">
+				<b>Existing Users</b>
+			</p>
+			<a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign
+				In</a>
+			<p class="mc-top-margin-1-5">
+				<b>Don't have an account?</b>
+			</p>
+			<a href="#page-signup" class="ui-btn ui-btn-b ui-corner-all">Sign
+				Up</a>
+			<p></p>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+
+
+
+	<div data-role="page" id="page-signin">
+		<div data-role="header" data-theme="c" data-position="fixed"
+			data-add-back-btn="true">
+			<h1>BookIt</h1>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content">
+			<h3>Sign In</h3>
+			<label for="txt-email">Email Address</label> <input type="text"
+				name="txt-email" id="txt-email" value=""> <label
+				for="txt-password">Password</label> <input type="password"
+				name="txt-password" id="txt-password" value="">
+			<fieldset data-role="controlgroup">
+				<input type="checkbox" name="chck-rememberme" id="chck-rememberme">
+				<label for="chck-rememberme">Remember me</label>
+			</fieldset>
+			<a id="btn-submit"
+				class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</a>
+			<p class="mc-top-margin-1-5">
+				<a href="begin-password-reset.html">Can't access your account?</a>
+			</p>
+			<div data-role="popup" id="dlg-invalid-credentials"
+				data-dismissible="false" style="max-width: 400px;">
+				<div role="main" class="ui-content">
+					<h3 class="mc-text-danger">Login Failed</h3>
+					<p>Did you enter the right credentials?</p>
+					<div class="mc-text-center">
+						<a href="#" data-rel="back"
+							class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">OK</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+
+
+	<div data-role="page" id="page-signup">
+		<div class="bi-header" data-role="header" data-theme="c"
+			data-position="fixed" data-add-back-btn="true">
+			<h1>BookIt</h1>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content">
+			<h3>Sign Up</h3>
+			<div id="ctn-err" class="bi-invisible"></div>
+			<label for="txt-first-name">First Name</label> <input type="text"
+				name="txt-first-name" id="txt-first-name" value=""> <label
+				for="txt-last-name">Last Name</label> <input type="text"
+				name="txt-last-name" id="txt-last-name" value=""> <label
+				for="txt-email-address">Email Address</label> <input type="text"
+				name="txt-email-address" id="txt-email-address" value=""> <label
+				for="txt-password">Password</label> <input type="password"
+				name="txt-password" id="txt-password" value=""> <label
+				for="txt-password-confirm">Confirm Password</label> <input
+				type="password" name="txt-password-confirm"
+				id="txt-password-confirm" value="">
+			<!--<a href="#dlg-sign-up-sent" data-rel="popup" data-transition="pop" data-position-to="window" id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</a>-->
+			<button id="btn-submit"
+				class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</button>
+			<div data-role="popup" id="dlg-sign-up-sent" data-dismissible="false"
+				style="max-width: 400px;">
+				<div data-role="header">
+					<h1>Almost done...</h1>
+				</div>
+				<div role="main" class="ui-content">
+					<h3>Confirm Your Email Address</h3>
+					<p>We sent you an email with instructions on how to confirm
+						your email address. Please check your inbox and follow the
+						instructions in the email.</p>
+					<div class="mc-text-center">
+						<a href="sign-in.html"
+							class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">OK</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- /content -->
+	</div>
+
+
+	<!-- /page -->
+	<div data-role="page" id="page-signup-succeeded">
+		<div data-role="header" data-theme="c">
+			<h1>Book It</h1>
+		</div>
+		<!-- /header -->
+		<div role="main" class="ui-content">
+			<h2 class="mc-text-center">Registration Succeeded</h2>
+			<p class="mc-top-margin-1-5">Congratulations! You are now
+				registered with BookIt.</p>
+			<a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign
+				In</a>
+			<p></p>
+		</div>
+		<!-- /content -->
+	</div>
+	<!-- /page -->
+
+
+	<div data-role="page" data-title="Info" id="info-main">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#nav-panel1" data-icon="bars" data-iconpos="notext"
+				class="ui-btn-right">Menü</a>
+			<h1>Info</h1>
+		</div>
+		<!-- /header -->
+		<div class="ui-content" role="main">
+			<h3 id="power-last">Letzte Stromablesung</h3>
+		</div>
+		<!-- /content -->
+		<div data-role="panel" data-display="push" data-theme="b"
+			id="nav-panel1">
+			        
+			<ul data-role="listview">
+				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
+				</li>
+				<li>
+			<a href="#page_power_aktuell">Strom</a>
+				</li>
+				<li>
+				<a href="#page-index">Logout</a>
+				</li>
+				</ul>
+			    
+		</div>
+		<!-- /panel -->
+		<div data-role="footer" data-position="fixed" data-theme="a"
+			id="basic_footer">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#aktuell" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Aktuell</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+
+	</div>
+	<!-- /page -->
+
+	<div id="page_power_aktuell" data-role="page" data-title="Strom">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#nav-panel2" data-icon="bars" data-iconpos="notext"
+				class="ui-btn-right">Menü</a>
+			<h1>Aktuell</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+
+			<h3 id="page_power_aktuell-last">Letzte Stromablesung</h3>
+			<a href="#power_zaehler_erfassen" data-role="button">Erfassen</a>
+		</div>
+		<!-- /content -->
+		<div data-role="panel" data-display="push" data-theme="b"
+			id="nav-panel2">
+			        
+			<ul data-role="listview">
+				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
+				</li>
+				<li><a href="#page_power_aktuell">Strom</a></li>
+				<li><a href="#page-index">Logout</a></li>
+			</ul>
+			    
+		</div>
+		<!-- /panel -->
+
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade">Verlauf</a></li>
+					<li><a href="#page_power_vertrag" data-prefetch="true"
+						data-transition="fade">Vertrag</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	<div id="page_power_verlauf" data-role="page" data-title="Strom">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#nav-panel3" data-icon="bars" data-iconpos="notext"
+				class="ui-btn-right">Menü</a>
+			<h1>Verlauf</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+
+			<ul id="power_list" data-role="listview" data-theme="a"
+				data-dividertheme="e" data-filter="true" data-filter-theme="a">
+
+			</ul>
+
+		</div>
+		<!-- /content -->
+		<div data-role="panel" data-display="push" data-theme="b"
+			id="nav-panel3">
+			        
+			<ul data-role="listview">
+				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
+				</li>
+				<li><a href="#page_power_aktuell">Strom</a></li>
+				<li><a href="#page-index">Logout</a></li>
+			</ul>
+			    
+		</div>
+		<!-- /panel -->
+
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Verlauf</a></li>
+					<li><a href="#page_power_vertrag" data-prefetch="true"
+						data-transition="fade">Vertrag</a></li>
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	<div id="page_power_vertrag" data-role="page" data-title="Vetrag">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-add-back-btn="true">
+			<a href="#nav-panel4" data-icon="bars" data-iconpos="notext"
+				class="ui-btn-right">Menü</a>
+			<h1>Vertrag</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+
+			<a id="power_supply_update" data-role="button">Angebote abfragen</a>
+			<ul id="power_supply_list" data-role="listview" data-theme="a"
+				data-dividertheme="e" data-filter="true" data-filter-theme="a">
+			</ul>
+
+		</div>
+		<!-- /content -->
+		<div data-role="panel" data-display="push" data-theme="b"
+			id="nav-panel4">
+			        
+			<ul data-role="listview">
+				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
+				</li>
+				<li><a href="#page_power_aktuell">Strom</a>
+				</li>
+
+				<li><a href="#page-index">Logout</a>
+				</li>
+			</ul>
+			    
+		</div>
+		<!-- /panel -->
+
+		<div data-role="footer" data-position="fixed" data-theme="a">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade">Verlauf</a></li>
+					<li><a href="#page_power_vertrag" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Vertrag</a></li>
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	<div id="power_zaehler_erfassen" data-rel="dialog"
+		data-transition="pop" data-close-btn="right"
+		data-title="Zähler erfassen" data-theme="a">
+		<div data-role="header" data-position="fixed" data-theme="a"
+			data-dismissible="false">
+			<h1>Zähler erfassen</h1>
+		</div>
+		<!-- /header -->
+		<div class="ui-content" role="main">
+			<label>Zähler-Stand</label> <input type="text" id="zaehler_stand"
+				name="Zähler-Stand"> <label>Erfassungs-Datum</label> <input
+				type="text" data-role="date" class="auto-adjustable-date"
+				id="zaehler_datum" name="Erfassungs-Datum" data-theme="a">
+			<button type="button" id="power_zaehler_erfassen_btn-submit">OK</button>
+		</div>
+		<!-- /content -->
+
+	</div>
+	<!-- /page -->
 </body>
 </html>

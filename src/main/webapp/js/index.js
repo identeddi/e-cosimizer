@@ -37,47 +37,4 @@ $(document).on("mobileinit", function (event, ui) {
 
 app.signupController = new BookIt.SignUpController();
 app.signinController = new BookIt.SignInController();
-
-//$(document).delegate("#page-signup", "pagebeforeshow", function () {
-//    // Reset the signup form.
-//    app.signupController.resetSignUpForm();
-//});
-
-$(document).on("pagecontainerbeforeshow", function (event, ui) {
-    if (typeof ui.toPage == "object") {
-        switch (ui.toPage.attr("id")) {
-        case "page-signup":
-            // Reset the signup form.
-            app.signupController.resetSignUpForm();
-            break;
-        case "page-signin":
-            // Reset the signup form.
-            app.signinController.resetSessionForm();
-            break;
-        case "page-index":
-            // Reset the signup form.
-            app.signinController.resetSessionForm();
-            break;
-        	
-        }
-    }
-});
-
-$(document).delegate("#page-signin", "pagebeforecreate", function () {
-
-    app.signinController.init();
-
-    app.signinController.$btnSubmit.off("tap").on("tap", function () {
-        app.signinController.onSigninCommand();
-    });
-
-});
-$(document).delegate("#page-signup", "pagebeforecreate", function () {
-
-    app.signupController.init();
-
-    app.signupController.$btnSubmit.off("tap").on("tap", function () {
-        app.signupController.onSignupCommand();
-    });
-
-});
+app.powerController = new BookIt.PowerController();

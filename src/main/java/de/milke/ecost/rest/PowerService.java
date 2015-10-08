@@ -16,13 +16,13 @@
  */
 package de.milke.ecost.rest;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,9 @@ import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.dao.PowerMeasureDao;
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.PowerMeasure;
+import de.milke.ecost.model.PowerSupply;
 import de.milke.ecost.model.User;
+import de.milke.ecost.service.Check24SupplyResolver;
 
 /**
  * JAX-RS Example
@@ -50,7 +52,6 @@ import de.milke.ecost.model.User;
  */
 @Path("/power")
 @Stateless
-@RolesAllowed("admin")
 public class PowerService {
 
     static Logger LOG = Logger.getLogger(PowerService.class.getName());
@@ -63,6 +64,9 @@ public class PowerService {
 
     @EJB
     PowerMeasureDao powerMeasureDao;
+
+    @EJB
+    Check24SupplyResolver check24SupplyResolver;
 
     @POST
     @Path("/measure")
@@ -112,6 +116,14 @@ public class PowerService {
 	LOG.info(getUser().getUsername() + ": getMeasure last ");
 	LOG.info(getUser().getUsername() + ": session: " + request.getSession().getId());
 	return powerMeasureDao.getLastByUser(getUser());
+    }
+
+    @GET
+    @Path("/supplies")
+    @Produces("application/json")
+    public List<PowerSupply> getPowerSupplies(@QueryParam("zipcode") int zipCode,
+	    @QueryParam("consumption") int consumption) throws GeneralException, IOException {
+	return check24SupplyResolver.getPowerSupplies(zipCode, consumption);
     }
 
     private Principal principal;
