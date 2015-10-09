@@ -13,11 +13,7 @@ BookIt.PowerController.prototype.init = function () {
 };
 
 BookIt.PowerController.prototype.resetStromErfassenForm = function () {
-	$('#measureDate').datepicker({
-        dateFormat: 'dd.mm.yyyy',
-        altField: '#thealtdate',
-        altFormat: 'yy-mm-dd'
-    });
+
 	this.afterErfassenMsg=null;
 };
 
@@ -81,9 +77,9 @@ if (BookIt.allPowerMeasure != null) {
 				powerlist.empty();
 				for ( var i in BookIt.allPowerMeasure) {
 					powerlist.append('<li>'
-							+ toNiceDate(BookIt.allPowerMeasure[i].measureDate)
-							+ "  " + BookIt.allPowerMeasure[i].measureValue
-							+ " kWh" + '</li>');
+						+ "<p>Ablesedatum: " + toNiceDate(BookIt.allPowerMeasure[i].measureDate) + "</p>"
+						+"<p>Zählerstand: <strong>" + BookIt.allPowerMeasure[i].measureValue + " kWh</strong></p>"
+							+ '</li>');
 				}
 				// Enhance new listview element
 				powerlist.listview('refresh');
@@ -128,14 +124,29 @@ $(document).on('click', '#power_supply_update', function(e){
 			// Add a new listview element
 			powerSupplylist = $('#power_supply_list')
 			powerSupplylist.empty();
+			powerSupplylist.append('<li>'
+			 + "<a href='" + resp[resp.length-1].url + " ' target='_blank'>"
+				+ "<p><strong>" + resp[resp.length-1].supply +"</strong></p>"
+				+ "<p>" + resp[resp.length-1].provider +"</p>"
+				+ "<p>Bewertungen: " + resp[resp.length-1].ratingCount+"</p>"
+				+ "<p>Weiterempfehlung: " + resp[resp.length-1].rating + "% </p>"
+				+ "<strong>" + resp[resp.length-1].price+ '€ </strong>'
+				+ "<a/>"
+				+ '</li>');
+			
 			for ( var i in resp) {
+				if(i<resp.length-1)
+					{
 				powerSupplylist.append('<li>'
 					 + "<a href='" + resp[i].url + " ' target='_blank'>"
-						+ "<h3>" + resp[i].provider +"</h3>"
-						+ "<p> Bewertung" + resp[i].ratingCount+ '(' + resp[i].rating + "%) </p>"
-						+ "<p>" + resp[i].price+ '€ </p>'
+						+ "<strong>" + resp[i].supply +"</strong>"
+						+ "<p>" + resp[i].provider +"</p>"
+						+ "<p>Bewertungen: " + resp[i].ratingCount+"</p>"
+						+ "<p>Weiterempfehlung: " + resp[i].rating + "% </p>"
+						+ "<strong>" + resp[i].price+ '€ </strong>'
 						+ "<a/>"
 						+ '</li>');
+					}
 			}
 			// Enhance new listview element
 			powerSupplylist.listview('refresh');

@@ -2,15 +2,18 @@ package de.milke.ecost.model;
 
 public class PowerSupply {
 
+    String supply;
     String provider;
     double price;
     int rating;
     int ratingCount;
     String url;
 
-    public PowerSupply(String provider, double price, int rating, int ratingCount, String url) {
+    public PowerSupply(String provider, String supply, double price, int rating, int ratingCount,
+	    String url) {
 	super();
 	this.provider = provider;
+	this.supply = supply;
 	this.price = price;
 	this.rating = rating;
 	this.ratingCount = ratingCount;
@@ -59,6 +62,14 @@ public class PowerSupply {
 
     public void setUrl(String url) {
 	this.url = url;
+    }
+
+    public String getSupply() {
+	return supply;
+    }
+
+    public void setSupply(String supply) {
+	this.supply = supply;
     }
 
 }

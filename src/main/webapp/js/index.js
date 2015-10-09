@@ -33,6 +33,8 @@ app.initialize();
 
 $(document).on("mobileinit", function (event, ui) {
     $.mobile.defaultPageTransition = "slide";
+    $.mobile.changePage.defaults.allowSamePageTransition = true;
+    $.datepicker.setDefaults( $.datepicker.regional[ "de" ] );
 });
 
 app.signupController = new BookIt.SignUpController();

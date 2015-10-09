@@ -500,7 +500,7 @@
                 </security-domain>
                 <security-domain name="jboss-ejb-policy" cache-type="default">
                     <authorization>
-                        <policy-module code="Delegating" flag="required"/>
+                        <policy-module code="Delegating" flag="optional"/>
                     </authorization>
                 </security-domain>
             </security-domains>

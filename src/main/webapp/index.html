@@ -6,6 +6,7 @@
 <link href="lib/jqm/jquery.mobile.structure-1.4.5.min.css"
 	rel="stylesheet" />
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css" />
+
 <link rel="stylesheet"
 	href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css" />
 
@@ -17,8 +18,8 @@
 	src="http://cdn.rawgit.com/jquery/jquery-ui/1.10.4/ui/jquery.ui.datepicker.js"></script>
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css" />
-<script src="lib/fastclick/fastclick.min.js"></script>
-
+<link rel="stylesheet" href="vendor/waves/waves.min.css" />
+<link rel="stylesheet" href="css/nativedroid2.css" />
 <script src="js/settings.js"></script>
 <script src="js/power-controller.js"></script>
 <script src="js/settings.js"></script>
@@ -52,7 +53,7 @@
 <body>
 
 	<div data-role="page" id="page-index">
-		<div data-role="header" data-theme="c" data-position="fixed">
+		<div data-role="header" data-position="fixed">
 			<h1>BookIt</h1>
 		</div>
 		<!-- /header -->
@@ -77,8 +78,7 @@
 
 
 	<div data-role="page" id="page-signin">
-		<div data-role="header" data-theme="c" data-position="fixed"
-			data-add-back-btn="true">
+		<div data-role="header" data-position="fixed">
 			<h1>BookIt</h1>
 		</div>
 		<!-- /header -->
@@ -115,8 +115,7 @@
 
 
 	<div data-role="page" id="page-signup">
-		<div class="bi-header" data-role="header" data-theme="c"
-			data-position="fixed" data-add-back-btn="true">
+		<div class="bi-header" data-role="header" data-position="fixed">
 			<h1>BookIt</h1>
 		</div>
 		<!-- /header -->
@@ -161,7 +160,7 @@
 
 	<!-- /page -->
 	<div data-role="page" id="page-signup-succeeded">
-		<div data-role="header" data-theme="c">
+		<div data-role="header">
 			<h1>Book It</h1>
 		</div>
 		<!-- /header -->
@@ -179,35 +178,56 @@
 
 
 	<div data-role="page" data-title="Info" id="info-main">
-		<div data-role="header" data-position="fixed" data-theme="a"
-			data-add-back-btn="true">
-			<a href="#nav-panel1" data-icon="bars" data-iconpos="notext"
-				class="ui-btn-right">Menü</a>
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel1"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
 			<h1>Info</h1>
+			
 		</div>
 		<!-- /header -->
 		<div class="ui-content" role="main">
-			<h3 id="power-last">Letzte Stromablesung</h3>
+			<div id="power-last">Letzte Stromablesung</div>
 		</div>
 		<!-- /content -->
-		<div data-role="panel" data-display="push" data-theme="b"
+		<div data-role="panel"  data-display="overlay"
 			id="nav-panel1">
 			        
-			<ul data-role="listview">
-				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
-				</li>
-				<li>
-			<a href="#page_power_aktuell">Strom</a>
-				</li>
-				<li>
-				<a href="#page-index">Logout</a>
-				</li>
+<div class="ui-panel-inner">
+				<div class="nd2-sidepanel-profile wow fadeInDown"
+					style="visibility: visible; animation-name: fadeInDown;">
+					<img class="profile-background"
+						src="//lorempixel.com/400/200/abstract/6/">
+					<div class="row">
+						<div class="col-xs-4 center-xs">
+							<div class="box">
+								<img class="profile-thumbnail"
+									src="//lorempixel.com/200/200/people/4/">
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="box profile-text">
+								<strong>Menü</strong> 
+								<span class="subline">Super
+									Power User</span>
+							</div>
+						</div>
+					</div>
+
+					    
+				</div>
+
+				<ul data-role="listview" data-inset="false">
+					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
+					</li>
+					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
+
+					<li data-icon="false"><a href="#page-index">Logout</a></li>
 				</ul>
+			</div>
 			    
 		</div>
 		<!-- /panel -->
-		<div data-role="footer" data-position="fixed" data-theme="a"
-			id="basic_footer">
+		<div data-role="footer" data-position="fixed" id="basic_footer">
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#aktuell" data-prefetch="true"
@@ -222,10 +242,9 @@
 	<!-- /page -->
 
 	<div id="page_power_aktuell" data-role="page" data-title="Strom">
-		<div data-role="header" data-position="fixed" data-theme="a"
-			data-add-back-btn="true">
-			<a href="#nav-panel2" data-icon="bars" data-iconpos="notext"
-				class="ui-btn-right">Menü</a>
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel2"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
 			<h1>Aktuell</h1>
 		</div>
 		<!-- /header -->
@@ -237,20 +256,44 @@
 			<a href="#power_zaehler_erfassen" data-role="button">Erfassen</a>
 		</div>
 		<!-- /content -->
-		<div data-role="panel" data-display="push" data-theme="b"
+		<div data-role="panel"  data-display="overlay"
 			id="nav-panel2">
-			        
-			<ul data-role="listview">
-				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
-				</li>
-				<li><a href="#page_power_aktuell">Strom</a></li>
-				<li><a href="#page-index">Logout</a></li>
-			</ul>
-			    
+<div class="ui-panel-inner">
+				<div class="nd2-sidepanel-profile wow fadeInDown"
+					style="visibility: visible; animation-name: fadeInDown;">
+					<img class="profile-background"
+						src="//lorempixel.com/400/200/abstract/6/">
+					<div class="row">
+						<div class="col-xs-4 center-xs">
+							<div class="box">
+								<img class="profile-thumbnail"
+									src="//lorempixel.com/200/200/people/4/">
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="box profile-text">
+								<strong>Menü</strong> 
+								<span class="subline">Super
+									Power User</span>
+							</div>
+						</div>
+					</div>
+
+					    
+				</div>
+
+				<ul data-role="listview" data-inset="false">
+					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
+					</li>
+					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
+
+					<li data-icon="false"><a href="#page-index">Logout</a></li>
+				</ul>
+			</div>
 		</div>
 		<!-- /panel -->
 
-		<div data-role="footer" data-position="fixed" data-theme="a">
+		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#page_power_aktuell" data-prefetch="true"
@@ -268,10 +311,9 @@
 	<!-- /page -->
 
 	<div id="page_power_verlauf" data-role="page" data-title="Strom">
-		<div data-role="header" data-position="fixed" data-theme="a"
-			data-add-back-btn="true">
-			<a href="#nav-panel3" data-icon="bars" data-iconpos="notext"
-				class="ui-btn-right">Menü</a>
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel3"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
 			<h1>Verlauf</h1>
 		</div>
 		<!-- /header -->
@@ -279,27 +321,52 @@
 
 		<div class="ui-content" role="main">
 
-			<ul id="power_list" data-role="listview" data-theme="a"
-				data-dividertheme="e" data-filter="true" data-filter-theme="a">
+			<ul id="power_list" data-role="listview" data-dividertheme="e"
+				data-filter="true" data-filter-theme="a">
 
 			</ul>
 
 		</div>
 		<!-- /content -->
-		<div data-role="panel" data-display="push" data-theme="b"
+		<div data-role="panel"  data-display="overlay"
 			id="nav-panel3">
-			        
-			<ul data-role="listview">
-				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
-				</li>
-				<li><a href="#page_power_aktuell">Strom</a></li>
-				<li><a href="#page-index">Logout</a></li>
-			</ul>
+<div class="ui-panel-inner">
+				<div class="nd2-sidepanel-profile wow fadeInDown"
+					style="visibility: visible; animation-name: fadeInDown;">
+					<img class="profile-background"
+						src="//lorempixel.com/400/200/abstract/6/">
+					<div class="row">
+						<div class="col-xs-4 center-xs">
+							<div class="box">
+								<img class="profile-thumbnail"
+									src="//lorempixel.com/200/200/people/4/">
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="box profile-text">
+								<strong>Menü</strong> 
+								<span class="subline">Super
+									Power User</span>
+							</div>
+						</div>
+					</div>
+
+					    
+				</div>
+
+				<ul data-role="listview" data-inset="false">
+					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
+					</li>
+					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
+
+					<li data-icon="false"><a href="#page-index">Logout</a></li>
+				</ul>
+			</div>
 			    
 		</div>
 		<!-- /panel -->
 
-		<div data-role="footer" data-position="fixed" data-theme="a">
+		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#page_power_aktuell" data-prefetch="true"
@@ -318,10 +385,9 @@
 	<!-- /page -->
 
 	<div id="page_power_vertrag" data-role="page" data-title="Vetrag">
-		<div data-role="header" data-position="fixed" data-theme="a"
-			data-add-back-btn="true">
-			<a href="#nav-panel4" data-icon="bars" data-iconpos="notext"
-				class="ui-btn-right">Menü</a>
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel4"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
 			<h1>Vertrag</h1>
 		</div>
 		<!-- /header -->
@@ -330,29 +396,51 @@
 		<div class="ui-content" role="main">
 
 			<a id="power_supply_update" data-role="button">Angebote abfragen</a>
-			<ul id="power_supply_list" data-role="listview" data-theme="a"
-				data-dividertheme="e" data-filter="true" data-filter-theme="a">
+			<ul id="power_supply_list" data-role="listview" data-dividertheme="e"
+				data-filter="true" data-filter-theme="a">
 			</ul>
 
 		</div>
 		<!-- /content -->
-		<div data-role="panel" data-display="push" data-theme="b"
+		<div data-role="panel"  data-display="overlay"
 			id="nav-panel4">
-			        
-			<ul data-role="listview">
-				<li><a href="#info-main" data-transition="flip	">Übersicht</a>
-				</li>
-				<li><a href="#page_power_aktuell">Strom</a>
-				</li>
 
-				<li><a href="#page-index">Logout</a>
-				</li>
-			</ul>
-			    
+			<div class="ui-panel-inner">
+				<div class="nd2-sidepanel-profile wow fadeInDown"
+					style="visibility: visible; animation-name: fadeInDown;">
+					<img class="profile-background"
+						src="//lorempixel.com/400/200/abstract/6/">
+					<div class="row">
+						<div class="col-xs-4 center-xs">
+							<div class="box">
+								<img class="profile-thumbnail"
+									src="//lorempixel.com/200/200/people/4/">
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="box profile-text">
+								<strong>Menü</strong> 
+								<span class="subline">Super
+									Power User</span>
+							</div>
+						</div>
+					</div>
+
+					    
+				</div>
+
+				<ul data-role="listview" data-inset="false">
+					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
+					</li>
+					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
+
+					<li data-icon="false"><a href="#page-index">Logout</a></li>
+				</ul>
+			</div>
+			<!-- /panel -->
 		</div>
-		<!-- /panel -->
 
-		<div data-role="footer" data-position="fixed" data-theme="a">
+		<div data-role="footer" data-position="fixed">
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#page_power_aktuell" data-prefetch="true"
@@ -370,11 +458,10 @@
 	</div>
 	<!-- /page -->
 
-	<div id="power_zaehler_erfassen" data-rel="dialog"
+	<div id="power_zaehler_erfassen" data-dialog="true"
 		data-transition="pop" data-close-btn="right"
-		data-title="Zähler erfassen" data-theme="a">
-		<div data-role="header" data-position="fixed" data-theme="a"
-			data-dismissible="false">
+		data-title="Zähler erfassen">
+		<div data-role="header" data-position="fixed" data-dismissible="false">
 			<h1>Zähler erfassen</h1>
 		</div>
 		<!-- /header -->
@@ -382,7 +469,7 @@
 			<label>Zähler-Stand</label> <input type="text" id="zaehler_stand"
 				name="Zähler-Stand"> <label>Erfassungs-Datum</label> <input
 				type="text" data-role="date" class="auto-adjustable-date"
-				id="zaehler_datum" name="Erfassungs-Datum" data-theme="a">
+				id="zaehler_datum" name="Erfassungs-Datum">
 			<button type="button" id="power_zaehler_erfassen_btn-submit">OK</button>
 		</div>
 		<!-- /content -->

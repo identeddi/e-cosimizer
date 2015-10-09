@@ -152,10 +152,21 @@ public class Check24SupplyResolver {
 	    col = iinput.select("div[class=c24-result-column2]");
 	    Elements liselem = col.get(0).select("li");
 	    String anbieter = "";
+	    String supply = "";
+
 	    for (int i = liselem.size() - 1; i >= 0; i--) {
 		if (!liselem.get(i).text().isEmpty()) {
-		    anbieter += liselem.get(i).text();
-		    anbieter += " - ";
+		    if (supply.isEmpty()) {
+
+			supply += liselem.get(i).text();
+
+		    } else {
+
+			if (!anbieter.isEmpty())
+			    anbieter = " - " + anbieter;
+			anbieter = liselem.get(i).text() + anbieter;
+
+		    }
 		}
 	    }
 
@@ -192,7 +203,7 @@ public class Check24SupplyResolver {
 		urlWeiter = baseURL + urlWeiter;
 	    }
 
-	    powerSupplies.add(new PowerSupply(anbieter, priceDouble, weiterempfehlungInt,
+	    powerSupplies.add(new PowerSupply(anbieter, supply, priceDouble, weiterempfehlungInt,
 		    kundenbewertungenInt, urlWeiter));
 
 	}
