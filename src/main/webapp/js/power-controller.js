@@ -1,4 +1,4 @@
-﻿var BookIt = BookIt || {};
+var BookIt = BookIt || {};
 
 BookIt.PowerController = function () {
 	
@@ -10,6 +10,8 @@ BookIt.PowerController.prototype.init = function () {
     this.$zaehlerStand = $("#zaehler_stand", this.$dialogzaehlerErfassen);
     this.$zaehlerDatum = $("#zaehler_datum", this.$dialogzaehlerErfassen);
     this.afterErfassenMsg=null;
+
+    
 };
 
 BookIt.PowerController.prototype.resetStromErfassenForm = function () {
@@ -44,19 +46,6 @@ BookIt.PowerController.prototype.onErfassenCommand = function () {
   
 };
 
-BookIt.PowerController.prototype.updateLastPowerMeasure = function () {
-
-	resp = $.ajax({
-	    type: 'GET',
-	    url: BookIt.Settings.getLastPowerMeasureURL,
-	    async: false
-	});
-	if(resp.status==200)
-	{
-		app.lastPowerMeasure = JSON.parse(resp.responseText);
-	}
-}
-
 $(document).on(
 		"pagebeforeshow",
 		"#page_power_verlauf",
@@ -65,36 +54,43 @@ $(document).on(
 resp = $.ajax({
 	type : 'GET',
 	url : BookIt.Settings.getAllPowerMeasureURL,
-	async : false
-
-}).responseText;
-
-BookIt.allPowerMeasure = JSON.parse(resp);
-
-if (BookIt.allPowerMeasure != null) {
+	success: function (resp) {
 				// Add a new listview element
 				powerlist = $('#power_list')
 				powerlist.empty();
-				for ( var i in BookIt.allPowerMeasure) {
+				for ( var i in resp) {
 					powerlist.append('<li>'
-						+ "<p>Ablesedatum: " + toNiceDate(BookIt.allPowerMeasure[i].measureDate) + "</p>"
-						+"<p>Zählerstand: <strong>" + BookIt.allPowerMeasure[i].measureValue + " kWh</strong></p>"
+						+ "<p>Ablesedatum: " + toNiceDate(resp[i].measureDate) + "</p>"
+						+"<p>Zählerstand: <strong>" + resp[i].measureValue + " kWh</strong></p>"
 							+ '</li>');
 				}
 				// Enhance new listview element
 				powerlist.listview('refresh');
 				// Hide first listview element
-			}
+	}
+
+})
+
 		});
+
+
 $(document).on("pagebeforeshow","#page_power_aktuell",function(event){
 
-app.powerController.updateLastPowerMeasure();
-
-if(app.lastPowerMeasure != null && app.lastPowerMeasure.measureDate != null &&
-			app.lastPowerMeasure.measureValue != null)
+	resp = $.ajax({
+	    type: 'GET',
+	    url: BookIt.Settings.getLastPowerMeasureURL,
+	            success: function (resp) {
+	            	console.log(resp);
+if(resp != null && resp.measureDate != null &&
+			resp.measureValue != null)
 		{
-			$("#page_power_aktuell-last").text("Strom zuletzt abgelesen am " + toNiceDate(app.lastPowerMeasure.measureDate) + "  mit " +  app.lastPowerMeasure.measureValue + "kWh");
+			$("#page_power_aktuell-last").text("Strom zuletzt abgelesen am " + toNiceDate(resp.measureDate) + "  mit " +  resp.measureValue + "kWh");
 		}
+	            		    		},
+        error: function (e) {
+        }
+	});
+
 	});
 
 $(document).on("pagebeforeshow","#power_zaehler_erfassen",function(event){
@@ -116,10 +112,17 @@ $(document).on('click', '#power_supply_update', function(e){
 		            text: "Angebote werden abgerufen",
 		            textVisible: true
 		    });
+
+	var powerSupply = $("#page_power_vertrag");
+	var powerSupplyZipcode = $("#zipcode_supply", powerSupply);
+	var powerSupplyConsumption = $("#consumption_supply", powerSupply);
+
+    var powerSupplyVal = powerSupplyConsumption.val().trim();
+    var powerSupplyZipcode = powerSupplyZipcode.val().trim();
  $.ajax({
         type: 'GET',
         url: BookIt.Settings.getAllPowerSuppliesURL,
-        data: {zipcode: 53773, consumption:4000},
+        data: {zipcode: powerSupplyZipcode, consumption:powerSupplyVal},
         success: function (resp) {
 			// Add a new listview element
 			powerSupplylist = $('#power_supply_list')

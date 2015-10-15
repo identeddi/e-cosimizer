@@ -102,21 +102,18 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
 
     // Make sure that all the required fields have values.
     if (invalidInput) {
-        me.$ctnErr.html("<p>Please enter all the required fields.</p>");
-        me.$ctnErr.addClass("bi-ctn-err").slideDown();
+		runtimePopup("Opps, bitte alle Felder ausfüllen.");
         return;
     }
 
-    if (!me.emailAddressIsValid(emailAddress)) {
-        me.$ctnErr.html("<p>Please enter a valid email address.</p>");
-        me.$ctnErr.addClass("bi-ctn-err").slideDown();
+ /*   if (!me.emailAddressIsValid(emailAddress)) {
+		runtimePopup("Opps, E-Mail-Adresse ungültig.");
         me.$txtEmailAddress.addClass(invalidInputStyle);
         return;
     }
-
+*/
     if (!me.passwordsMatch(password, passwordConfirm)) {
-        me.$ctnErr.html("<p>Your passwords don't match.</p>");
-        me.$ctnErr.addClass("bi-ctn-err").slideDown();
+		runtimePopup("Passwörter stimmen nicht überein.");
         me.$txtPassword.addClass(invalidInputStyle);
         me.$txtPasswordConfirm.addClass(invalidInputStyle);
         return;
@@ -139,14 +136,11 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
         url: callurl,
         data: "email=" + emailAddress + "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm,
         success: function (resp) {
-                $.mobile.navigate("#page-signup-succeeded");
+		runtimePopup("Benutzer erfolgreich angelegt, Sie können sich nun einloggen.",function(){$.mobile.changePage("#page-signin")});
                 return;
         },
         error: function (e) {
-            console.log(e.message);
-            // TODO: Use a friendlier error message below.
-            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not register you.  Please try again in a few minutes.</p>");
-            me.$ctnErr.addClass("bi-ctn-err").slideDown();
+			runtimePopup("Opps, unerwarteter Fehler bei der Registrierung des Benutzers " + emailAddress + ".");
         }
     });
 };

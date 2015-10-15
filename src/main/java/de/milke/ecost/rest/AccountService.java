@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.security.auth.spi.Util;
@@ -59,6 +60,11 @@ public class AccountService {
 
 	Role adminRole = accountDao.getOrCreateRole("admin");
 
+	// check user exists
+	if (null != accountDao.getByUsername(email)) {
+	    throw new WebApplicationException(email + " bereits registriert.");
+	}
+
 	User user = new User();
 	user.setPassword(Util.createPasswordHash("SHA-256", "BASE64", null, null, password));
 	user.setEmail(email);
@@ -69,6 +75,6 @@ public class AccountService {
 	accountDao.save(user);
 	LOG.info("email: " + email + " firstname" + firstName + " lastName: " + lastName
 		+ "password: " + password + " passwortconfirmed: " + passwordConfirm);
-	return "super";
+	return "Successfully registered " + email;
     }
 }

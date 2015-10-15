@@ -1,6 +1,11 @@
 var BookIt = BookIt || {};
 
 // Begin boilerplate code generated with Cordova project.
+$.ajaxSetup({
+    xhrFields: {
+        withCredentials : true
+    }
+})
 
 var app = {
     // Application Constructor
@@ -40,3 +45,33 @@ $(document).on("mobileinit", function (event, ui) {
 app.signupController = new BookIt.SignUpController();
 app.signinController = new BookIt.SignInController();
 app.powerController = new BookIt.PowerController();
+
+$(document).on('click', '#button-page-signin', function(e){
+	   callurl="http://" + window.location.host + BookIt.Settings.signInUrl
+
+// If the return is 401, refresh the page to request new details.
+
+
+   callurl="http://" + window.location.host + BookIt.Settings.signInUrl
+        resp =$.ajax({
+        type: 'POST',
+        url: callurl,
+                username: 'reset',
+                password: 'reset',
+        async:false
+    });
+
+                        	   
+resp =$.ajax({
+type: 'POST',
+url: callurl,
+        success: function (resp) {
+			$.mobile.changePage("#info-main");
+		},
+        error: function (e) {
+			runtimePopup(e)
+        }
+});
+
+});
+	

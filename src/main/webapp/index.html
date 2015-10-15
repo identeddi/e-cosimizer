@@ -54,21 +54,20 @@
 
 	<div data-role="page" id="page-index">
 		<div data-role="header" data-position="fixed">
-			<h1>BookIt</h1>
+			<h1>e-costimizer</h1>
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			<h2 class="mc-text-center">Welcome!</h2>
+			<h2 class="mc-text-center">Willkommen!</h2>
 			<p class="mc-top-margin-1-5">
-				<b>Existing Users</b>
+				<b>Registrierte Benutzer</b>
 			</p>
-			<a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign
-				In</a>
+			<!--a href="#page-signin" data-role="button">Einloggen</a-->
+			<a id="button-page-signin" data-role="button">Einloggen</a>
 			<p class="mc-top-margin-1-5">
-				<b>Don't have an account?</b>
+				<b>Noch nicht registriert?</b>
 			</p>
-			<a href="#page-signup" class="ui-btn ui-btn-b ui-corner-all">Sign
-				Up</a>
+			<a href="#page-signup" data-role="button">Registrieren</a>
 			<p></p>
 		</div>
 		<!-- /content -->
@@ -79,35 +78,20 @@
 
 	<div data-role="page" id="page-signin">
 		<div data-role="header" data-position="fixed">
-			<h1>BookIt</h1>
+			<h1>e-costimizer</h1>
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			<h3>Sign In</h3>
-			<label for="txt-email">Email Address</label> <input type="text"
+			<h3>Einloggen</h3>
+			<label for="txt-email">E-Mail</label> <input type="text"
 				name="txt-email" id="txt-email" value=""> <label
-				for="txt-password">Password</label> <input type="password"
+				for="txt-password">Passwort</label> <input type="password"
 				name="txt-password" id="txt-password" value="">
-			<fieldset data-role="controlgroup">
-				<input type="checkbox" name="chck-rememberme" id="chck-rememberme">
-				<label for="chck-rememberme">Remember me</label>
-			</fieldset>
 			<a id="btn-submit"
-				class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</a>
+				data-role="button">Einloggen</a>
 			<p class="mc-top-margin-1-5">
-				<a href="begin-password-reset.html">Can't access your account?</a>
+				<a href="begin-password-reset.html">Zugriff nicht möglich?</a>
 			</p>
-			<div data-role="popup" id="dlg-invalid-credentials"
-				data-dismissible="false" style="max-width: 400px;">
-				<div role="main" class="ui-content">
-					<h3 class="mc-text-danger">Login Failed</h3>
-					<p>Did you enter the right credentials?</p>
-					<div class="mc-text-center">
-						<a href="#" data-rel="back"
-							class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">OK</a>
-					</div>
-				</div>
-			</div>
 		</div>
 		<!-- /content -->
 	</div>
@@ -116,65 +100,28 @@
 
 	<div data-role="page" id="page-signup">
 		<div class="bi-header" data-role="header" data-position="fixed">
-			<h1>BookIt</h1>
+			<h1>e-costimizer</h1>
 		</div>
 		<!-- /header -->
 		<div role="main" class="ui-content">
-			<h3>Sign Up</h3>
+			<h3>Registrieren</h3>
 			<div id="ctn-err" class="bi-invisible"></div>
-			<label for="txt-first-name">First Name</label> <input type="text"
+			<label for="txt-first-name">Vorname</label> <input type="text"
 				name="txt-first-name" id="txt-first-name" value=""> <label
-				for="txt-last-name">Last Name</label> <input type="text"
+				for="txt-last-name">Nachname</label> <input type="text"
 				name="txt-last-name" id="txt-last-name" value=""> <label
-				for="txt-email-address">Email Address</label> <input type="text"
+				for="txt-email-address">Email-Adresse</label> <input type="text"
 				name="txt-email-address" id="txt-email-address" value=""> <label
-				for="txt-password">Password</label> <input type="password"
+				for="txt-password">Passwort</label> <input type="password"
 				name="txt-password" id="txt-password" value=""> <label
-				for="txt-password-confirm">Confirm Password</label> <input
+				for="txt-password-confirm">Passwort bestätigen</label> <input
 				type="password" name="txt-password-confirm"
 				id="txt-password-confirm" value="">
 			<!--<a href="#dlg-sign-up-sent" data-rel="popup" data-transition="pop" data-position-to="window" id="btn-submit" class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</a>-->
-			<button id="btn-submit"
-				class="ui-btn ui-btn-b ui-corner-all mc-top-margin-1-5">Submit</button>
-			<div data-role="popup" id="dlg-sign-up-sent" data-dismissible="false"
-				style="max-width: 400px;">
-				<div data-role="header">
-					<h1>Almost done...</h1>
-				</div>
-				<div role="main" class="ui-content">
-					<h3>Confirm Your Email Address</h3>
-					<p>We sent you an email with instructions on how to confirm
-						your email address. Please check your inbox and follow the
-						instructions in the email.</p>
-					<div class="mc-text-center">
-						<a href="sign-in.html"
-							class="ui-btn ui-corner-all ui-shadow ui-btn-b mc-top-margin-1-5">OK</a>
-					</div>
-
-				</div>
-			</div>
+			<button id="btn-submit" data-role="button">Registrieren</button>
 		</div>
 		<!-- /content -->
 	</div>
-
-
-	<!-- /page -->
-	<div data-role="page" id="page-signup-succeeded">
-		<div data-role="header">
-			<h1>Book It</h1>
-		</div>
-		<!-- /header -->
-		<div role="main" class="ui-content">
-			<h2 class="mc-text-center">Registration Succeeded</h2>
-			<p class="mc-top-margin-1-5">Congratulations! You are now
-				registered with BookIt.</p>
-			<a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign
-				In</a>
-			<p></p>
-		</div>
-		<!-- /content -->
-	</div>
-	<!-- /page -->
 
 
 	<div data-role="page" data-title="Info" id="info-main">
@@ -182,17 +129,16 @@
 			<a href="#nav-panel1"
 				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
 			<h1>Info</h1>
-			
+
 		</div>
 		<!-- /header -->
 		<div class="ui-content" role="main">
 			<div id="power-last">Letzte Stromablesung</div>
 		</div>
 		<!-- /content -->
-		<div data-role="panel"  data-display="overlay"
-			id="nav-panel1">
+		<div data-role="panel" data-display="overlay" id="nav-panel1">
 			        
-<div class="ui-panel-inner">
+			<div class="ui-panel-inner">
 				<div class="nd2-sidepanel-profile wow fadeInDown"
 					style="visibility: visible; animation-name: fadeInDown;">
 					<img class="profile-background"
@@ -206,9 +152,8 @@
 						</div>
 						<div class="col-xs-8">
 							<div class="box profile-text">
-								<strong>Menü</strong> 
-								<span class="subline">Super
-									Power User</span>
+								<strong>Menü</strong> <span class="subline">Super Power
+									User</span>
 							</div>
 						</div>
 					</div>
@@ -217,8 +162,8 @@
 				</div>
 
 				<ul data-role="listview" data-inset="false">
-					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
-					</li>
+					<li data-icon="false"><a href="#info-main"
+						data-transition="flip">Übersicht</a></li>
 					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
 
 					<li data-icon="false"><a href="#page-index">Logout</a></li>
@@ -256,9 +201,8 @@
 			<a href="#power_zaehler_erfassen" data-role="button">Erfassen</a>
 		</div>
 		<!-- /content -->
-		<div data-role="panel"  data-display="overlay"
-			id="nav-panel2">
-<div class="ui-panel-inner">
+		<div data-role="panel" data-display="overlay" id="nav-panel2">
+			<div class="ui-panel-inner">
 				<div class="nd2-sidepanel-profile wow fadeInDown"
 					style="visibility: visible; animation-name: fadeInDown;">
 					<img class="profile-background"
@@ -272,9 +216,8 @@
 						</div>
 						<div class="col-xs-8">
 							<div class="box profile-text">
-								<strong>Menü</strong> 
-								<span class="subline">Super
-									Power User</span>
+								<strong>Menü</strong> <span class="subline">Super Power
+									User</span>
 							</div>
 						</div>
 					</div>
@@ -283,8 +226,8 @@
 				</div>
 
 				<ul data-role="listview" data-inset="false">
-					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
-					</li>
+					<li data-icon="false"><a href="#info-main"
+						data-transition="flip">Übersicht</a></li>
 					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
 
 					<li data-icon="false"><a href="#page-index">Logout</a></li>
@@ -328,9 +271,8 @@
 
 		</div>
 		<!-- /content -->
-		<div data-role="panel"  data-display="overlay"
-			id="nav-panel3">
-<div class="ui-panel-inner">
+		<div data-role="panel" data-display="overlay" id="nav-panel3">
+			<div class="ui-panel-inner">
 				<div class="nd2-sidepanel-profile wow fadeInDown"
 					style="visibility: visible; animation-name: fadeInDown;">
 					<img class="profile-background"
@@ -344,9 +286,8 @@
 						</div>
 						<div class="col-xs-8">
 							<div class="box profile-text">
-								<strong>Menü</strong> 
-								<span class="subline">Super
-									Power User</span>
+								<strong>Menü</strong> <span class="subline">Super Power
+									User</span>
 							</div>
 						</div>
 					</div>
@@ -355,8 +296,8 @@
 				</div>
 
 				<ul data-role="listview" data-inset="false">
-					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
-					</li>
+					<li data-icon="false"><a href="#info-main"
+						data-transition="flip">Übersicht</a></li>
 					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
 
 					<li data-icon="false"><a href="#page-index">Logout</a></li>
@@ -394,7 +335,10 @@
 
 
 		<div class="ui-content" role="main">
-
+			<label>PLZ</label> <input type="text" id="zipcode_supply"
+				name="PLZ" placeholder="53773"> 
+			<label>Verbrauch (kWh)</label> <input type="text" id="consumption_supply"
+				name="Verbrauch" placeholder="3.500"> 
 			<a id="power_supply_update" data-role="button">Angebote abfragen</a>
 			<ul id="power_supply_list" data-role="listview" data-dividertheme="e"
 				data-filter="true" data-filter-theme="a">
@@ -402,8 +346,7 @@
 
 		</div>
 		<!-- /content -->
-		<div data-role="panel"  data-display="overlay"
-			id="nav-panel4">
+		<div data-role="panel" data-display="overlay" id="nav-panel4">
 
 			<div class="ui-panel-inner">
 				<div class="nd2-sidepanel-profile wow fadeInDown"
@@ -419,9 +362,8 @@
 						</div>
 						<div class="col-xs-8">
 							<div class="box profile-text">
-								<strong>Menü</strong> 
-								<span class="subline">Super
-									Power User</span>
+								<strong>Menü</strong> <span class="subline">Super Power
+									User</span>
 							</div>
 						</div>
 					</div>
@@ -430,8 +372,8 @@
 				</div>
 
 				<ul data-role="listview" data-inset="false">
-					<li data-icon="false"><a href="#info-main" data-transition="flip">Übersicht</a>
-					</li>
+					<li data-icon="false"><a href="#info-main"
+						data-transition="flip">Übersicht</a></li>
 					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
 
 					<li data-icon="false"><a href="#page-index">Logout</a></li>
@@ -458,7 +400,7 @@
 	</div>
 	<!-- /page -->
 
-	<div id="power_zaehler_erfassen" data-dialog="true"
+	<div id="power_zaehler_erfassen" data-role="page" data-dialog="true"
 		data-transition="pop" data-close-btn="right"
 		data-title="Zähler erfassen">
 		<div data-role="header" data-position="fixed" data-dismissible="false">

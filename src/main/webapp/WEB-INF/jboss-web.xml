@@ -2,4 +2,5 @@
 <jboss-web>
         <security-domain>other</security-domain>
         <context-root>/</context-root>
+        <security-domain flushOnSessionInvalidation="true">other</security-domain>
 </jboss-web>

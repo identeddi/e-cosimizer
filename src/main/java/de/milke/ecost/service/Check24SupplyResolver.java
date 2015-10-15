@@ -97,8 +97,8 @@ public class Check24SupplyResolver {
 	}
 	Connection finalConn = Jsoup.connect(baseURL + url);
 
-	formElements.put("c24api_zipcode", "40789");
-	formElements.put("c24api_totalconsumption", "3500");
+	formElements.put("c24api_zipcode", PLZ + "");
+	formElements.put("c24api_totalconsumption", consumtion + "");
 
 	for (Element iinput : document.select("input")) {
 

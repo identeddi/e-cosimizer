@@ -16,12 +16,16 @@
  */
 package de.milke.ecost.rest;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -39,6 +43,7 @@ import de.milke.ecost.dao.AccountDao;
  */
 @Path("/login")
 @Stateless
+@RolesAllowed("admin")
 public class LoginService {
 
     static Logger LOG = Logger.getLogger(LoginService.class.getName());
@@ -51,9 +56,27 @@ public class LoginService {
 
     @DELETE
     @Path("/session")
-    public void deleteSession(@Context HttpServletRequest request) {
+    public void deleteSession(@Context HttpServletRequest request,
+	    @Context HttpServletResponse response) throws ServletException, IOException {
 	LOG.info("Delete session: " + request.getSession().getId());
-	request.getSession().invalidate();
+	response.setHeader("Cache-Control", "no-cache, no-store");
+
+	response.setHeader("Pragma", "no-cache");
+
+	response.setHeader("Expires", new java.util.Date().toString());
+	if (request.getSession(false) != null) {
+
+	    request.getSession(false).invalidate();// remove session.
+
+	}
+
+	// if (request.getSession() != null) {
+	//
+	// request.getSession().invalidate();// remove session.
+	//
+	// }
+	request.logout();
+	response.sendRedirect(request.getContextPath());
 	return;
     }
 
@@ -62,6 +85,6 @@ public class LoginService {
     public String registerget(@QueryParam("email") String email,
 	    @QueryParam("password") String password) {
 	LOG.info("logged in - email: " + email + "password: " + password);
-	return "successfully logged in";
+	return "successfully logged in " + email;
     }
 }
