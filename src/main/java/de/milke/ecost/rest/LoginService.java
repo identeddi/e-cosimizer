@@ -82,9 +82,9 @@ public class LoginService {
 
     @POST
     @Path("/login")
-    public String registerget(@QueryParam("email") String email,
+    public String registerget(@QueryParam("username") String username,
 	    @QueryParam("password") String password) {
-	LOG.info("logged in - email: " + email + "password: " + password);
-	return "successfully logged in " + email;
+	LOG.info("logged in - username: " + username + "password: " + password);
+	return "successfully logged in " + username;
     }
 }

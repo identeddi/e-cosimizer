@@ -1,8 +1,8 @@
-﻿var BookIt = BookIt || {};
+var BookIt = BookIt || {};
 
 BookIt.SignInController = function () {
 
-    this.$txtEmailAddress = null;
+    this.$txtUsername = null;
     this.$txtPassword = null;
 };
 
@@ -10,7 +10,7 @@ BookIt.SignInController.prototype.init = function () {
     this.$signInPage = $("#page-signin");
     this.$btnSubmit = $("#btn-submit", this.$signInPage);
     this.$ctnErr = $("#ctn-err", this.$signInPage);
-    this.$txtEmailAddress = $("#txt-email", this.$signInPage);
+    this.$txtUsername = $("#txt-username", this.$signInPage);
     this.$txtPassword = $("#txt-password", this.$signInPage);
 };
 
@@ -25,7 +25,7 @@ BookIt.SignInController.prototype.resetSessionForm = function () {
 BookIt.SignInController.prototype.onSigninCommand = function () {
 
     var me = this,
-        emailAddress = me.$txtEmailAddress.val().trim(),
+        username = me.$txtUsername.val().trim(),
         password = me.$txtPassword.val().trim(),
         invalidInput = false,
         invisibleStyle = "bi-invisible",
@@ -33,7 +33,7 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
 
     // Reset styles.
     me.$ctnErr.removeClass().addClass(invisibleStyle);
-    me.$txtEmailAddress.removeClass(invalidInputStyle);
+    me.$txtUsername.removeClass(invalidInputStyle);
     me.$txtPassword.removeClass(invalidInputStyle);
 
         callurl="http://" + window.location.host + BookIt.Settings.deleteSessionUrl
@@ -49,31 +49,28 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
         }
     });
     
-    callurl="http://" + window.location.host + BookIt.Settings.signInUrl
 
+   callurl="http://" + window.location.host + BookIt.Settings.signInUrl
         resp =$.ajax({
         type: 'POST',
         url: callurl,
-        headers: {
-            "Authorization": "Basic " + btoa("xxxxxxxxxxx:xxxxxxxx123")
-          },
-        data: "email=" + emailAddress + "&password=" + password,
+                username: 'reset',
+                password: 'reset',
         async:false
     });
-        
+       
     $.ajax({
         type: 'POST',
         url: callurl,
-        headers: {
-            "Authorization": "Basic " + btoa(emailAddress + ":" + password)
-          },
-        data: "email=" + emailAddress + "&password=" + password,
+    username: username,
+    password: password,
+        data: "username=" + username + "&password=" + password,
         success: function (resp) {
         	  $.mobile.changePage("#info-main", "flip", true, false);
         	       },
         error: function (e) {
         	
-			runtimePopup("Opps, Benutzer " + emailAddress + " konnte nicht eingeloggt werden.");
+			runtimePopup("Opps, Benutzer " + username + " konnte nicht eingeloggt werden.");
         }
     });
 };

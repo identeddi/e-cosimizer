@@ -109,9 +109,9 @@ $(document).delegate("#power_zaehler_erfassen", "pagebeforecreate", function () 
 
 $(document).on('click', '#power_supply_update', function(e){
 	$.mobile.loading( "show", {
-		            text: "Angebote werden abgerufen",
-		            textVisible: true
-		    });
+	    text: "Angebote werden abgerufen",
+	    textVisible: true
+	});
 
 	var powerSupply = $("#page_power_vertrag");
 	var powerSupplyZipcode = $("#zipcode_supply", powerSupply);

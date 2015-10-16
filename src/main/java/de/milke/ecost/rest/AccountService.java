@@ -54,8 +54,8 @@ public class AccountService {
     @POST
     @Path("/register")
     public String register(@QueryParam("email") String email,
-	    @QueryParam("firstName") String firstName, @QueryParam("lastName") String lastName,
-	    @QueryParam("password") String password,
+	    @QueryParam("firstName") String firstName, @QueryParam("username") String username,
+	    @QueryParam("lastName") String lastName, @QueryParam("password") String password,
 	    @QueryParam("passwordConfirm") String passwordConfirm) {
 
 	Role adminRole = accountDao.getOrCreateRole("admin");
@@ -68,13 +68,14 @@ public class AccountService {
 	User user = new User();
 	user.setPassword(Util.createPasswordHash("SHA-256", "BASE64", null, null, password));
 	user.setEmail(email);
-	user.setUsername(email);
+	user.setUsername(username);
 	user.setFirstName(firstName);
 	user.setLastName(lastName);
 	user.getRoles().add(adminRole);
 	accountDao.save(user);
-	LOG.info("email: " + email + " firstname" + firstName + " lastName: " + lastName
-		+ "password: " + password + " passwortconfirmed: " + passwordConfirm);
+	LOG.info("username: " + username + "email: " + email + " firstname" + firstName
+		+ " lastName: " + lastName + "password: " + password + " passwortconfirmed: "
+		+ passwordConfirm);
 	return "Successfully registered " + email;
     }
 }

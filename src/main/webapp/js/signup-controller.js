@@ -1,4 +1,4 @@
-﻿var BookIt = BookIt || {};
+var BookIt = BookIt || {};
 
 BookIt.SignUpController = function () {
 
@@ -8,6 +8,7 @@ BookIt.SignUpController = function () {
     this.$txtFirstName = null;
     this.$txtLastName = null;
     this.$txtEmailAddress = null;
+    this.$txtUsername= null;
     this.$txtPassword = null;
     this.$txtPasswordConfirm = null;
 };
@@ -19,6 +20,7 @@ BookIt.SignUpController.prototype.init = function () {
     this.$txtFirstName = $("#txt-first-name", this.$signUpPage);
     this.$txtLastName = $("#txt-last-name", this.$signUpPage);
     this.$txtEmailAddress = $("#txt-email-address", this.$signUpPage);
+    this.$txtUsername = $("#txt-username", this.$signUpPage);
     this.$txtPassword = $("#txt-password", this.$signUpPage);
     this.$txtPasswordConfirm = $("#txt-password-confirm", this.$signUpPage);
 };
@@ -46,12 +48,14 @@ BookIt.SignUpController.prototype.resetSignUpForm = function () {
     this.$ctnErr.removeClass().addClass(invisibleStyle);
     this.$txtFirstName.removeClass(invalidInputStyle);
     this.$txtLastName.removeClass(invalidInputStyle);
+    this.$txtUsername.removeClass(invalidInputStyle);
     this.$txtEmailAddress.removeClass(invalidInputStyle);
     this.$txtPassword.removeClass(invalidInputStyle);
     this.$txtPasswordConfirm.removeClass(invalidInputStyle);
 
     this.$txtFirstName.val("");
     this.$txtLastName.val("");
+    this.$txtUsername.val("");
     this.$txtEmailAddress.val("");
     this.$txtPassword.val("");
     this.$txtPasswordConfirm.val("");
@@ -63,6 +67,7 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
     var me = this,
         firstName = me.$txtFirstName.val().trim(),
         lastName = me.$txtLastName.val().trim(),
+        username = me.$txtUsername.val().trim(),
         emailAddress = me.$txtEmailAddress.val().trim(),
         password = me.$txtPassword.val().trim(),
         passwordConfirm = me.$txtPasswordConfirm.val().trim(),
@@ -74,6 +79,7 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
     me.$ctnErr.removeClass().addClass(invisibleStyle);
     me.$txtFirstName.removeClass(invalidInputStyle);
     me.$txtLastName.removeClass(invalidInputStyle);
+    me.$txtUsername.removeClass(invalidInputStyle);
     me.$txtEmailAddress.removeClass(invalidInputStyle);
     me.$txtPassword.removeClass(invalidInputStyle);
     me.$txtPasswordConfirm.removeClass(invalidInputStyle);
@@ -106,12 +112,12 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
         return;
     }
 
- /*   if (!me.emailAddressIsValid(emailAddress)) {
+    if (!me.emailAddressIsValid(emailAddress)) {
 		runtimePopup("Opps, E-Mail-Adresse ungültig.");
         me.$txtEmailAddress.addClass(invalidInputStyle);
         return;
     }
-*/
+
     if (!me.passwordsMatch(password, passwordConfirm)) {
 		runtimePopup("Passwörter stimmen nicht überein.");
         me.$txtPassword.addClass(invalidInputStyle);
@@ -129,12 +135,12 @@ BookIt.SignUpController.prototype.onSignupCommand = function () {
     }
 
 
-    callurl="http://" + window.location.host + BookIt.Settings.signUpUrl+"?"+"email=" + emailAddress + "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm
+    callurl="http://" + window.location.host + BookIt.Settings.signUpUrl+"?"+"email=" + emailAddress + "&firstName=" + firstName + "&username=" + username + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm
     
     $.ajax({
         type: 'POST',
         url: callurl,
-        data: "email=" + emailAddress + "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm,
+        data: "email=" + emailAddress+ "&firstName=" + firstName + "&lastName=" + lastName + "&password=" + password + "&passwordConfirm=" + passwordConfirm + "&username=" + username  ,
         success: function (resp) {
 		runtimePopup("Benutzer erfolgreich angelegt, Sie können sich nun einloggen.",function(){$.mobile.changePage("#page-signin")});
                 return;
