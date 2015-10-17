@@ -170,3 +170,12 @@ $(document).on('click', '#power_supply_update', function(e){
         }
     });
 });
+$.datepicker.setDefaults({
+    beforeShow: function ( input, inst ) {
+        setTimeout(function(){
+            inst.dpDiv.css({
+                zIndex: 10000
+            });
+        })
+    }
+});
