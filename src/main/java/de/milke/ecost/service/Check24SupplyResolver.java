@@ -137,7 +137,9 @@ public class Check24SupplyResolver {
 
 	Elements results = resultDocument.select("div[class=c24Frame]")
 		.select("div[class=c24FrameContent]").select("div[class=c24FrameContentPadding]")
-		.select("div[class=c24-content]").get(2).select("div[class=c24-result-row-energy]");
+		.select("div[class=c24-content]");
+	System.out.println(results.toString());
+	results = results.select("div[class=c24-result-row-energy]");
 	for (Element row : results) {
 
 	    Element iinput = row.select("div[class=c24-energy-result-row-detail c24-clearfix]")

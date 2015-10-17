@@ -38,7 +38,7 @@ BookIt.PowerController.prototype.onErfassenCommand = function () {
 		},
 		error : function(e) {
 			afterErfassenMsg = e.responseText;
-			runtimePopup(afterErfassenMsg)
+			runtimePopup(afterErfassenMsg);
 			console.log(e.message);
 			return;
 		}
@@ -127,29 +127,39 @@ $(document).on('click', '#power_supply_update', function(e){
 			// Add a new listview element
 			powerSupplylist = $('#power_supply_list')
 			powerSupplylist.empty();
-			powerSupplylist.append('<li>'
-			 + "<a href='" + resp[resp.length-1].url + " ' target='_blank'>"
-				+ "<p><strong>" + resp[resp.length-1].supply +"</strong></p>"
-				+ "<p>" + resp[resp.length-1].provider +"</p>"
-				+ "<p>Bewertungen: " + resp[resp.length-1].ratingCount+"</p>"
-				+ "<p>Weiterempfehlung: " + resp[resp.length-1].rating + "% </p>"
-				+ "<strong>" + resp[resp.length-1].price+ '€ </strong>'
-				+ "<a/>"
-				+ '</li>');
+			if(resp.length == 0)
+			{
+							runtimePopup("Es wurden keine Angebote zu den eingebenen Daten gefunden.");
+
+			}
+			else
+			{
+
 			
-			for ( var i in resp) {
-				if(i<resp.length-1)
-					{
 				powerSupplylist.append('<li>'
-					 + "<a href='" + resp[i].url + " ' target='_blank'>"
-						+ "<strong>" + resp[i].supply +"</strong>"
-						+ "<p>" + resp[i].provider +"</p>"
-						+ "<p>Bewertungen: " + resp[i].ratingCount+"</p>"
-						+ "<p>Weiterempfehlung: " + resp[i].rating + "% </p>"
-						+ "<strong>" + resp[i].price+ '€ </strong>'
-						+ "<a/>"
-						+ '</li>');
-					}
+				 + "<a href='" + resp[resp.length-1].url + " ' target='_blank'>"
+					+ "<p><strong>" + resp[resp.length-1].supply +"</strong></p>"
+					+ "<p>" + resp[resp.length-1].provider +"</p>"
+					+ "<p>Bewertungen: " + resp[resp.length-1].ratingCount+"</p>"
+					+ "<p>Weiterempfehlung: " + resp[resp.length-1].rating + "% </p>"
+					+ "<strong>" + resp[resp.length-1].price+ '€ </strong>'
+					+ "<a/>"
+					+ '</li>');
+
+				for ( var i in resp) {
+					if(i<resp.length-1)
+						{
+					powerSupplylist.append('<li>'
+						 + "<a href='" + resp[i].url + " ' target='_blank'>"
+							+ "<strong>" + resp[i].supply +"</strong>"
+							+ "<p>" + resp[i].provider +"</p>"
+							+ "<p>Bewertungen: " + resp[i].ratingCount+"</p>"
+							+ "<p>Weiterempfehlung: " + resp[i].rating + "% </p>"
+							+ "<strong>" + resp[i].price+ '€ </strong>'
+							+ "<a/>"
+							+ '</li>');
+						}
+				}
 			}
 			// Enhance new listview element
 			powerSupplylist.listview('refresh');
