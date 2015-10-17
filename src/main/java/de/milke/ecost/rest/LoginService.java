@@ -17,6 +17,7 @@
 package de.milke.ecost.rest;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -29,11 +30,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
 import de.milke.ecost.dao.AccountDao;
+import de.milke.ecost.model.User;
 
 /**
  * JAX-RS Example
@@ -82,9 +86,23 @@ public class LoginService {
 
     @POST
     @Path("/login")
-    public String registerget(@QueryParam("username") String username,
+    @Produces("application/json")
+    public User registerget(@QueryParam("username") String username,
 	    @QueryParam("password") String password) {
 	LOG.info("logged in - username: " + username + "password: " + password);
-	return "successfully logged in " + username;
+	User user = getUser();
+	return user;
+    }
+
+    private Principal principal;
+
+    @Context
+    public void setSecurityContext(SecurityContext context) {
+	LOG.info(context.getUserPrincipal().getName() + ": getMeasure last ");
+	principal = context.getUserPrincipal();
+    }
+
+    protected User getUser() {
+	return accountDao.getByUsername(principal.getName());
     }
 }

@@ -1,4 +1,25 @@
 var BookIt = BookIt || {};
+var usr=null;
+$( document ).on( "pagebeforeshow" , function(e, data) {
+   if(usr ==null)
+   {
+      callurl="http://" + window.location.host + BookIt.Settings.signInUrl;
+   	    $.ajax({
+        type: 'POST',
+        url: callurl,
+        success: function (resp) {
+        	  usr=resp;
+        },
+        error: function (e) {
+        	usr=null;
+        }
+    });
+   }
+});
+
+$("#nav-panel1").on("panelbeforeopen",function(){
+ $( ".box-profile-text" ).append('<strong>Menü</strong> <span class="subline">' + usr.firstName + " " + usr.lastName + '</span>');
+});
 
 $(document).on("pagebeforeshow","#info-main",function(event){
 		resp = $.ajax({

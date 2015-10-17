@@ -50,7 +50,7 @@ BookIt.SignInController.prototype.onSigninCommand = function () {
     });
     
 
-   callurl="http://" + window.location.host + BookIt.Settings.signInUrl
+   callurl="http://" + window.location.host + BookIt.Settings.signInUrl;
         resp =$.ajax({
         type: 'POST',
         url: callurl,
