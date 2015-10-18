@@ -25,6 +25,8 @@ BookIt.PowerController.prototype.onErfassenCommand = function () {
 	    var me = this, zaehlerStand = me.$zaehlerStand.val().trim(), zaehlerDatum = me.$zaehlerDatum
 			.val().trim(), invalidInput = false, invisibleStyle = "bi-invisible", invalidInputStyle = "bi-invalid-input";
 
+		var tep= 	$.datepicker.parseDate('dd.mm.yy', zaehlerDatum);
+		zaehlerDatum = tep.toJSON();
 	callurl = "http://" + window.location.host
 			+ BookIt.Settings.measurePowerURL + "?" + "measureValue="
 			+ zaehlerStand + "&measureDate=" + zaehlerDatum
@@ -37,9 +39,13 @@ BookIt.PowerController.prototype.onErfassenCommand = function () {
 			return;
 		},
 		error : function(e) {
-			afterErfassenMsg = e.responseText;
+			var afterErfassenMsg = e.responseText;
+			if(afterErfassenMsg.length == 0)
+			{
+				afterErfassenMsg="Ein unerwarteter Fehler ist aufgetreten."
+			}
 			runtimePopup(afterErfassenMsg);
-			console.log(e.message);
+			console.log(afterErfassenMsg);
 			return;
 		}
 	});
@@ -169,13 +175,4 @@ $(document).on('click', '#power_supply_update', function(e){
 			$.mobile.loading( "hide" );
         }
     });
-});
-$.datepicker.setDefaults({
-    beforeShow: function ( input, inst ) {
-        setTimeout(function(){
-            inst.dpDiv.css({
-                zIndex: 10000
-            });
-        })
-    }
 });

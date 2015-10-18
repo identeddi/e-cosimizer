@@ -18,7 +18,6 @@ package de.milke.ecost.rest;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -73,7 +72,7 @@ public class PowerService {
     @POST
     @Path("/measure")
     public void measure(@QueryParam("measureValue") Double measureValue,
-	    @QueryParam("measureDate") Date measureDate) throws GeneralException {
+	    @QueryParam("measureDate") DateParam measureDate) throws GeneralException {
 
 	if (measureValue == null) {
 	    String msg = getUser().getUsername() + ": measureValue ist: " + measureValue;
@@ -88,13 +87,13 @@ public class PowerService {
 
 	}
 	LOG.info(getUser().getUsername() + ": measureValue: " + measureValue + " measureDate"
-		+ measureDate);
+		+ measureDate.getDate());
 
 	// check measure valid
 
 	PowerMeasure powerMeasure = new PowerMeasure();
 	powerMeasure.setUser(getUser());
-	powerMeasure.setMeasureDate(measureDate);
+	powerMeasure.setMeasureDate(measureDate.getDate());
 	powerMeasure.setMeasureValue(measureValue);
 	powerMeasureDao.save(powerMeasure);
     }

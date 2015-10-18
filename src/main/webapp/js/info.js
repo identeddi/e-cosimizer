@@ -17,7 +17,7 @@ $( document ).on( "pagebeforeshow" , function(e, data) {
    }
 });
 
-$("#nav-panel1").on("panelbeforeopen",function(){
+$("#nav-panel").on("panelbeforeopen",function(){
  $( ".box-profile-text" ).append('<strong>Menü</strong> <span class="subline">' + usr.firstName + " " + usr.lastName + '</span>');
 });
 
@@ -66,6 +66,11 @@ $("#power-last").text("");
 	});
 
 
-
+    $(function () {
+        var tmp = $("body>[data-role='panel']");
+        tmp =tmp.panel();
+        tmp = tmp.find("ul");
+        tmp = tmp.listview();
+    });
 
 
