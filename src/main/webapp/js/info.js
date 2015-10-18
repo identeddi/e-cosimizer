@@ -66,11 +66,4 @@ $("#power-last").text("");
 	});
 
 
-    $(function () {
-        var tmp = $("body>[data-role='panel']");
-        tmp =tmp.panel();
-        tmp = tmp.find("ul");
-        tmp = tmp.listview();
-    });
-
 

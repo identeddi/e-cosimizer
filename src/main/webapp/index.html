@@ -33,44 +33,48 @@
 <script type="text/javascript" src="js/runtimePopup.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src="js/info.js"></script>
-
+	<script id="panel-init">
+		$(function() {
+			var panel = $( "body>[data-role='panel']" ).panel();
+	        tmp = panel.find("ul").listview();
+		});
+	</script>
 </head>
 
 <body>
-	<div data-role="panel" id="nav-panel" data-theme="a">
-			        
-			<div class="ui-panel-inner">
-				<div class="nd2-sidepanel-profile wow fadeInDown"
-					style="visibility: visible; animation-name: fadeInDown;">
-					<img class="profile-background"
-						src="img/background.jpeg">
-					<div class="row">
-						<div class="col-xs-4 center-xs">
-							<div class="box">
-								<img class="profile-thumbnail"
-									src="//lorempixel.com/200/200/people/4/">
-							</div>
-						</div>
-						<div class="col-xs-8">
-							<div class="box profile-text">
-								<strong>Menü</strong> <span class="subline">Super Power
-									User</span>
-							</div>
+	<div data-role="panel" id="nav-panel" data-theme="a" data-display="overlay">
+		        
+		<div class="ui-panel-inner">
+			<div class="nd2-sidepanel-profile wow fadeInDown"
+				style="visibility: visible; animation-name: fadeInDown;">
+				<img class="profile-background" src="img/background.jpeg">
+				<div class="row">
+					<div class="col-xs-4 center-xs">
+						<div class="box">
+							<img class="profile-thumbnail"
+								src="//lorempixel.com/200/200/people/4/">
 						</div>
 					</div>
-
-					    
+					<div class="col-xs-8">
+						<div class="box profile-text">
+							<strong>Menü</strong> <span class="subline">Super Power
+								User</span>
+						</div>
+					</div>
 				</div>
 
-				<ul data-role="listview" data-inset="true">
-					<li data-icon="false"><a href="#info-main"
-						data-transition="flip">Übersicht</a></li>
-					<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
-
-					<li data-icon="false"><a href="#page-index">Logout</a></li>
-				</ul>
+				    
 			</div>
-			    
+
+			<ul data-role="listview" data-inset="true">
+				<li data-icon="false"><a href="#info-main"
+					data-transition="flip">Übersicht</a></li>
+				<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
+
+				<li data-icon="false"><a href="#page-index">Logout</a></li>
+			</ul>
+		</div>
+		    
 		</div>
 		<!-- /panel -->
 

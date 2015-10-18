@@ -68,6 +68,9 @@ jQuery(function($) {
 		isRTL : false
 	};
 	$.datepicker.setDefaults($.datepicker.regional['de']);
+	$.mobile.changePage.defaults.allowSamePageTransition = true;
+	$.mobile.defaultPageTransition = "slide";
+
 });
 
 // End boilerplate code.
