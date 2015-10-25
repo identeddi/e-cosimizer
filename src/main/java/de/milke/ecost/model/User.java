@@ -55,6 +55,9 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
+    @Column
+    private String zipcode;
+
     @Column(unique = false)
     @JsonIgnore
     private String password;
@@ -120,6 +123,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
 	this.email = email;
+    }
+
+    public String getZipcode() {
+	return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+	this.zipcode = zipcode;
     }
 
 }

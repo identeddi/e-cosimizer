@@ -10,8 +10,7 @@
 
 <link rel="stylesheet"
 	href="http://cdn.rawgit.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.9/jquery.mobile.datepicker.css" />
-<link rel="stylesheet"
-	href="css/global.css" />
+<link rel="stylesheet" href="css/global.css" />
 
 <script src="lib/jquery/jquery-2.1.4.min.js"></script>
 <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script>
@@ -24,7 +23,10 @@
 <link rel="stylesheet" href="vendor/waves/waves.min.css" />
 <link rel="stylesheet" href="css/nativedroid2.css" />
 <script src="js/settings.js"></script>
+<script src="js/knockout.js"></script>
+<script src="js/knockout.mapping.js"></script>
 <script src="js/power-controller.js"></script>
+<script src="js/settings-controller.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/util.js"></script>
 <script src="js/api-messages.js"></script>
@@ -33,7 +35,7 @@
 <script type="text/javascript" src="js/runtimePopup.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src="js/info.js"></script>
-	<script id="panel-init">
+<script id="panel-init">
 		$(function() {
 			var panel = $( "body>[data-role='panel']" ).panel();
 	        tmp = panel.find("ul").listview();
@@ -42,7 +44,8 @@
 </head>
 
 <body>
-	<div data-role="panel" id="nav-panel" data-theme="a" data-display="overlay">
+	<div data-role="panel" id="nav-panel" data-theme="a"
+		data-display="overlay">
 		        
 		<div class="ui-panel-inner">
 			<div class="nd2-sidepanel-profile wow fadeInDown"
@@ -70,13 +73,13 @@
 				<li data-icon="false"><a href="#info-main"
 					data-transition="flip">Übersicht</a></li>
 				<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
-
+				<li data-icon="false"><a href="#settings_general">Einstellungen</a></li>
 				<li data-icon="false"><a href="#page-index">Logout</a></li>
 			</ul>
 		</div>
 		    
-		</div>
-		<!-- /panel -->
+	</div>
+	<!-- /panel -->
 
 
 	<div data-role="page" id="page-index">
@@ -113,9 +116,8 @@
 			<label for="txt-email">Benutzername</label> <input type="text"
 				name="txtmeusernae" id="txt-username" value=""> <label
 				for="txt-password">Passwort</label> <input type="password"
-				name="txt-password" id="txt-password" value="">
-			<a id="btn-submit"
-				data-role="button">Einloggen</a>
+				name="txt-password" id="txt-password" value=""> <a
+				id="btn-submit" data-role="button">Einloggen</a>
 			<p class="mc-top-margin-1-5">
 				<a href="begin-password-reset.html">Zugriff nicht möglich?</a>
 			</p>
@@ -138,9 +140,7 @@
 				for="txt-last-name">Nachname</label> <input type="text"
 				name="txt-last-name" id="txt-last-name" value=""> <label
 				for="txt-email-address">Email-Adresse</label> <input type="text"
-				name="txt-email-address" id="txt-email-address" value=""> 
-
-				<label
+				name="txt-email-address" id="txt-email-address" value=""> <label
 				for="txt-username">Benutzername</label> <input type="text"
 				name="txt-username" id="txt-username" value=""> <label
 				for="txt-password">Passwort</label> <input type="password"
@@ -154,7 +154,7 @@
 		<!-- /content -->
 	</div>
 
-	
+
 
 	<div data-role="page" data-title="Info" id="info-main">
 		<div data-role="header" data-position="fixed">
@@ -202,14 +202,17 @@
 			<div data-role="navbar">
 				<ul>
 					<li><a href="#page_power_aktuell" data-prefetch="true"
-						data-transition="fade" class="ui-btn-active">Aktuell</a></li>
+						data-transition="fade">Aktuell</a></li>
 					<li><a href="#page_power_verlauf" data-prefetch="true"
 						data-transition="fade">Verlauf</a></li>
-					<li><a href="#page_power_vertrag" data-prefetch="true"
-						data-transition="fade">Vertrag</a></li>
+					<li><a href="#page_power_contract" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Vertragsdaten</a></li>
+					<li><a href="#page_power_supply" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Angebote</a></li>
+
 				</ul>
 			</div>
-			<!-- /navbar -->
+						<!-- /navbar -->
 		</div>
 		<!-- /footer -->
 	</div>
@@ -239,19 +242,21 @@
 					<li><a href="#page_power_aktuell" data-prefetch="true"
 						data-transition="fade">Aktuell</a></li>
 					<li><a href="#page_power_verlauf" data-prefetch="true"
-						data-transition="fade" class="ui-btn-active">Verlauf</a></li>
-					<li><a href="#page_power_vertrag" data-prefetch="true"
-						data-transition="fade">Vertrag</a></li>
+						data-transition="fade">Verlauf</a></li>
+					<li><a href="#page_power_contract" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Vertragsdaten</a></li>
+					<li><a href="#page_power_supply" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Angebote</a></li>
 
 				</ul>
 			</div>
-			<!-- /navbar -->
+					<!-- /navbar -->
 		</div>
 		<!-- /footer -->
 	</div>
 	<!-- /page -->
 
-	<div id="page_power_vertrag" data-role="page" data-title="Vetrag">
+	<div id="page_power_supply" data-role="page" data-title="Angebote">
 		<div data-role="header" data-position="fixed">
 			<a href="#nav-panel"
 				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
@@ -261,11 +266,11 @@
 
 
 		<div class="ui-content" role="main">
-			<label>PLZ</label> <input type="text" id="zipcode_supply"
-				name="PLZ" placeholder="53773"> 
-			<label>Verbrauch (kWh)</label> <input type="text" id="consumption_supply"
-				name="Verbrauch" placeholder="3.500"> 
-			<a id="power_supply_update" data-role="button">Angebote abfragen</a>
+			<label>PLZ</label> <input type="text" id="zipcode_supply" name="PLZ"
+				placeholder="53773"   > <label>Verbrauch (kWh)</label> <input
+				type="text" id="consumption_supply" name="Verbrauch"
+				placeholder="3.500"> <a id="power_supply_update"
+				data-role="button">Angebote abfragen</a>
 			<ul id="power_supply_list" data-role="listview" data-dividertheme="e"
 				data-filter="true" data-filter-theme="a">
 			</ul>
@@ -280,8 +285,10 @@
 						data-transition="fade">Aktuell</a></li>
 					<li><a href="#page_power_verlauf" data-prefetch="true"
 						data-transition="fade">Verlauf</a></li>
-					<li><a href="#page_power_vertrag" data-prefetch="true"
-						data-transition="fade" class="ui-btn-active">Vertrag</a></li>
+					<li><a href="#page_power_contract" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Vertragsdaten</a></li>
+					<li><a href="#page_power_supply" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Angebote</a></li>
 
 				</ul>
 			</div>
@@ -290,6 +297,86 @@
 		<!-- /footer -->
 	</div>
 	<!-- /page -->
+
+	<div id="page_power_contract" data-role="page" data-title="Vetrag">
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
+			<h1>Vetragsdaten</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+			<label>Anbieter</label> <input type="text"
+				name="Abieter" data-bind="value: providerName" />
+			<label>Vetrag</label> <input type="text"
+				name="Vetrag" data-bind="value: contractName" />
+			<label>Vertragsende</label> <input
+				type="text" data-role="date" class="auto-adjustable-date" data-bind="datepicker: dueDate" />
+			<label>Kündingungsfrist[Tage]</label> <input type="text" data-bind="value: cancellationPeriod" />
+				<a data-role="button" id="save_contract_settings"  >Speichern</a>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#page_power_aktuell" data-prefetch="true"
+						data-transition="fade">Aktuell</a></li>
+					<li><a href="#page_power_verlauf" data-prefetch="true"
+						data-transition="fade">Verlauf</a></li>
+					<li><a href="#page_power_contract" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Vertragsdaten</a></li>
+					<li><a href="#page_power_supply" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Angebote</a></li>
+
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+
+	<div id="settings_general" data-role="page" data-title="Strom">
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
+			<h1>Einstellungen</h1>
+		</div>
+		<!-- /header -->
+
+
+		<div class="ui-content" role="main">
+			<label>Vorname</label> <input type="text" id="settings_firstname"
+				name="Vorname" data-bind="value: firstName" />
+				<label>Nachname</label> <input type="text"
+				name="Nachname" data-bind="value: lastName" />
+				<label>E-Mail</label> <input type="text"
+				name="E-Mail" data-bind="value: email" />
+<!-- 				<label>PLZ</label> <input type="text" -->
+<!-- 				name="PLZ" data-bind="value: zipcode" />				 -->
+				<label>Benutzername</label> <input type="text"
+				name="username" data-bind="value: username" />
+				<a data-role="button" id="save_general_settings"  >Speichern</a>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#settings_general" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Allgemein</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
 
 	<div id="power_zaehler_erfassen" data-role="page" data-dialog="true"
 		data-transition="pop" data-close-btn="right"
@@ -302,7 +389,8 @@
 			<label>Zähler-Stand</label> <input type="text" id="zaehler_stand"
 				name="Zähler-Stand"> <label>Erfassungs-Datum</label> <input
 				type="text" data-role="date" class="auto-adjustable-date"
-				id="zaehler_datum" name="Erfassungs-Datum" data-date-format="dd.mm.yy">
+				id="zaehler_datum" name="Erfassungs-Datum"
+				data-date-format="dd.mm.yy">
 			<button type="button" id="power_zaehler_erfassen_btn-submit">OK</button>
 		</div>
 		<!-- /content -->

@@ -24,50 +24,35 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-import de.milke.ecost.model.Role;
+import de.milke.ecost.model.Contract;
 import de.milke.ecost.model.User;
 
 @Stateless
-public class AccountDao {
-    static Logger LOG = Logger.getLogger(AccountDao.class.getName());
+public class ContractDao {
+    static Logger LOG = Logger.getLogger(ContractDao.class.getName());
 
     @Inject
     private EntityManager em;
 
-    public User findById(Long id) {
-	return em.find(User.class, id);
+    public Contract findById(Long id) {
+	return em.find(Contract.class, id);
     }
 
-    public User persist(User user) {
+    public Contract persist(Contract user) {
 	em.persist(user);
 	return user;
     }
 
-    public Role getOrCreateRole(String roleName) {
-	TypedQuery<Role> lQuery = em.createQuery("from Role where rolename=:rolename", Role.class);
-	lQuery.setParameter("rolename", roleName);
+    public Contract getByUser(User user) {
+	TypedQuery<Contract> lQuery = em.createQuery("from Contract where user=:user",
+		Contract.class);
+	lQuery.setParameter("user", user);
 	try {
-	    Role foundRole = lQuery.getSingleResult();
-	    return foundRole;
+	    Contract contract = lQuery.getSingleResult();
+	    LOG.info("Contract found " + contract.getContractName());
+	    return contract;
 	} catch (NoResultException e) {
-	    Role role = new Role(roleName);
-
-	    em.persist(role);
-	    return role;
-
-	}
-
-    }
-
-    public User getByUsername(String userName) {
-	TypedQuery<User> lQuery = em.createQuery("from User where username=:username", User.class);
-	lQuery.setParameter("username", userName);
-	try {
-	    User usr = lQuery.getSingleResult();
-	    LOG.info("User found " + usr.getUsername());
-	    return usr;
-	} catch (NoResultException e) {
-	    LOG.info("User not found " + userName);
+	    LOG.info("Contract not found " + user.getUsername());
 
 	    return null;
 
@@ -75,15 +60,22 @@ public class AccountDao {
 
     }
 
-    public User save(User user) {
+    public Contract save(Contract contract) {
 
-	if (user.getId() == null || user.getId() == 0) {
-	    em.persist(user);
+	if (contract.getId() == null || contract.getId() == 0) {
+	    em.persist(contract);
 
 	} else {
-	    em.merge(user);
+	    Contract attachedContract = findById(contract.getId());
+	    attachedContract.setCancellationPeriod(contract.getCancellationPeriod());
+	    attachedContract.setContractName(contract.getContractName());
+	    attachedContract.setContractType(contract.getContractType());
+	    attachedContract.setDueDate(contract.getDueDate());
+	    attachedContract.setNotification(contract.getNotification());
+	    attachedContract.setProviderName(contract.getProviderName());
+	    em.merge(contract);
 	}
-	return user;
+	return contract;
 
     }
 }

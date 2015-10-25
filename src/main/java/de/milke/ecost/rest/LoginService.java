@@ -27,8 +27,11 @@ import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -91,6 +94,31 @@ public class LoginService {
 	    @QueryParam("password") String password) {
 	LOG.info("logged in - username: " + username + "password: " + password);
 	User user = getUser();
+	return user;
+    }
+
+    @PUT
+    @Path("/login")
+    @Produces("application/json")
+    @Consumes("application/json")
+    public User updateUser(User usr) {
+	LOG.info("start update user - username: " + usr.getFirstName() + "password: "
+		+ usr.getLastName());
+	User user = getUser();
+	user.setFirstName(usr.getFirstName());
+	user.setLastName(usr.getLastName());
+	user.setEmail(usr.getEmail());
+	user.setZipcode(usr.getZipcode());
+	user = accountDao.save(user);
+	return user;
+    }
+
+    @GET
+    @Path("/login")
+    @Produces("application/json")
+    public User getLoggedInUser() {
+	User user = getUser();
+	LOG.info("getuser - username: " + user.getUsername() + "password: " + user.getPassword());
 	return user;
     }
 

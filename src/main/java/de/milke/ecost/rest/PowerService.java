@@ -26,8 +26,10 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -37,7 +39,9 @@ import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
 import de.milke.ecost.dao.AccountDao;
+import de.milke.ecost.dao.ContractDao;
 import de.milke.ecost.dao.PowerMeasureDao;
+import de.milke.ecost.model.Contract;
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.PowerSupply;
@@ -65,6 +69,9 @@ public class PowerService {
 
     @EJB
     PowerMeasureDao powerMeasureDao;
+
+    @EJB
+    ContractDao contractDao;
 
     @EJB
     Check24SupplyResolver check24SupplyResolver;
@@ -105,6 +112,26 @@ public class PowerService {
 
 	LOG.info(getUser().getUsername() + ": getMeasure");
 	return powerMeasureDao.getByUser(getUser());
+    }
+
+    @GET
+    @Path("/contract")
+    @Produces("application/json")
+    public Contract getContract() {
+
+	LOG.info(getUser().getUsername() + ": getMeasure");
+
+	return contractDao.getByUser(getUser());
+    }
+
+    @PUT
+    @Path("/contract")
+    @Consumes("application/json")
+    public Contract setContract(Contract contract) {
+
+	LOG.info(getUser().getUsername() + ": getContract");
+
+	return contractDao.save(contract);
     }
 
     @GET
