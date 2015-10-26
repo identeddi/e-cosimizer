@@ -60,8 +60,7 @@
 					</div>
 					<div class="col-xs-8">
 						<div class="box profile-text">
-							<strong>Menü</strong> <span class="subline">Super Power
-								User</span>
+							<strong>Menü</strong> <span class="subline" data-bind="text: fullUserName"></span>
 						</div>
 					</div>
 				</div>
@@ -267,9 +266,9 @@
 
 		<div class="ui-content" role="main">
 			<label>PLZ</label> <input type="text" id="zipcode_supply" name="PLZ"
-				placeholder="53773"   > <label>Verbrauch (kWh)</label> <input
+				placeholder="53773" data-bind="value: zipcode"> <label>Verbrauch (kWh)</label> <input
 				type="text" id="consumption_supply" name="Verbrauch"
-				placeholder="3.500"> <a id="power_supply_update"
+				placeholder="3.500" data-bind="value: consumption"> <a id="power_supply_update"
 				data-role="button">Angebote abfragen</a>
 			<ul id="power_supply_list" data-role="listview" data-dividertheme="e"
 				data-filter="true" data-filter-theme="a">
@@ -314,7 +313,7 @@
 				name="Vetrag" data-bind="value: contractName" />
 			<label>Vertragsende</label> <input
 				type="text" data-role="date" class="auto-adjustable-date" data-bind="datepicker: dueDate" />
-			<label>Kündingungsfrist[Tage]</label> <input type="text" data-bind="value: cancellationPeriod" />
+			<label>Kündigungsfrist[Tage]</label> <input type="text" data-bind="value: cancellationPeriod" />
 				<a data-role="button" id="save_contract_settings"  >Speichern</a>
 		</div>
 		<!-- /content -->
@@ -356,8 +355,8 @@
 				name="Nachname" data-bind="value: lastName" />
 				<label>E-Mail</label> <input type="text"
 				name="E-Mail" data-bind="value: email" />
-<!-- 				<label>PLZ</label> <input type="text" -->
-<!-- 				name="PLZ" data-bind="value: zipcode" />				 -->
+				<label>PLZ</label> <input type="text"
+				name="PLZ" data-bind="value: zipcode" />				
 				<label>Benutzername</label> <input type="text"
 				name="username" data-bind="value: username" />
 				<a data-role="button" id="save_general_settings"  >Speichern</a>

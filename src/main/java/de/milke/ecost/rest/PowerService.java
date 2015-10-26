@@ -127,6 +127,7 @@ public class PowerService {
     @PUT
     @Path("/contract")
     @Consumes("application/json")
+    @Produces("application/json")
     public Contract setContract(Contract contract) {
 
 	LOG.info(getUser().getUsername() + ": getContract");

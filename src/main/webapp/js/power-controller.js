@@ -125,8 +125,8 @@ $(document).delegate("#page_power_supply", "pagebeforeshow", function() {
 		type : 'GET',
 		url : BookIt.Settings.getUser,
 		success : function(resp) {
-			viewModel = ko.mapping.fromJS(resp);
-			ko.applyBindings(viewModel, $('#page_power_supply'));
+			powerSupplyModel.zipcode(resp.zipcode);
+			powerSupplyModel.consumption(4000);
 		},
 		error : function(e) {
 			$.mobile.loading("hide");
@@ -228,16 +228,14 @@ $(document)
 							});
 				});
 
-$(document).on("pagecreate", "#page_power_contract", function(event) {
-
-});
-
 $(document).delegate("#page_power_contract", "pagebeforeshow", function() {
 	$.ajax({
 		type : 'GET',
 		url : BookIt.Settings.powerContract,
 		success : function(resp) {
-			resp.dueDate = new Date();
+			if (resp.dueDate != null) {
+				resp.dueDate = new Date(resp.dueDate);
+			}
 			ko.mapping.fromJS(resp, contractModel);
 		},
 		error : function(e) {
@@ -253,7 +251,7 @@ $(document).on('click', '#save_contract_settings', function(e) {
 	var jsonString = JSON.stringify(jsobj);
 	$.ajax({
 		type : 'PUT',
-		url : BookIt.Settings.getUser,
+		url : BookIt.Settings.powerContract,
 		data : jsonString,
 		contentType : "application/json",
 		success : function(resp) {

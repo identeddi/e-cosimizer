@@ -40,6 +40,17 @@ function UserModel() {
 	self.zipcode = '';
 	self.username = '';
 }
+
+function PanelModel() {
+	self = this;
+	self.fullUserName = '';
+}
+
+function PowerSupplyModel() {
+	self = this;
+	self.zipcode = '';
+	self.consumption = '';
+}
 function ContractModel() {
 	self = this;
 	self.providerName = '';
@@ -50,6 +61,7 @@ function ContractModel() {
 
 var userModel;
 var contractModel;
+var powerSupplyModel;
 ko.bindingHandlers.datepicker = {
 	init : function(element, valueAccessor, allBindingsAccessor) {
 		// initialize datepicker with some optional options
@@ -120,11 +132,27 @@ jQuery(function($) {
 
 	userModel = ko.mapping.fromJS(new UserModel());
 	contractModel = ko.mapping.fromJS(new ContractModel());
+	powerSupplyModel = ko.mapping.fromJS(new PowerSupplyModel());
+	panelModel = ko.mapping.fromJS(new PanelModel());
 	ko.applyBindings(userModel, $('#settings_general')[0]);
 	ko.applyBindings(contractModel, $('#page_power_contract')[0]);
+	ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
+	ko.applyBindings(panelModel, $('#nav-panel')[0]);
+
 	app.signupController = new BookIt.SignUpController();
 	app.signinController = new BookIt.SignInController();
 	app.powerController = new BookIt.PowerController();
+	$.ajax({
+		type : 'GET',
+		url : BookIt.Settings.getUser,
+		success : function(resp) {
+			panelModel.fullUserName(resp.firstName + ' ' + resp.lastName);
+
+		},
+		error : function(e) {
+			$.mobile.loading("hide");
+		}
+	});
 
 });
 
