@@ -65,11 +65,14 @@ $(document).on(
 					powerlist = $('#power_list')
 					powerlist.empty();
 					for ( var i in resp) {
-						powerlist.append('<li>' + "<p>Ablesedatum: "
+						var elem = '<li>' + "<p>Ablesedatum: "
 								+ toNiceDate(resp[i].measureDate) + "</p>"
 								+ "<p>Zählerstand: <strong>"
-								+ resp[i].measureValue + " kWh</strong></p>"
-								+ '</li>');
+								+ resp[i].measureValue + " kWh ("
+								+ resp[i].dataType + ') '
+								+ '</strong></p></li>';
+						powerlist.append(elem);
+
 					}
 					// Enhance new listview element
 					powerlist.listview('refresh');

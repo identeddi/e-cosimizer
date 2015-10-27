@@ -19,45 +19,32 @@ package de.milke.ecost.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Entity
-@XmlRootElement
-@Table(name = "PowerMeasure")
-public class PowerMeasure implements Serializable {
+public class PowerMeasureHistoryDTO implements Serializable {
     /** Default value included to remove warning. Remove or modify at will. **/
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
     private Date measureDate;
 
-    @Column(nullable = false)
     private Double measureValue;
 
-    @JsonIgnore
-    @ManyToOne
+    private String dataType = "";
+
     private User user;
 
-    public PowerMeasure() {
+    public PowerMeasureHistoryDTO() {
 	super();
     }
 
-    public PowerMeasure(User user, Date measureDate, Double measureValue) {
-	this.user = user;
+    public PowerMeasureHistoryDTO(Long id, Date measureDate, Double measureValue, String dataType,
+	    User user) {
+	super();
+	this.id = id;
 	this.measureDate = measureDate;
 	this.measureValue = measureValue;
+	this.dataType = dataType;
+	this.user = user;
     }
 
     public Long getId() {
@@ -90,6 +77,14 @@ public class PowerMeasure implements Serializable {
 
     public void setMeasureValue(Double measureValue) {
 	this.measureValue = measureValue;
+    }
+
+    public String getDataType() {
+	return dataType;
+    }
+
+    public void setDataType(String dataType) {
+	this.dataType = dataType;
     }
 
 }
