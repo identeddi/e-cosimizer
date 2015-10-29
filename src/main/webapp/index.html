@@ -266,9 +266,13 @@
 
 		<div class="ui-content" role="main">
 			<label>PLZ</label> <input type="text" id="zipcode_supply" name="PLZ"
-				placeholder="53773" data-bind="value: zipcode"> <label>Verbrauch (kWh)</label> <input
+				placeholder="53773" data-bind="value: zipcode">
+				
+				Bisheriger Verbrauch <span data-bind="text: passedConsumption"></span> kWh.
+				 <label>Verbrauch (kWh)</label> 
+				<input
 				type="text" id="consumption_supply" name="Verbrauch"
-				placeholder="3.500" data-bind="value: consumption"> <a id="power_supply_update"
+				placeholder="3.500" data-bind="value: estimatedConsumption"> <a id="power_supply_update"
 				data-role="button">Angebote abfragen</a>
 			<ul id="power_supply_list" data-role="listview" data-dividertheme="e"
 				data-filter="true" data-filter-theme="a">

@@ -9,3 +9,4 @@ BookIt.Settings.measurePowerURL = "/rest/power/measure";
 BookIt.Settings.getLastPowerMeasureURL = "/rest/power/measure/last";
 BookIt.Settings.getAllPowerMeasureURL = "/rest/power/measure";
 BookIt.Settings.getAllPowerSuppliesURL = "/rest/power/supplies";
+BookIt.Settings.getSupplySettings = "/rest/power/supply/settings";

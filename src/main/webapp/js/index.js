@@ -49,7 +49,8 @@ function PanelModel() {
 function PowerSupplyModel() {
 	self = this;
 	self.zipcode = '';
-	self.consumption = '';
+	self.estimatedConsumption = '';
+	self.passedConsumption = '';
 }
 function ContractModel() {
 	self = this;

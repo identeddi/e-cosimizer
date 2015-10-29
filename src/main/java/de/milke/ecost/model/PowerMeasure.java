@@ -92,4 +92,10 @@ public class PowerMeasure implements Serializable {
 	this.measureValue = measureValue;
     }
 
+    @Override
+    public String toString() {
+	// TODO Auto-generated method stub
+	return measureDate + " abgelesen, Wert: " + measureValue;
+    }
+
 }

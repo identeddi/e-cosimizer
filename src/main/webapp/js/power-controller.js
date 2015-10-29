@@ -65,12 +65,23 @@ $(document).on(
 					powerlist = $('#power_list')
 					powerlist.empty();
 					for ( var i in resp) {
-						var elem = '<li>' + "<p>Ablesedatum: "
-								+ toNiceDate(resp[i].measureDate) + "</p>"
+						var elem = '<li>'
+								+ "<p>Ablesedatum: "
+								+ toNiceDate(resp[i].measureDate)
+								+ "</p>"
 								+ "<p>Zählerstand: <strong>"
-								+ resp[i].measureValue + " kWh ("
-								+ resp[i].dataType + ') '
-								+ '</strong></p></li>';
+								+ resp[i].measureValue
+								+ " kWh ("
+								+ resp[i].dataType
+								+ ') '
+								+ '</strong></p>'
+								+ "<p>Tagesverbrauch: <strong>"
+								+ Number(resp[i].dailyConsumption).toFixed(2)
+								+ " kWh </strong></p>"
+								+ '<p>Kalkulierter Jahresverbrauch <strong>'
+								+ Number(resp[i].dailyConsumption * 365)
+										.toFixed(2) + ' ' + '</strong></p>'
+								+ '</li>';
 						powerlist.append(elem);
 
 					}
@@ -126,10 +137,10 @@ $(document).delegate("#power_zaehler_erfassen", "pagebeforecreate", function() {
 $(document).delegate("#page_power_supply", "pagebeforeshow", function() {
 	$.ajax({
 		type : 'GET',
-		url : BookIt.Settings.getUser,
+		url : BookIt.Settings.getSupplySettings,
 		success : function(resp) {
-			powerSupplyModel.zipcode(resp.zipcode);
-			powerSupplyModel.consumption(4000);
+			ko.mapping.fromJS(resp, powerSupplyModel);
+
 		},
 		error : function(e) {
 			$.mobile.loading("hide");

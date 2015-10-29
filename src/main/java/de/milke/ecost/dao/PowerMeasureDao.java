@@ -16,8 +16,10 @@
  */
 package de.milke.ecost.dao;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,12 +27,17 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.PowerMeasure;
+import de.milke.ecost.model.PowerMeasureHistoryDTO;
 import de.milke.ecost.model.User;
 
 @Stateless
 public class PowerMeasureDao {
+    static Logger LOG = Logger.getLogger(PowerMeasureDao.class.getName());
 
     @Inject
     private EntityManager em;
@@ -102,5 +109,47 @@ public class PowerMeasureDao {
 		    "Keine Zählerdaten für den User " + user.getUsername() + " gefunden");
 	}
 
+    }
+
+    public List<PowerMeasureHistoryDTO> getMeasureHistory(User user) {
+	LOG.info(user.getUsername() + ": getMeasure");
+	List<PowerMeasure> listMeasures = getByUser(user);
+	List<PowerMeasureHistoryDTO> listHistory = new ArrayList<>();
+	for (int i = 0; i < listMeasures.size() - 1; i++) {
+	    PowerMeasure current = listMeasures.get(i + 1);
+	    PowerMeasure next = listMeasures.get(i);
+	    int currentYear = current.getMeasureDate().getYear();
+	    int nextYear = next.getMeasureDate().getYear();
+	    if (currentYear < nextYear) {
+		int days = Days.daysBetween(new DateTime(current.getMeasureDate()),
+			new DateTime(next.getMeasureDate())).getDays();
+		double consumptionPerDay = (next.getMeasureValue() - current.getMeasureValue())
+			/ days;
+
+		// estimated date
+		DateTime estimatedDate = new DateTime(1900 + next.getMeasureDate().getYear(), 1, 1,
+			0, 0);
+		int daysToEstimated = Days
+			.daysBetween(new DateTime(current.getMeasureDate()), estimatedDate)
+			.getDays();
+
+		int estimatedValue = (int) (consumptionPerDay * daysToEstimated);
+
+		listHistory.add(new PowerMeasureHistoryDTO(next.getId(), next.getMeasureDate(),
+			next.getMeasureValue(), "gemessen", user, consumptionPerDay));
+		listHistory.add(new PowerMeasureHistoryDTO(null, estimatedDate.toDate(),
+			(current.getMeasureValue() + estimatedValue), "geschätzt", user,
+			consumptionPerDay));
+	    }
+
+	}
+
+	if (listMeasures.size() > 0) {
+	    PowerMeasure current = listMeasures.get(listMeasures.size() - 1);
+	    listHistory.add(new PowerMeasureHistoryDTO(current.getId(), current.getMeasureDate(),
+		    current.getMeasureValue(), "gemessen", user, 0));
+
+	}
+	return listHistory;
     }
 }
