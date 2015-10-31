@@ -91,6 +91,10 @@ ko.bindingHandlers.datepicker = {
 		}
 	}
 };
+google.load('visualization', '1.1', {
+	'packages' : [ 'corechart' ]
+});
+
 app.initialize();
 jQuery(function($) {
 

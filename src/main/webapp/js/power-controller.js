@@ -35,14 +35,14 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 		url : callurl,
 		success : function() {
 			runtimePopup("Daten erfolgreich verbucht", function() {
-				$.mobile.changePage("#info-main")
+				$.mobile.changePage("#info-main");
 			});
 			return;
 		},
 		error : function(e) {
 			var afterErfassenMsg = e.responseText;
 			if (afterErfassenMsg.length == 0) {
-				afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten."
+				afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten.";
 			}
 			runtimePopup(afterErfassenMsg);
 			console.log(afterErfassenMsg);
@@ -52,17 +52,44 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 };
 
+$(document).on("pageshow", "#page_power_verlauf", function(event) {
+
+	drawChart();
+
+});
+
+function drawChart() {
+	var data = google.visualization.arrayToDataTable([
+			[ 'Jahr', 'Gasverbrauch', 'Stromverbrauch' ],
+			[ '2004', 1000, 400 ], [ '2005', 1170, 460 ],
+			[ '2006', 660, 1120 ], [ '2007', 1030, 540 ] ]);
+
+	var options = {
+		title : 'Company Performance',
+		curveType : 'function',
+		legend : {
+			position : 'bottom'
+		}
+	};
+
+	var chart = new google.visualization.LineChart(document
+			.getElementById('line'));
+
+	chart.draw(data, options);
+}
+
 $(document).on(
 		"pagebeforeshow",
 		"#page_power_verlauf",
 		function(event) {
-
+			drawChart();
 			resp = $.ajax({
 				type : 'GET',
 				url : BookIt.Settings.getAllPowerMeasureURL,
 				success : function(resp) {
+					// drawChart();
 					// Add a new listview element
-					powerlist = $('#power_list')
+					powerlist = $('#power_list');
 					powerlist.empty();
 					for ( var i in resp) {
 						var elem = '<li>'
@@ -158,14 +185,9 @@ $(document)
 						text : "Angebote werden abgerufen",
 						textVisible : true
 					});
-
-					var powerSupply = $("#page_power_supply");
-					var powerSupplyZipcode = $("#zipcode_supply", powerSupply);
-					var powerSupplyConsumption = $("#consumption_supply",
-							powerSupply);
-
-					var powerSupplyVal = powerSupplyConsumption.val().trim();
-					var powerSupplyZipcode = powerSupplyZipcode.val().trim();
+					var powerSupplyVal = powerSupplyModel
+							.estimatedConsumption();
+					var powerSupplyZipcode = powerSupplyModel.zipcode();
 					$
 							.ajax({
 								type : 'GET',
@@ -176,7 +198,7 @@ $(document)
 								},
 								success : function(resp) {
 									// Add a new listview element
-									powerSupplylist = $('#power_supply_list')
+									powerSupplylist = $('#power_supply_list');
 									powerSupplylist.empty();
 									if (resp.length == 0) {
 										runtimePopup("Es wurden keine Angebote zu den eingebenen Daten gefunden.");
