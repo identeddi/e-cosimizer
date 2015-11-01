@@ -18,6 +18,7 @@ package de.milke.ecost.rest;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -37,6 +38,12 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
+
+import com.google.visualization.datasource.base.TypeMismatchException;
+import com.google.visualization.datasource.datatable.ColumnDescription;
+import com.google.visualization.datasource.datatable.DataTable;
+import com.google.visualization.datasource.datatable.value.ValueType;
+import com.google.visualization.datasource.render.JsonRenderer;
 
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.dao.ContractDao;
@@ -113,6 +120,42 @@ public class PowerService {
     public List<PowerMeasureHistoryDTO> getMeasure() {
 
 	return powerMeasureDao.getMeasureHistory(getUser());
+    }
+
+    @GET
+    @Path("/measuregraph")
+    public String getMeasureGraphData() {
+	// Create a data table,
+	DataTable data = new DataTable();
+	ArrayList cd = new ArrayList();
+	cd.add(new ColumnDescription("Monat", ValueType.TEXT, "Jahr"));
+	cd.add(new ColumnDescription("2014", ValueType.NUMBER, "2014"));
+	cd.add(new ColumnDescription("2015", ValueType.NUMBER, "2015"));
+	cd.add(new ColumnDescription("2016", ValueType.NUMBER, "2016"));
+	cd.add(new ColumnDescription("2017", ValueType.NUMBER, "2017"));
+	cd.add(new ColumnDescription("2018", ValueType.NUMBER, "2018"));
+
+	data.addColumns(cd);
+
+	// Fill the data table.
+	try {
+	    List<PowerMeasureHistoryDTO> histList = powerMeasureDao.getMeasureHistory(getUser());
+
+	    String[] months = { "Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep",
+		    "Okt", "Nov", "Dez" };
+
+	    for (String mon : months) {
+		data.addRowFromValues(mon, Math.random() * 300, Math.random() * 200,
+			Math.random() * 400, Math.random() * 500, Math.random() * 100);
+	    }
+
+	} catch (TypeMismatchException e) {
+	    System.out.println("Invalid type!");
+	}
+	String json = JsonRenderer.renderDataTable(data, true, false).toString();
+	;
+	System.out.println(json);
+	return json;
     }
 
     @GET

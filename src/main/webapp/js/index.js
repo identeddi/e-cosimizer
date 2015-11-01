@@ -34,7 +34,7 @@ var app = {
 
 function UserModel() {
 	self = this;
-	self.firstName = 'Test';
+	self.firstName = '';
 	self.lastName = '';
 	self.email = '';
 	self.zipcode = '';
@@ -57,7 +57,7 @@ function ContractModel() {
 	self.providerName = '';
 	self.contractName = '';
 	self.dueDate = '';
-	self.cancellationPeriod = 14;
+	self.cancellationPeriod = 0;
 }
 
 var userModel;

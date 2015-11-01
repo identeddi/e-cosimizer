@@ -52,23 +52,13 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 };
 
-$(document).on("pageshow", "#page_power_verlauf", function(event) {
 
-	// drawChart();
+function drawChart(jsonData) {
 
-});
-
-function drawChart() {
-	var data = google.visualization.arrayToDataTable([
-			[ 'Jahr', '2014', '2015' ], [ 'Jan', 300, 400 ],
-			[ 'Feb', 320, 330 ], [ 'Mär', 400, 250 ], [ 'Apr', 300, 260 ],
-			[ 'Mai', 250, 200 ], [ 'Jun', 200, 150 ], [ 'Jul', 200, 100 ],
-			[ 'Aug', 200, 110 ], [ 'Sep', 220, null ], [ 'Okt', 250, null ],
-			[ 'Nov', 300, null ], [ 'Dez', 330, null ] ]);
+	var data = new google.visualization.DataTable(jsonData);
 
 	var options = {
-		title : 'Jahresverbrauch',
-		curveType : 'function',
+		title : '5-Jahresverbrauch',
 		legend : {
 			position : 'bottom'
 		}
@@ -84,7 +74,14 @@ $(document).on(
 		"pagebeforeshow",
 		"#page_power_verlauf",
 		function(event) {
-			drawChart();
+			resp = $.ajax({
+				type : 'GET',
+				url : BookIt.Settings.getAllPowerMeasureGraph,
+				success : function(resp) {
+					drawChart(resp);
+				}
+			}).responseText;
+
 			resp = $.ajax({
 				type : 'GET',
 				url : BookIt.Settings.getAllPowerMeasureURL,
