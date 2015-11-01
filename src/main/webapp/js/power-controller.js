@@ -54,18 +54,20 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 $(document).on("pageshow", "#page_power_verlauf", function(event) {
 
-	drawChart();
+	// drawChart();
 
 });
 
 function drawChart() {
 	var data = google.visualization.arrayToDataTable([
-			[ 'Jahr', 'Gasverbrauch', 'Stromverbrauch' ],
-			[ '2004', 1000, 400 ], [ '2005', 1170, 460 ],
-			[ '2006', 660, 1120 ], [ '2007', 1030, 540 ] ]);
+			[ 'Jahr', '2014', '2015' ], [ 'Jan', 300, 400 ],
+			[ 'Feb', 320, 330 ], [ 'Mär', 400, 250 ], [ 'Apr', 300, 260 ],
+			[ 'Mai', 250, 200 ], [ 'Jun', 200, 150 ], [ 'Jul', 200, 100 ],
+			[ 'Aug', 200, 110 ], [ 'Sep', 220, null ], [ 'Okt', 250, null ],
+			[ 'Nov', 300, null ], [ 'Dez', 330, null ] ]);
 
 	var options = {
-		title : 'Company Performance',
+		title : 'Jahresverbrauch',
 		curveType : 'function',
 		legend : {
 			position : 'bottom'
