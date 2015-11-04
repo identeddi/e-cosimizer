@@ -1,8 +1,8 @@
 /*
- * JBoss, Home of Professional Open Source
  * Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
  * contributors by the @authors tag. See the copyright.txt in the
  * distribution for a full listing of individual contributors.
+ * JBoss, Home of Professional Open Source
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -151,5 +151,41 @@ public class PowerMeasureDao {
 
 	}
 	return listHistory;
+    }
+
+    public Integer getEstimationForDate(Date searchDate, User user) {
+	// TODO Auto-generated method stub
+	System.out.println("searchDate: " + searchDate);
+	List<PowerMeasure> listMeasures = getByUser(user);
+	DateTime estimatedDate = new DateTime(searchDate.getYear() + 1900,
+		searchDate.getMonth() + 1, searchDate.getDate(), 0, 0);
+	System.out.println("estimatedDate: " + estimatedDate);
+
+	for (int i = 0; i < listMeasures.size() - 1; i++) {
+
+	    if (listMeasures.get(i).getMeasureDate().after(searchDate)) {
+		PowerMeasure current = listMeasures.get(i + 1);
+		PowerMeasure next = listMeasures.get(i);
+		int days = Days.daysBetween(new DateTime(current.getMeasureDate()),
+			new DateTime(next.getMeasureDate())).getDays();
+		double consumptionPerDay = (next.getMeasureValue() - current.getMeasureValue())
+			/ days;
+
+		// estimated date
+		// int daysToEstimated = Days
+		// .daysBetween(new DateTime(current.getMeasureDate()),
+		// estimatedDate)
+		// .getDays();
+
+		int estimatedValue = (int) (consumptionPerDay * 30);
+		LOG.info(user.getUsername() + ": estimation for " + searchDate + " Value: "
+			+ estimatedValue);
+
+		return estimatedValue;
+	    }
+
+	}
+	LOG.info(user.getUsername() + ": no estimation found for " + searchDate);
+	return null;
     }
 }

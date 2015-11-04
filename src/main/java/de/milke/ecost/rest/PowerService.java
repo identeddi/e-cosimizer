@@ -19,6 +19,7 @@ package de.milke.ecost.rest;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -128,12 +129,17 @@ public class PowerService {
 	// Create a data table,
 	DataTable data = new DataTable();
 	ArrayList cd = new ArrayList();
+
+	Date now = new Date();
+	int currentYear = now.getYear() + 1900;
+	int numYears = 3;
+
 	cd.add(new ColumnDescription("Monat", ValueType.TEXT, "Jahr"));
-	cd.add(new ColumnDescription("2014", ValueType.NUMBER, "2014"));
-	cd.add(new ColumnDescription("2015", ValueType.NUMBER, "2015"));
-	cd.add(new ColumnDescription("2016", ValueType.NUMBER, "2016"));
-	cd.add(new ColumnDescription("2017", ValueType.NUMBER, "2017"));
-	cd.add(new ColumnDescription("2018", ValueType.NUMBER, "2018"));
+	for (int i = 0; i < numYears; i++) {
+	    cd.add(new ColumnDescription((currentYear - i) + "", ValueType.NUMBER,
+		    (currentYear - i) + ""));
+
+	}
 
 	data.addColumns(cd);
 
@@ -144,16 +150,20 @@ public class PowerService {
 	    String[] months = { "Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep",
 		    "Okt", "Nov", "Dez" };
 
-	    for (String mon : months) {
-		data.addRowFromValues(mon, Math.random() * 300, Math.random() * 200,
-			Math.random() * 400, Math.random() * 500, Math.random() * 100);
+	    for (int i = 0; i < months.length; i++) {
+		Integer[] yearMeasure = new Integer[numYears];
+		for (int j = 0; j < numYears; j++) {
+		    Date searchDate = new Date(currentYear - 1900 - j, i, 1);
+		    yearMeasure[j] = powerMeasureDao.getEstimationForDate(searchDate, getUser());
+		}
+		data.addRowFromValues(months[i], yearMeasure[1], yearMeasure[2]);
 	    }
 
 	} catch (TypeMismatchException e) {
 	    System.out.println("Invalid type!");
 	}
 	String json = JsonRenderer.renderDataTable(data, true, false).toString();
-	;
+
 	System.out.println(json);
 	return json;
     }
