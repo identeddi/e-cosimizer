@@ -69,12 +69,9 @@
 				    
 			</div>
 
-			<ul data-role="listview" data-inset="true">
+			<ul data-role="listview" data-inset="true"  data-bind="foreach: panelitems">
 				<li data-icon="false"><a href="#info-main"
-					data-transition="flip">Übersicht</a></li>
-				<li data-icon="false"><a href="#page_power_aktuell">Strom</a></li>
-				<li data-icon="false"><a href="#settings_general">Einstellungen</a></li>
-				<li data-icon="false"><a href="#page-index">Logout</a></li>
+					data-transition="flip" data-bind="attr : {href : url}"><span data-bind="text: caption"> </span></a></li>
 			</ul>
 		</div>
 		    

@@ -46,6 +46,12 @@ function PanelModel() {
 	self.fullUserName = '';
 }
 
+function MenuModel() {
+	self = this;
+	self.caption = '';
+	self.url = '';
+}
+
 function PowerSupplyModel() {
 	self = this;
 	self.zipcode = '';
@@ -63,6 +69,26 @@ function ContractModel() {
 var userModel;
 var contractModel;
 var powerSupplyModel;
+
+var link1 = ko.observable({
+	caption : 'Übersicht',
+	url : '#info-main'
+});
+var link2 = ko.observable({
+	caption : 'Strom',
+	url : '#page_power_aktuell'
+});
+var link3 = ko.observable({
+	caption : 'Einstellungen',
+	url : '#settings_general'
+});
+var link4 = ko.observable({
+	caption : 'Ausloggen',
+	url : '#page-index'
+});
+
+var panelitems = ko.observableArray([ link1, link2, link3, link4 ]);
+
 ko.bindingHandlers.datepicker = {
 	init : function(element, valueAccessor, allBindingsAccessor) {
 		// initialize datepicker with some optional options
@@ -91,47 +117,52 @@ ko.bindingHandlers.datepicker = {
 		}
 	}
 };
-google.load('visualization', '1.1', {
-	'packages' : [ 'corechart' ]
-});
+if (typeof google != 'undefined') {
+	google.load('visualization', '1.1', {
+		'packages' : [ 'corechart' ]
+	});
+}
 
 app.initialize();
 jQuery(function($) {
 
-	$.datepicker.regional['de'] = {
-		clearText : 'löschen',
-		clearStatus : 'aktuelles Datum löschen',
-		closeText : 'schließen',
-		closeStatus : 'ohne Änderungen schließen',
-		prevText : '<zurück',
-		prevStatus : 'letzten Monat zeigen',
-		nextText : 'Vor>',
-		nextStatus : 'nächsten Monat zeigen',
-		changeMonth : true,
-		changeYear : true,
-		currentText : 'heute',
-		currentStatus : '',
-		monthNames : [ 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-				'Juli', 'August', 'September', 'Oktober', 'November',
-				'Dezember' ],
-		monthNamesShort : [ 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul',
-				'Aug', 'Sep', 'Okt', 'Nov', 'Dez' ],
-		monthStatus : 'anderen Monat anzeigen',
-		yearStatus : 'anderes Jahr anzeigen',
-		weekHeader : 'Wo',
-		weekStatus : 'Woche des Monats',
-		dayNames : [ 'Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
-				'Freitag', 'Samstag' ],
-		dayNamesShort : [ 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' ],
-		dayNamesMin : [ 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' ],
-		dayStatus : 'Setze DD als ersten Wochentag',
-		dateStatus : 'Wähle D, M d',
-		dateFormat : 'dd.mm.yy',
-		firstDay : 1,
-		initStatus : 'Wähle ein Datum',
-		isRTL : false
-	};
-	$.datepicker.setDefaults($.datepicker.regional['de']);
+	if (typeof $.datepicker != 'undefined') {
+		$.datepicker.regional['de'] = {
+			clearText : 'löschen',
+			clearStatus : 'aktuelles Datum löschen',
+			closeText : 'schließen',
+			closeStatus : 'ohne Änderungen schließen',
+			prevText : '<zurück',
+			prevStatus : 'letzten Monat zeigen',
+			nextText : 'Vor>',
+			nextStatus : 'nächsten Monat zeigen',
+			changeMonth : true,
+			changeYear : true,
+			currentText : 'heute',
+			currentStatus : '',
+			monthNames : [ 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+					'Juli', 'August', 'September', 'Oktober', 'November',
+					'Dezember' ],
+			monthNamesShort : [ 'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+					'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez' ],
+			monthStatus : 'anderen Monat anzeigen',
+			yearStatus : 'anderes Jahr anzeigen',
+			weekHeader : 'Wo',
+			weekStatus : 'Woche des Monats',
+			dayNames : [ 'Sonntag', 'Montag', 'Dienstag', 'Mittwoch',
+					'Donnerstag', 'Freitag', 'Samstag' ],
+			dayNamesShort : [ 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' ],
+			dayNamesMin : [ 'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa' ],
+			dayStatus : 'Setze DD als ersten Wochentag',
+			dateStatus : 'Wähle D, M d',
+			dateFormat : 'dd.mm.yy',
+			firstDay : 1,
+			initStatus : 'Wähle ein Datum',
+			isRTL : false
+		};
+
+		$.datepicker.setDefaults($.datepicker.regional['de']);
+	}
 	$.mobile.changePage.defaults.allowSamePageTransition = true;
 	$.mobile.defaultPageTransition = "slide";
 
@@ -140,10 +171,11 @@ jQuery(function($) {
 	powerSupplyModel = ko.mapping.fromJS(new PowerSupplyModel());
 	panelModel = ko.mapping.fromJS(new PanelModel());
 	ko.applyBindings(userModel, $('#settings_general')[0]);
-	ko.applyBindings(contractModel, $('#page_power_contract')[0]);
-	ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
+	// ko.applyBindings(contractModel, $('#page_power_contract')[0]);
+	// ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
 	ko.applyBindings(panelModel, $('#nav-panel')[0]);
-
+	// ko.applyBindings(new MenuModel());
+	// panelitems = ko.observableArray([]);
 	app.signupController = new BookIt.SignUpController();
 	app.signinController = new BookIt.SignInController();
 	app.powerController = new BookIt.PowerController();
@@ -156,6 +188,17 @@ jQuery(function($) {
 		},
 		error : function(e) {
 			$.mobile.loading("hide");
+		}
+	});
+	callurl = "http://" + window.location.host + BookIt.Settings.getMenuList;
+	$.ajax({
+		type : 'GET',
+		url : callurl,
+		success : function(resp) {
+			// ko.mapping.fromJS(resp, panelitems);
+		},
+		error : function(e) {
+			usr = null;
 		}
 	});
 

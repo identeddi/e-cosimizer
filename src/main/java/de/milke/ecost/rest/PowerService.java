@@ -51,6 +51,7 @@ import de.milke.ecost.dao.ContractDao;
 import de.milke.ecost.dao.PowerMeasureDao;
 import de.milke.ecost.model.Contract;
 import de.milke.ecost.model.GeneralException;
+import de.milke.ecost.model.MenuItemDTO;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.PowerMeasureHistoryDTO;
 import de.milke.ecost.model.PowerSupply;
@@ -121,6 +122,19 @@ public class PowerService {
     public List<PowerMeasureHistoryDTO> getMeasure() {
 
 	return powerMeasureDao.getMeasureHistory(getUser());
+    }
+
+    @GET
+    @Path("/menulist")
+    @Produces("application/json")
+    public List<MenuItemDTO> getMenuItems() {
+
+	List<MenuItemDTO> listMenuItems = new ArrayList<>();
+	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main"));
+	listMenuItems.add(new MenuItemDTO("Strom", "#page_power_aktuell"));
+	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general"));
+	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index"));
+	return listMenuItems;
     }
 
     @GET

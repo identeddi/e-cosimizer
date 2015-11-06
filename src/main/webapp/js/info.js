@@ -17,9 +17,6 @@ $( document ).on( "pagebeforeshow" , function(e, data) {
    }
 });
 
-$("#nav-panel").on("panelbeforeopen",function(){
- $( ".box-profile-text" ).append('<strong>Menü</strong> <span class="subline">' + usr.firstName + " " + usr.lastName + '</span>');
-});
 
 $(document).on("pagebeforeshow","#info-main",function(event){
 		resp = $.ajax({
