@@ -49,7 +49,7 @@
 		data-display="overlay">
 		        
 		<div class="ui-panel-inner">
-			<div class="nd2-sidepanel-profile wow fadeInDown"
+			<div  id="nav-panel-profile" class="nd2-sidepanel-profile wow fadeInDown"
 				style="visibility: visible; animation-name: fadeInDown;">
 				<img class="profile-background" src="img/background.jpeg">
 				<div class="row">
@@ -68,11 +68,12 @@
 
 				    
 			</div>
-
-			<ul data-role="listview" data-inset="true"  data-bind="foreach: panelitems">
-				<li data-icon="false"><a href="#info-main"
-					data-transition="flip" data-bind="attr : {href : url}"><span data-bind="text: caption"> </span></a></li>
-			</ul>
+			<div id="nav-panel-list" >
+				<ul data-role="listview" data-inset="true"  data-bind="foreach: panelitems">
+					<li data-icon="false"><a href="#info-main"
+						data-transition="flip" data-bind="attr : {href : url}"><span data-bind="text: caption"> </span></a></li>
+				</ul>
+			</div>
 		</div>
 		    
 	</div>

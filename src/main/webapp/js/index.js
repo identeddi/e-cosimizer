@@ -87,7 +87,7 @@ var link4 = ko.observable({
 	url : '#page-index'
 });
 
-var panelitems = ko.observableArray([ link1, link2, link3, link4 ]);
+var panelitems;// = ko.observableArray([ link1, link2, link3, link4 ]);
 
 ko.bindingHandlers.datepicker = {
 	init : function(element, valueAccessor, allBindingsAccessor) {
@@ -171,11 +171,13 @@ jQuery(function($) {
 	powerSupplyModel = ko.mapping.fromJS(new PowerSupplyModel());
 	panelModel = ko.mapping.fromJS(new PanelModel());
 	ko.applyBindings(userModel, $('#settings_general')[0]);
+	panelitems = ko.mapping.fromJS([]);
 	// ko.applyBindings(contractModel, $('#page_power_contract')[0]);
 	// ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
-	ko.applyBindings(panelModel, $('#nav-panel')[0]);
+	ko.applyBindings(panelModel, $('#nav-panel-profile')[0]);
+	ko.applyBindings(panelitems, $('#nav-panel-list')[0]);
+
 	// ko.applyBindings(new MenuModel());
-	// panelitems = ko.observableArray([]);
 	app.signupController = new BookIt.SignUpController();
 	app.signinController = new BookIt.SignInController();
 	app.powerController = new BookIt.PowerController();
@@ -195,7 +197,7 @@ jQuery(function($) {
 		type : 'GET',
 		url : callurl,
 		success : function(resp) {
-			// ko.mapping.fromJS(resp, panelitems);
+			ko.mapping.fromJS(resp, panelitems);
 		},
 		error : function(e) {
 			usr = null;
