@@ -69,6 +69,7 @@ function ContractModel() {
 var userModel;
 var contractModel;
 var powerSupplyModel;
+var powerType = 2;
 
 var link1 = ko.observable({
 	caption : 'Übersicht',

@@ -33,7 +33,7 @@ import org.joda.time.Days;
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.PowerMeasureHistoryDTO;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.PowerMeasureType;
 
 @Stateless
 public class PowerMeasureDao {
@@ -51,17 +51,18 @@ public class PowerMeasureDao {
 	return Power;
     }
 
-    public List<PowerMeasure> getByUser(User user) {
+    public List<PowerMeasure> getByType(PowerMeasureType powerMeasureType) {
 	TypedQuery<PowerMeasure> lQuery = em.createQuery(
-		"from PowerMeasure where user=:user order by measureDate desc", PowerMeasure.class);
-	lQuery.setParameter("user", user);
+		"from PowerMeasure where powerMeasureType=:powerMeasureType order by measureDate desc",
+		PowerMeasure.class);
+	lQuery.setParameter("powerMeasureType", powerMeasureType);
 	return lQuery.getResultList();
 
     }
 
     public PowerMeasure save(PowerMeasure power) throws GeneralException {
 
-	List<PowerMeasure> listPM = getByUser(power.getUser());
+	List<PowerMeasure> listPM = getByType(power.getPowerMeasureType());
 
 	if (power.getMeasureDate().after(new Date())) {
 	    // Ablesung höher aber Datum jünger, Fehler
@@ -95,25 +96,25 @@ public class PowerMeasureDao {
 
     }
 
-    public PowerMeasure getLastByUser(User user) throws GeneralException {
+    public PowerMeasure getLastByType(PowerMeasureType powerMeasureType) throws GeneralException {
 
 	try {
 	    TypedQuery<PowerMeasure> lQuery = em.createQuery(
-		    "from PowerMeasure where user=:user order by measureDate desc",
+		    "from PowerMeasure where powerMeasureType=:powerMeasureType order by measureDate desc",
 		    PowerMeasure.class);
-	    lQuery.setParameter("user", user);
+	    lQuery.setParameter("powerMeasureType", powerMeasureType);
 	    lQuery.setMaxResults(1);
 	    return lQuery.getSingleResult();
 	} catch (NoResultException e) {
-	    throw new GeneralException(
-		    "Keine Zählerdaten für den User " + user.getUsername() + " gefunden");
+	    throw new GeneralException("Keine Zählerdaten für den Typ "
+		    + powerMeasureType.getTypeName() + " gefunden");
 	}
 
     }
 
-    public List<PowerMeasureHistoryDTO> getMeasureHistory(User user) {
-	LOG.info(user.getUsername() + ": getMeasure");
-	List<PowerMeasure> listMeasures = getByUser(user);
+    public List<PowerMeasureHistoryDTO> getMeasureHistory(PowerMeasureType powerMeasureType) {
+	LOG.info(powerMeasureType.getUser().getUsername() + ": getMeasure");
+	List<PowerMeasure> listMeasures = getByType(powerMeasureType);
 	List<PowerMeasureHistoryDTO> listHistory = new ArrayList<>();
 	for (int i = 0; i < listMeasures.size() - 1; i++) {
 	    PowerMeasure current = listMeasures.get(i + 1);
@@ -136,9 +137,9 @@ public class PowerMeasureDao {
 		int estimatedValue = (int) (consumptionPerDay * daysToEstimated);
 
 		listHistory.add(new PowerMeasureHistoryDTO(next.getId(), next.getMeasureDate(),
-			next.getMeasureValue(), "gemessen", user, consumptionPerDay));
+			next.getMeasureValue(), "gemessen", powerMeasureType, consumptionPerDay));
 		listHistory.add(new PowerMeasureHistoryDTO(null, estimatedDate.toDate(),
-			(current.getMeasureValue() + estimatedValue), "geschätzt", user,
+			(current.getMeasureValue() + estimatedValue), "geschätzt", powerMeasureType,
 			consumptionPerDay));
 	    }
 
@@ -147,16 +148,16 @@ public class PowerMeasureDao {
 	if (listMeasures.size() > 0) {
 	    PowerMeasure current = listMeasures.get(listMeasures.size() - 1);
 	    listHistory.add(new PowerMeasureHistoryDTO(current.getId(), current.getMeasureDate(),
-		    current.getMeasureValue(), "gemessen", user, 0));
+		    current.getMeasureValue(), "gemessen", powerMeasureType, 0));
 
 	}
 	return listHistory;
     }
 
-    public Integer getEstimationForDate(Date searchDate, User user) {
+    public Integer getEstimationForDate(Date searchDate, PowerMeasureType powerMeasureType) {
 	// TODO Auto-generated method stub
 	System.out.println("searchDate: " + searchDate);
-	List<PowerMeasure> listMeasures = getByUser(user);
+	List<PowerMeasure> listMeasures = getByType(powerMeasureType);
 	DateTime estimatedDate = new DateTime(searchDate.getYear() + 1900,
 		searchDate.getMonth() + 1, searchDate.getDate(), 0, 0);
 	System.out.println("estimatedDate: " + estimatedDate);
@@ -178,14 +179,15 @@ public class PowerMeasureDao {
 		// .getDays();
 
 		int estimatedValue = (int) (consumptionPerDay * 30);
-		LOG.info(user.getUsername() + ": estimation for " + searchDate + " Value: "
-			+ estimatedValue);
+		LOG.info(powerMeasureType.getUser().getUsername() + ": estimation for " + searchDate
+			+ " Value: " + estimatedValue);
 
 		return estimatedValue;
 	    }
 
 	}
-	LOG.info(user.getUsername() + ": no estimation found for " + searchDate);
+	LOG.info(powerMeasureType.getUser().getUsername() + ": no estimation found for "
+		+ searchDate);
 	return null;
     }
 }

@@ -27,8 +27,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @XmlRootElement
 @Table(name = "PowerMeasure")
@@ -46,16 +44,15 @@ public class PowerMeasure implements Serializable {
     @Column(nullable = false)
     private Double measureValue;
 
-    @JsonIgnore
-    @ManyToOne
-    private User user;
+    @ManyToOne(optional = false)
+    private PowerMeasureType powerMeasureType;
 
     public PowerMeasure() {
 	super();
     }
 
-    public PowerMeasure(User user, Date measureDate, Double measureValue) {
-	this.user = user;
+    public PowerMeasure(PowerMeasureType powerMeasureType, Date measureDate, Double measureValue) {
+	this.powerMeasureType = powerMeasureType;
 	this.measureDate = measureDate;
 	this.measureValue = measureValue;
     }
@@ -76,12 +73,12 @@ public class PowerMeasure implements Serializable {
 	this.measureDate = measureDate;
     }
 
-    public User getUser() {
-	return user;
+    public PowerMeasureType getPowerMeasureType() {
+	return powerMeasureType;
     }
 
-    public void setUser(User user) {
-	this.user = user;
+    public void setPowerMeasureType(PowerMeasureType powerMeasureType) {
+	this.powerMeasureType = powerMeasureType;
     }
 
     public Double getMeasureValue() {

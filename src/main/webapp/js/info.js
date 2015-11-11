@@ -21,7 +21,7 @@ $( document ).on( "pagebeforeshow" , function(e, data) {
 $(document).on("pagebeforeshow","#info-main",function(event){
 		resp = $.ajax({
 	    type: 'GET',
-	    url: BookIt.Settings.getLastPowerMeasureURL,
+	    url: BookIt.Settings.getLastPowerMeasureURL.replace("%TYPEID%",powerType),
 	            success: function (resp) {
 	            	console.log(resp);
 if(resp != null && resp.measureDate != null &&

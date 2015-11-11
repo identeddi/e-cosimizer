@@ -18,48 +18,60 @@ package de.milke.ecost.model;
 
 import java.io.Serializable;
 
-public class MenuItemDTO implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@XmlRootElement
+@Table(name = "PowerMeasureType")
+public class PowerMeasureType implements Serializable {
     /** Default value included to remove warning. Remove or modify at will. **/
     private static final long serialVersionUID = 1L;
 
-    String caption;
-    String url;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    PowerMeasureType powerMeasureType;
+    @Column(nullable = false)
+    private String typeName;
 
-    public MenuItemDTO() {
+    @JsonIgnore
+    @ManyToOne
+    private User user;
+
+    public PowerMeasureType() {
 	super();
     }
 
-    public MenuItemDTO(String caption, String url, PowerMeasureType powerMeasureType) {
-	super();
-	this.caption = caption;
-	this.url = url;
-	this.powerMeasureType = powerMeasureType;
+    public Long getId() {
+	return id;
     }
 
-    public String getCaption() {
-	return caption;
+    public void setId(Long id) {
+	this.id = id;
     }
 
-    public void setCaption(String caption) {
-	this.caption = caption;
+    public String getTypeName() {
+	return typeName;
     }
 
-    public String getUrl() {
-	return url;
+    public void setTypeName(String typeName) {
+	this.typeName = typeName;
     }
 
-    public void setUrl(String url) {
-	this.url = url;
+    public User getUser() {
+	return user;
     }
 
-    public PowerMeasureType getPowerMeasureType() {
-	return powerMeasureType;
-    }
-
-    public void setPowerMeasureType(PowerMeasureType powerMeasureType) {
-	this.powerMeasureType = powerMeasureType;
+    public void setUser(User user) {
+	this.user = user;
     }
 
 }

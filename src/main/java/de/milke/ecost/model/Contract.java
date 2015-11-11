@@ -56,8 +56,8 @@ public class Contract implements Serializable {
     @Column
     private Boolean notification;
 
-    @ManyToOne
-    private User user;
+    @ManyToOne(optional = false)
+    private PowerMeasureType powerMeasureType;
 
     public Contract() {
 	super();
@@ -119,12 +119,12 @@ public class Contract implements Serializable {
 	this.notification = notification;
     }
 
-    public User getUser() {
-	return user;
+    public PowerMeasureType getPowerMeasureType() {
+	return powerMeasureType;
     }
 
-    public void setUser(User user) {
-	this.user = user;
+    public void setPowerMeasureType(PowerMeasureType powerMeasureType) {
+	this.powerMeasureType = powerMeasureType;
     }
 
 }

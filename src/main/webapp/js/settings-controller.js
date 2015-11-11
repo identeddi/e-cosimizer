@@ -21,8 +21,9 @@ BookIt.SettingsController.prototype.onErfassenCommand = function() {
 	var tep = $.datepicker.parseDate('dd.mm.yy', zaehlerDatum);
 	zaehlerDatum = tep.toJSON();
 	callurl = "http://" + window.location.host
-			+ BookIt.Settings.measurePowerURL + "?" + "measureValue="
-			+ zaehlerStand + "&measureDate=" + zaehlerDatum
+			+ BookIt.Settings.measurePowerURL.replace("%TYPEID%", powerType)
+			+ "?" + "measureValue=" + zaehlerStand + "&measureDate="
+			+ zaehlerDatum
 
 	$.ajax({
 		type : 'POST',

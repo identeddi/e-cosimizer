@@ -25,7 +25,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import de.milke.ecost.model.Contract;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.PowerMeasureType;
 
 @Stateless
 public class ContractDao {
@@ -43,16 +43,16 @@ public class ContractDao {
 	return user;
     }
 
-    public Contract getByUser(User user) {
-	TypedQuery<Contract> lQuery = em.createQuery("from Contract where user=:user",
-		Contract.class);
-	lQuery.setParameter("user", user);
+    public Contract getByType(PowerMeasureType powerMeasureType) {
+	TypedQuery<Contract> lQuery = em.createQuery(
+		"from Contract where powerMeasureType=:powerMeasureType", Contract.class);
+	lQuery.setParameter("powerMeasureType", powerMeasureType);
 	try {
 	    Contract contract = lQuery.getSingleResult();
 	    LOG.info("Contract found " + contract.getContractName());
 	    return contract;
 	} catch (NoResultException e) {
-	    LOG.info("Contract not found " + user.getUsername());
+	    LOG.info("Contract not found " + powerMeasureType.getTypeName());
 
 	    return null;
 

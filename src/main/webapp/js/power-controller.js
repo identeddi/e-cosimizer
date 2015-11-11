@@ -27,8 +27,9 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 	var tep = $.datepicker.parseDate('dd.mm.yy', zaehlerDatum);
 	zaehlerDatum = tep.toJSON();
 	callurl = "http://" + window.location.host
-			+ BookIt.Settings.measurePowerURL + "?" + "measureValue="
-			+ zaehlerStand + "&measureDate=" + zaehlerDatum
+			+ BookIt.Settings.measurePowerURL.replace("%TYPEID%", powerType)
+			+ "?" + "measureValue=" + zaehlerStand + "&measureDate="
+			+ zaehlerDatum
 
 	$.ajax({
 		type : 'POST',
@@ -52,22 +53,22 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 };
 
-
 function drawChart(jsonData) {
+	if (typeof google != 'undefined') {
+		var data = new google.visualization.DataTable(jsonData);
 
-	var data = new google.visualization.DataTable(jsonData);
+		var options = {
+			title : '5-Jahresverbrauch',
+			legend : {
+				position : 'bottom'
+			}
+		};
 
-	var options = {
-		title : '5-Jahresverbrauch',
-		legend : {
-			position : 'bottom'
-		}
-	};
+		var chart = new google.visualization.LineChart(document
+				.getElementById('line'));
 
-	var chart = new google.visualization.LineChart(document
-			.getElementById('line'));
-
-	chart.draw(data, options);
+		chart.draw(data, options);
+	}
 }
 
 $(document).on(
@@ -76,7 +77,8 @@ $(document).on(
 		function(event) {
 			resp = $.ajax({
 				type : 'GET',
-				url : BookIt.Settings.getAllPowerMeasureGraph,
+				url : BookIt.Settings.getAllPowerMeasureGraph.replace(
+						"%TYPEID%", powerType),
 				success : function(resp) {
 					drawChart(resp);
 				}
@@ -84,7 +86,8 @@ $(document).on(
 
 			resp = $.ajax({
 				type : 'GET',
-				url : BookIt.Settings.getAllPowerMeasureURL,
+				url : BookIt.Settings.getAllPowerMeasureURL.replace("%TYPEID%",
+						powerType),
 				success : function(resp) {
 					// drawChart();
 					// Add a new listview element
@@ -128,7 +131,8 @@ $(document).on(
 			resp = $
 					.ajax({
 						type : 'GET',
-						url : BookIt.Settings.getLastPowerMeasureURL,
+						url : BookIt.Settings.getLastPowerMeasureURL.replace(
+								"%TYPEID%", powerType),
 						success : function(resp) {
 							console.log(resp);
 							if (resp != null && resp.measureDate != null
@@ -163,7 +167,7 @@ $(document).delegate("#power_zaehler_erfassen", "pagebeforecreate", function() {
 $(document).delegate("#page_power_supply", "pagebeforeshow", function() {
 	$.ajax({
 		type : 'GET',
-		url : BookIt.Settings.getSupplySettings,
+		url : BookIt.Settings.getSupplySettings.replace("%TYPEID%", powerType),
 		success : function(resp) {
 			ko.mapping.fromJS(resp, powerSupplyModel);
 
@@ -190,7 +194,8 @@ $(document)
 					$
 							.ajax({
 								type : 'GET',
-								url : BookIt.Settings.getAllPowerSuppliesURL,
+								url : BookIt.Settings.getAllPowerSuppliesURL
+										.replace("%TYPEID%", powerType),
 								data : {
 									zipcode : powerSupplyZipcode,
 									consumption : powerSupplyVal
@@ -266,7 +271,7 @@ $(document)
 $(document).delegate("#page_power_contract", "pagebeforeshow", function() {
 	$.ajax({
 		type : 'GET',
-		url : BookIt.Settings.powerContract,
+		url : BookIt.Settings.powerContract.replace("%TYPEID%", powerType),
 		success : function(resp) {
 			if (resp.dueDate != null) {
 				resp.dueDate = new Date(resp.dueDate);
@@ -286,7 +291,7 @@ $(document).on('click', '#save_contract_settings', function(e) {
 	var jsonString = JSON.stringify(jsobj);
 	$.ajax({
 		type : 'PUT',
-		url : BookIt.Settings.powerContract,
+		url : BookIt.Settings.powerContract.replace("%TYPEID%", powerType),
 		data : jsonString,
 		contentType : "application/json",
 		success : function(resp) {

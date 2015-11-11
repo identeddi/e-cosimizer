@@ -33,6 +33,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -49,11 +50,13 @@ import com.google.visualization.datasource.render.JsonRenderer;
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.dao.ContractDao;
 import de.milke.ecost.dao.PowerMeasureDao;
+import de.milke.ecost.dao.PowerMeasureTypeDao;
 import de.milke.ecost.model.Contract;
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.MenuItemDTO;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.PowerMeasureHistoryDTO;
+import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.PowerSupply;
 import de.milke.ecost.model.SupplySettingsDTO;
 import de.milke.ecost.model.User;
@@ -82,16 +85,20 @@ public class PowerService {
     PowerMeasureDao powerMeasureDao;
 
     @EJB
+    PowerMeasureTypeDao powerMeasureTypeDao;
+
+    @EJB
     ContractDao contractDao;
 
     @EJB
     Check24SupplyResolver check24SupplyResolver;
 
     @POST
-    @Path("/measure")
-    public void measure(@QueryParam("measureValue") Double measureValue,
+    @Path("/type/{powerMeasureType}/measure")
+    public void measure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
+	    @QueryParam("powerMeasureType") Double measureValue,
 	    @QueryParam("measureDate") DateParam measureDate) throws GeneralException {
-
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 	if (measureValue == null) {
 	    String msg = getUser().getUsername() + ": measureValue ist: " + measureValue;
 	    LOG.info(msg);
@@ -110,18 +117,20 @@ public class PowerService {
 	// check measure valid
 
 	PowerMeasure powerMeasure = new PowerMeasure();
-	powerMeasure.setUser(getUser());
+	powerMeasure.setPowerMeasureType(powerMeasureType);
 	powerMeasure.setMeasureDate(measureDate.getDate());
 	powerMeasure.setMeasureValue(measureValue);
 	powerMeasureDao.save(powerMeasure);
     }
 
     @GET
-    @Path("/measure")
+    @Path("/type/{powerMeasureType}/measure")
     @Produces("application/json")
-    public List<PowerMeasureHistoryDTO> getMeasure() {
+    public List<PowerMeasureHistoryDTO> getMeasure(
+	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
-	return powerMeasureDao.getMeasureHistory(getUser());
+	return powerMeasureDao.getMeasureHistory(powerMeasureType);
     }
 
     @GET
@@ -130,16 +139,21 @@ public class PowerService {
     public List<MenuItemDTO> getMenuItems() {
 
 	List<MenuItemDTO> listMenuItems = new ArrayList<>();
-	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main"));
-	listMenuItems.add(new MenuItemDTO("Strom", "#page_power_aktuell"));
-	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general"));
-	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index"));
+	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main", null));
+	for (PowerMeasureType powerMeasureType : powerMeasureTypeDao.getByUser(getUser())) {
+	    listMenuItems.add(new MenuItemDTO(powerMeasureType.getTypeName(), "#page_power_aktuell",
+		    powerMeasureType));
+	}
+	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general", null));
+	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index", null));
 	return listMenuItems;
     }
 
     @GET
-    @Path("/measuregraph")
-    public String getMeasureGraphData() {
+    @Path("/type/{powerMeasureType}/measuregraph")
+    public String getMeasureGraphData(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+
 	// Create a data table,
 	DataTable data = new DataTable();
 	ArrayList cd = new ArrayList();
@@ -159,7 +173,8 @@ public class PowerService {
 
 	// Fill the data table.
 	try {
-	    List<PowerMeasureHistoryDTO> histList = powerMeasureDao.getMeasureHistory(getUser());
+	    List<PowerMeasureHistoryDTO> histList = powerMeasureDao
+		    .getMeasureHistory(powerMeasureType);
 
 	    String[] months = { "Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep",
 		    "Okt", "Nov", "Dez" };
@@ -168,7 +183,8 @@ public class PowerService {
 		Integer[] yearMeasure = new Integer[numYears];
 		for (int j = 0; j < numYears; j++) {
 		    Date searchDate = new Date(currentYear - 1900 - j, i, 1);
-		    yearMeasure[j] = powerMeasureDao.getEstimationForDate(searchDate, getUser());
+		    yearMeasure[j] = powerMeasureDao.getEstimationForDate(searchDate,
+			    powerMeasureType);
 		}
 		data.addRowFromValues(months[i], yearMeasure[1], yearMeasure[2]);
 	    }
@@ -183,56 +199,67 @@ public class PowerService {
     }
 
     @GET
-    @Path("/contract")
+    @Path("/type/{powerMeasureType}/contract")
     @Produces("application/json")
-    public Contract getContract() {
+    public Contract getContract(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
 	LOG.info(getUser().getUsername() + ": getMeasure");
 
-	return contractDao.getByUser(getUser());
+	return contractDao.getByType(powerMeasureType);
     }
 
     @PUT
-    @Path("/contract")
+    @Path("/type/{powerMeasureType}/contract")
     @Consumes("application/json")
     @Produces("application/json")
-    public Contract setContract(Contract contract) {
+    public Contract setContract(Contract contract,
+	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
+	contract.setPowerMeasureType(powerMeasureType);
 	LOG.info(getUser().getUsername() + ": getContract");
 
 	return contractDao.save(contract);
     }
 
     @GET
-    @Path("/measure/last")
+    @Path("/type/{powerMeasureType}/measure/last")
     @Produces("application/json")
-    public PowerMeasure getLastMeasure(@Context HttpServletRequest request)
-	    throws GeneralException {
+    public PowerMeasure getLastMeasure(@Context HttpServletRequest request,
+	    @PathParam("powerMeasureType") Long powerMeasureTypeId) throws GeneralException {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
 	LOG.info(request.toString());
 	LOG.info(getUser().getUsername() + ": getMeasure last ");
 	LOG.info(getUser().getUsername() + ": session: " + request.getSession().getId());
-	return powerMeasureDao.getLastByUser(getUser());
+	return powerMeasureDao.getLastByType(powerMeasureType);
     }
 
     @GET
-    @Path("/supplies")
+    @Path("/type/{powerMeasureType}/supplies")
     @Produces("application/json")
-    public List<PowerSupply> getPowerSupplies(@QueryParam("zipcode") int zipCode,
-	    @QueryParam("consumption") int consumption) throws GeneralException, IOException {
+    public List<PowerSupply> getPowerSupplies(
+	    @PathParam("powerMeasureType") Long powerMeasureTypeId,
+	    @QueryParam("zipcode") int zipCode, @QueryParam("consumption") int consumption)
+		    throws GeneralException, IOException {
 	return check24SupplyResolver.getPowerSupplies(zipCode, consumption);
     }
 
     @GET
-    @Path("/supply/settings")
+    @Path("/type/{powerMeasureType}/supply/settings")
     @Produces("application/json")
-    public SupplySettingsDTO getSupplySettings() throws GeneralException, IOException {
+    public SupplySettingsDTO getSupplySettings(
+	    @PathParam("powerMeasureType") Long powerMeasureTypeId)
+		    throws GeneralException, IOException {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+
 	String zipcode = null;
 	Integer estimatedConsumtion = null;
 	Integer passedConsumtion = null;
 
 	zipcode = getUser().getZipcode();
-	for (PowerMeasureHistoryDTO hist : powerMeasureDao.getMeasureHistory(getUser())) {
+	for (PowerMeasureHistoryDTO hist : powerMeasureDao.getMeasureHistory(powerMeasureType)) {
 	    passedConsumtion = (int) (hist.getDailyConsumption() * 365);
 	    estimatedConsumtion = (int) (passedConsumtion * 1.1);
 	    break;

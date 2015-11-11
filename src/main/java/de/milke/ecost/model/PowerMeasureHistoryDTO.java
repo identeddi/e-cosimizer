@@ -32,20 +32,20 @@ public class PowerMeasureHistoryDTO implements Serializable {
 
     private String dataType = "";
 
-    private User user;
+    private PowerMeasureType powerMeasureType;
 
     public PowerMeasureHistoryDTO() {
 	super();
     }
 
     public PowerMeasureHistoryDTO(Long id, Date measureDate, Double measureValue, String dataType,
-	    User user, double dailyConsumption) {
+	    PowerMeasureType powerMeasureType, double dailyConsumption) {
 	super();
 	this.id = id;
 	this.measureDate = measureDate;
 	this.measureValue = measureValue;
 	this.dataType = dataType;
-	this.user = user;
+	this.powerMeasureType = powerMeasureType;
 	this.dailyConsumption = dailyConsumption;
     }
 
@@ -65,12 +65,12 @@ public class PowerMeasureHistoryDTO implements Serializable {
 	this.measureDate = measureDate;
     }
 
-    public User getUser() {
-	return user;
+    public PowerMeasureType getPowerMeasureType() {
+	return powerMeasureType;
     }
 
-    public void setUser(User user) {
-	this.user = user;
+    public void setPowerMeasureType(PowerMeasureType powerMeasureType) {
+	this.powerMeasureType = powerMeasureType;
     }
 
     public Double getMeasureValue() {
