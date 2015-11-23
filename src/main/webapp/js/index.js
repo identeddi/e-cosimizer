@@ -69,26 +69,9 @@ function ContractModel() {
 var userModel;
 var contractModel;
 var powerSupplyModel;
-var powerType = 2;
+var powerType = 0;
 
-var link1 = ko.observable({
-	caption : 'Übersicht',
-	url : '#info-main'
-});
-var link2 = ko.observable({
-	caption : 'Strom',
-	url : '#page_power_aktuell'
-});
-var link3 = ko.observable({
-	caption : 'Einstellungen',
-	url : '#settings_general'
-});
-var link4 = ko.observable({
-	caption : 'Ausloggen',
-	url : '#page-index'
-});
-
-var panelitems;// = ko.observableArray([ link1, link2, link3, link4 ]);
+var panelitems;
 
 ko.bindingHandlers.datepicker = {
 	init : function(element, valueAccessor, allBindingsAccessor) {
@@ -173,12 +156,13 @@ jQuery(function($) {
 	panelModel = ko.mapping.fromJS(new PanelModel());
 	ko.applyBindings(userModel, $('#settings_general')[0]);
 	panelitems = ko.mapping.fromJS([]);
+	lastMeasures = ko.mapping.fromJS([]);
 	// ko.applyBindings(contractModel, $('#page_power_contract')[0]);
 	// ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
 	ko.applyBindings(panelModel, $('#nav-panel-profile')[0]);
 	ko.applyBindings(panelitems, $('#nav-panel-list')[0]);
+	ko.applyBindings(lastMeasures, $('#info-main')[0]);
 
-	// ko.applyBindings(new MenuModel());
 	app.signupController = new BookIt.SignUpController();
 	app.signinController = new BookIt.SignInController();
 	app.powerController = new BookIt.PowerController();
@@ -191,17 +175,6 @@ jQuery(function($) {
 		},
 		error : function(e) {
 			$.mobile.loading("hide");
-		}
-	});
-	callurl = "http://" + window.location.host + BookIt.Settings.getMenuList;
-	$.ajax({
-		type : 'GET',
-		url : callurl,
-		success : function(resp) {
-			ko.mapping.fromJS(resp, panelitems);
-		},
-		error : function(e) {
-			usr = null;
 		}
 	});
 
@@ -232,4 +205,29 @@ $(document).on('click', '#button-page-signin', function(e) {
 		}
 	});
 
+});
+
+$(document).on("click", "#nav-panel-list li a", function() {
+	var powerMeasureType = $(this).attr('id');
+	if (powerMeasureType > 0) {
+		powerType = powerMeasureType;
+	}
+	var href = $(this).attr('href');
+	var e = 2;
+	// your code
+});
+
+$(document).on("panelbeforeopen", "#nav-panel", function(event) {
+	callurl = "http://" + window.location.host + BookIt.Settings.getMenuList;
+	$.ajax({
+		type : 'GET',
+		url : callurl,
+		success : function(resp) {
+			ko.mapping.fromJS(resp, panelitems);
+			$('#nav-panel-list').listview('refresh');
+		},
+		error : function(e) {
+			usr = null;
+		}
+	});
 });

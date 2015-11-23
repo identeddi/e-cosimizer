@@ -25,17 +25,17 @@ public class MenuItemDTO implements Serializable {
     String caption;
     String url;
 
-    PowerMeasureType powerMeasureType;
+    long powerMeasureTypeid;
 
     public MenuItemDTO() {
 	super();
     }
 
-    public MenuItemDTO(String caption, String url, PowerMeasureType powerMeasureType) {
+    public MenuItemDTO(String caption, String url, long powerMeasureTypeid) {
 	super();
 	this.caption = caption;
 	this.url = url;
-	this.powerMeasureType = powerMeasureType;
+	this.powerMeasureTypeid = powerMeasureTypeid;
     }
 
     public String getCaption() {
@@ -54,12 +54,12 @@ public class MenuItemDTO implements Serializable {
 	this.url = url;
     }
 
-    public PowerMeasureType getPowerMeasureType() {
-	return powerMeasureType;
+    public long getPowerMeasureTypeid() {
+	return powerMeasureTypeid;
     }
 
-    public void setPowerMeasureType(PowerMeasureType powerMeasureType) {
-	this.powerMeasureType = powerMeasureType;
+    public void setPowerMeasureTypeid(long powerMeasureTypeid) {
+	this.powerMeasureTypeid = powerMeasureTypeid;
     }
 
 }

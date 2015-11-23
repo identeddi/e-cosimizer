@@ -42,6 +42,9 @@ public class PowerMeasureType implements Serializable {
     @Column(nullable = false)
     private String typeName;
 
+    @Column(nullable = false)
+    private String referenceId;
+
     @JsonIgnore
     @ManyToOne
     private User user;
@@ -72,6 +75,14 @@ public class PowerMeasureType implements Serializable {
 
     public void setUser(User user) {
 	this.user = user;
+    }
+
+    public String getReferenceId() {
+	return referenceId;
+    }
+
+    public void setReferenceId(String referenceId) {
+	this.referenceId = referenceId;
     }
 
 }

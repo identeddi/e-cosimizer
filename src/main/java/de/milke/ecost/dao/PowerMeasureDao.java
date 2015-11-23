@@ -70,13 +70,6 @@ public class PowerMeasureDao {
 	}
 
 	for (PowerMeasure pm : listPM) {
-	    if (pm.getMeasureDate().compareTo(power.getMeasureDate()) == 0) {
-		// update measure value
-		pm.setMeasureValue(power.getMeasureValue());
-		em.merge(pm);
-		return pm;
-
-	    }
 
 	    if (power.getMeasureDate().before(pm.getMeasureDate())
 		    && power.getMeasureValue() > pm.getMeasureValue()) {
@@ -90,7 +83,15 @@ public class PowerMeasureDao {
 		throw new GeneralException("Ablesung niedriger aber Datum später, Fehler");
 	    }
 	}
+	for (PowerMeasure pm : listPM) {
+	    if (pm.getMeasureDate().compareTo(power.getMeasureDate()) == 0) {
+		// update measure value
+		pm.setMeasureValue(power.getMeasureValue());
+		em.merge(pm);
+		return pm;
 
+	    }
+	}
 	em.persist(power);
 	return power;
 
@@ -121,11 +122,14 @@ public class PowerMeasureDao {
 	    PowerMeasure next = listMeasures.get(i);
 	    int currentYear = current.getMeasureDate().getYear();
 	    int nextYear = next.getMeasureDate().getYear();
+	    int days = Days.daysBetween(new DateTime(current.getMeasureDate()),
+		    new DateTime(next.getMeasureDate())).getDays();
+	    double consumptionPerDay = (next.getMeasureValue() - current.getMeasureValue()) / days;
+	    consumptionPerDay = ((int) (consumptionPerDay * 100)) / 100.;
+	    listHistory.add(new PowerMeasureHistoryDTO(next.getId(), next.getMeasureDate(),
+		    next.getMeasureValue(), "gemessen", powerMeasureType, consumptionPerDay));
+
 	    if (currentYear < nextYear) {
-		int days = Days.daysBetween(new DateTime(current.getMeasureDate()),
-			new DateTime(next.getMeasureDate())).getDays();
-		double consumptionPerDay = (next.getMeasureValue() - current.getMeasureValue())
-			/ days;
 
 		// estimated date
 		DateTime estimatedDate = new DateTime(1900 + next.getMeasureDate().getYear(), 1, 1,
@@ -136,8 +140,6 @@ public class PowerMeasureDao {
 
 		int estimatedValue = (int) (consumptionPerDay * daysToEstimated);
 
-		listHistory.add(new PowerMeasureHistoryDTO(next.getId(), next.getMeasureDate(),
-			next.getMeasureValue(), "gemessen", powerMeasureType, consumptionPerDay));
 		listHistory.add(new PowerMeasureHistoryDTO(null, estimatedDate.toDate(),
 			(current.getMeasureValue() + estimatedValue), "geschätzt", powerMeasureType,
 			consumptionPerDay));

@@ -96,7 +96,7 @@ public class PowerService {
     @POST
     @Path("/type/{powerMeasureType}/measure")
     public void measure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
-	    @QueryParam("powerMeasureType") Double measureValue,
+	    @QueryParam("measureValue") Double measureValue,
 	    @QueryParam("measureDate") DateParam measureDate) throws GeneralException {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 	if (measureValue == null) {
@@ -139,13 +139,13 @@ public class PowerService {
     public List<MenuItemDTO> getMenuItems() {
 
 	List<MenuItemDTO> listMenuItems = new ArrayList<>();
-	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main", null));
+	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main", -1));
 	for (PowerMeasureType powerMeasureType : powerMeasureTypeDao.getByUser(getUser())) {
 	    listMenuItems.add(new MenuItemDTO(powerMeasureType.getTypeName(), "#page_power_aktuell",
-		    powerMeasureType));
+		    powerMeasureType.getId()));
 	}
-	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general", null));
-	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index", null));
+	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general", -2));
+	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index", -3));
 	return listMenuItems;
     }
 
@@ -224,16 +224,24 @@ public class PowerService {
     }
 
     @GET
-    @Path("/type/{powerMeasureType}/measure/last")
+    @Path("/measure/last")
     @Produces("application/json")
-    public PowerMeasure getLastMeasure(@Context HttpServletRequest request,
-	    @PathParam("powerMeasureType") Long powerMeasureTypeId) throws GeneralException {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+    public List<PowerMeasureHistoryDTO> getLastMeasure(@Context HttpServletRequest request)
+	    throws GeneralException {
+	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getByUser(getUser());
 
+	List<PowerMeasureHistoryDTO> lastMeasures = new ArrayList<>();
+	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
+	    List<PowerMeasureHistoryDTO> history = powerMeasureDao
+		    .getMeasureHistory(powerMeasureType);
+	    if (history.size() > 0) {
+		lastMeasures.add(history.get(0));
+	    }
+	}
 	LOG.info(request.toString());
 	LOG.info(getUser().getUsername() + ": getMeasure last ");
 	LOG.info(getUser().getUsername() + ": session: " + request.getSession().getId());
-	return powerMeasureDao.getLastByType(powerMeasureType);
+	return lastMeasures;
     }
 
     @GET
