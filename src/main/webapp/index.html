@@ -25,7 +25,9 @@
 <link rel="stylesheet" href="css/nativedroid2.css" />
 <script src="js/settings.js"></script>
 <script src="js/knockout.js"></script>
+<script src="js/moment.min.js"></script>
 <script src="js/knockout.mapping.js"></script>
+<script src="js/knockout-date-bindings.js"></script>
 <script src="js/power-controller.js"></script>
 <script src="js/settings-controller.js"></script>
 <script src="js/settings.js"></script>
@@ -56,7 +58,7 @@
 					<div class="col-xs-4 center-xs">
 						<div class="box">
 							<img class="profile-thumbnail"
-								src="//lorempixel.com/200/200/people/4/">
+								src="img/avatar.jpeg">
 						</div>
 					</div>
 					<div class="col-xs-8">
@@ -166,15 +168,15 @@
 			<div id="power-last" data-bind="foreach: lastMeasures">
 				<div class='nd2-card'>
 					<div class='card-title has-avatar'>
-						<img class='card-avatar' src='//lorempixel.com/200/200/people/9/'>
+						<img class='card-avatar' src='img/avatar.jpeg'>
 						<h3 class='card-primary-title'><span data-bind="text: powerMeasureType.typeName"></span> </h3>
 						<h5 class='card-subtitle'><span data-bind="text: powerMeasureType.referenceId"></span></h5>
 						</div>
 						<div class='card-supporting-text has-action'>
-						<p>Zuletzt abgelesen: <span data-bind="text: measureDate"></span>  <p>
+						<p>Zuletzt abgelesen: <span data-bind="date: measureDate, dateFormat: 'DD.MM.YYYY'"></span>  <p>
 						<p>Aktueller Verbrauch: <span data-bind="text: dailyConsumption"></span> kWh<p>
 						<p><strong>Zählerstand: <span data-bind="text: measureValue"></span>  kWh</strong></p>
-						<p><strong>Nächste Ablesung: 01.01.2028 </strong></p>
+						<p><strong>Nächste Ablesung: <span data-bind="date: nextMeasureDate, dateFormat: 'DD.MM.YYYY'"> </strong></p>
 					</div>
 				</div>	
 			</div>
@@ -205,7 +207,19 @@
 
 		<div class="ui-content" role="main">
 
-			<h3 id="page_power_aktuell-last">Letzte Stromablesung</h3>
+			<div class='nd2-card'>
+					<div class='card-title has-avatar'>
+						<img class='card-avatar' src='img/avatar.jpeg'>
+<!-- 						<h3 class='card-primary-title'><span data-bind="text: powerMeasureType.typeName"></span> </h3> -->
+<!-- 						<h5 class='card-subtitle'><span data-bind="text: powerMeasureType.referenceId"></span></h5> -->
+						</div>
+						<div class='card-supporting-text has-action'>
+						<p>Zuletzt abgelesen: <span data-bind="text: measureDate"></span>  <p>
+						<p>Aktueller Verbrauch: <span data-bind="text: dailyConsumption"></span> kWh<p>
+						<p><strong>Zählerstand: <span data-bind="text: measureValue"></span>  kWh</strong></p>
+						<p><strong>Nächste Ablesung: <span data-bind="text: nextMeasureDate"> </strong></p>
+					</div>
+				</div>	
 			<a href="#power_zaehler_erfassen" data-role="button">Erfassen</a>
 		</div>
 		<!-- /content -->
@@ -242,8 +256,21 @@
 		<div class="ui-content" role="main">
 			<div id="line" class="is-gchart">
 			</div>
+			
 			<ul id="power_list" data-role="listview" data-dividertheme="a"
-				data-filter="true" data-filter-theme="a">
+				data-filter="true" data-filter-theme="a" data-bind="foreach: historyMeasures" >
+
+					<li>
+								<p>Ablesedatum: <strong>
+								<span data-bind="date: measureDate, dateFormat: 'DD.MM.YYYY'"></span></strong></p>
+								<p>Zählerstand: <strong>
+								<span data-bind="text: measureValue"></span>kWh (<span data-bind="text: dataType"></span>) </strong></p>
+								<p>Tagesverbrauch: <strong>
+								<span data-bind="text: Number(dailyConsumption).toFixed(2)"></span>kWh </strong></p>
+								<p>Kalkulierter Jahresverbrauch <strong>
+								<span data-bind="text: Number(dailyConsumption * 365).toFixed(2)"></span></strong></p>
+								</li>
+					
 
 			</ul>
 

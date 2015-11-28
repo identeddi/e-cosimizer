@@ -124,13 +124,31 @@ public class PowerService {
     }
 
     @GET
-    @Path("/type/{powerMeasureType}/measure")
+    @Path("/type/{powerMeasureType}/measure/history")
     @Produces("application/json")
     public List<PowerMeasureHistoryDTO> getMeasure(
 	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
 	return powerMeasureDao.getMeasureHistory(powerMeasureType);
+    }
+
+    @GET
+    @Path("/type/{powerMeasureType}/measure")
+    @Produces("application/json")
+    public PowerMeasureHistoryDTO getLastMeasure(
+	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
+	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+
+	List<PowerMeasureHistoryDTO> historyList = powerMeasureDao
+		.getMeasureHistory(powerMeasureType);
+
+	if (historyList.size() > 0) {
+	    return historyList.get(0);
+	} else {
+	    return null;
+	}
+
     }
 
     @GET
@@ -226,7 +244,7 @@ public class PowerService {
     @GET
     @Path("/measure/last")
     @Produces("application/json")
-    public List<PowerMeasureHistoryDTO> getLastMeasure(@Context HttpServletRequest request)
+    public List<PowerMeasureHistoryDTO> getLastMeasures(@Context HttpServletRequest request)
 	    throws GeneralException {
 	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getByUser(getUser());
 

@@ -46,7 +46,7 @@
 	</security-constraint>
 	
 	<login-config><!-- 3 -->
-    <auth-method>BASIC</auth-method>
+    <auth-method>BASIC?silent=true</auth-method>
     <realm-name>other</realm-name>
 	</login-config>
 	

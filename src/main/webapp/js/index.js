@@ -65,12 +65,23 @@ function ContractModel() {
 	self.dueDate = '';
 	self.cancellationPeriod = 0;
 }
+function LastMeasureModel() {
+	self = this;
+	self.measureDate = '';
+
+	self.nextMeasureDate = '';
+
+	self.measureValue = '';
+	self.dailyConsumption = '';
+
+	self.dataType = '';
+}
 
 var userModel;
 var contractModel;
 var powerSupplyModel;
 var powerType = 0;
-
+var lastMeasureModel;
 var panelitems;
 
 ko.bindingHandlers.datepicker = {
@@ -157,11 +168,16 @@ jQuery(function($) {
 	ko.applyBindings(userModel, $('#settings_general')[0]);
 	panelitems = ko.mapping.fromJS([]);
 	lastMeasures = ko.mapping.fromJS([]);
-	// ko.applyBindings(contractModel, $('#page_power_contract')[0]);
-	// ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
+	historyMeasures = ko.mapping.fromJS([]);
+	lastMeasureModel = ko.mapping.fromJS(new LastMeasureModel());
+
+	ko.applyBindings(contractModel, $('#page_power_contract')[0]);
+	ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
 	ko.applyBindings(panelModel, $('#nav-panel-profile')[0]);
 	ko.applyBindings(panelitems, $('#nav-panel-list')[0]);
+	ko.applyBindings(lastMeasureModel, $('#page_power_aktuell')[0]);
 	ko.applyBindings(lastMeasures, $('#info-main')[0]);
+	ko.applyBindings(historyMeasures, $('#page_power_verlauf')[0]);
 
 	app.signupController = new BookIt.SignUpController();
 	app.signinController = new BookIt.SignInController();
@@ -193,17 +209,18 @@ $(document).on('click', '#button-page-signin', function(e) {
 		password : 'reset',
 		async : false
 	});
-
-	resp = $.ajax({
-		type : 'POST',
-		url : callurl,
-		success : function(resp) {
-			$.mobile.changePage("#info-main");
-		},
-		error : function(e) {
-			runtimePopup(e)
-		}
-	});
+	$.mobile.changePage("#page-signin");
+	//	
+	// resp = $.ajax({
+	// type : 'POST',
+	// url : callurl,
+	// success : function(resp) {
+	// $.mobile.changePage("#page-signin");
+	// },
+	// error : function(e) {
+	// runtimePopup(e)
+	// }
+	// });
 
 });
 
@@ -230,4 +247,11 @@ $(document).on("panelbeforeopen", "#nav-panel", function(event) {
 			usr = null;
 		}
 	});
+});
+
+$(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+	if (jqxhr.status == 500) {
+		// $.mobile.changePage("#info-main");
+	}
+	console.log("Triggered ajaxError handler.");
 });

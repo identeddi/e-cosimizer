@@ -6,6 +6,7 @@ BookIt.Settings.getUser = "/rest/login/login";
 BookIt.Settings.powerContract = "/rest/power/type/%TYPEID%/contract";
 BookIt.Settings.deleteSessionUrl = "/rest/login/session";
 BookIt.Settings.measurePowerURL = "/rest/power/type/%TYPEID%/measure";
+BookIt.Settings.measurePowerHistoryURL = "/rest/power/type/%TYPEID%/measure/history";
 BookIt.Settings.getLastPowerMeasureURL = "/rest/power/measure/last";
 BookIt.Settings.getAllPowerMeasureURL = "/rest/power/type/%TYPEID%/measure";
 BookIt.Settings.getAllPowerMeasureGraph = "/rest/power/type/%TYPEID%/measuregraph";

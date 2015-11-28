@@ -126,8 +126,12 @@ public class PowerMeasureDao {
 		    new DateTime(next.getMeasureDate())).getDays();
 	    double consumptionPerDay = (next.getMeasureValue() - current.getMeasureValue()) / days;
 	    consumptionPerDay = ((int) (consumptionPerDay * 100)) / 100.;
+	    Date nextMeasure = new Date(
+		    current.getMeasureDate().getTime() + 1000 * 60 * 60 * 24 * 31);
+
 	    listHistory.add(new PowerMeasureHistoryDTO(next.getId(), next.getMeasureDate(),
-		    next.getMeasureValue(), "gemessen", powerMeasureType, consumptionPerDay));
+		    next.getMeasureValue(), "gemessen", powerMeasureType, consumptionPerDay,
+		    nextMeasure));
 
 	    if (currentYear < nextYear) {
 
@@ -149,8 +153,10 @@ public class PowerMeasureDao {
 
 	if (listMeasures.size() > 0) {
 	    PowerMeasure current = listMeasures.get(listMeasures.size() - 1);
+	    Date nextMeasure = new Date(
+		    current.getMeasureDate().getTime() + 1000 * 60 * 60 * 24 * 31);
 	    listHistory.add(new PowerMeasureHistoryDTO(current.getId(), current.getMeasureDate(),
-		    current.getMeasureValue(), "gemessen", powerMeasureType, 0));
+		    current.getMeasureValue(), "gemessen", powerMeasureType, 0, nextMeasure));
 
 	}
 	return listHistory;

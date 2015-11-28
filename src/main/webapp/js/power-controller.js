@@ -86,36 +86,16 @@ $(document).on(
 
 			resp = $.ajax({
 				type : 'GET',
-				url : BookIt.Settings.getAllPowerMeasureURL.replace("%TYPEID%",
-						powerType),
+				url : BookIt.Settings.measurePowerHistoryURL.replace(
+						"%TYPEID%", powerType),
 				success : function(resp) {
 					// drawChart();
-					// Add a new listview element
-					powerlist = $('#power_list');
-					powerlist.empty();
-					for ( var i in resp) {
-						var elem = '<li>'
-								+ "<p>Ablesedatum: "
-								+ toNiceDate(resp[i].measureDate)
-								+ "</p>"
-								+ "<p>Zählerstand: <strong>"
-								+ resp[i].measureValue
-								+ " kWh ("
-								+ resp[i].dataType
-								+ ') '
-								+ '</strong></p>'
-								+ "<p>Tagesverbrauch: <strong>"
-								+ Number(resp[i].dailyConsumption).toFixed(2)
-								+ " kWh </strong></p>"
-								+ '<p>Kalkulierter Jahresverbrauch <strong>'
-								+ Number(resp[i].dailyConsumption * 365)
-										.toFixed(2) + ' ' + '</strong></p>'
-								+ '</li>';
-						powerlist.append(elem);
+					ko.mapping.fromJS(resp, historyMeasures);
 
-					}
-					// Enhance new listview element
-					powerlist.listview('refresh');
+					// Add a new listview element
+					// powerlist = $('#power_list');
+					// // Enhance new listview element
+					// powerlist.listview('refresh');
 					// Hide first listview element
 				}
 
@@ -128,25 +108,20 @@ $(document).on(
 		"#page_power_aktuell",
 		function(event) {
 
-			resp = $
-					.ajax({
-						type : 'GET',
-						url : BookIt.Settings.getLastPowerMeasureURL.replace(
-								"%TYPEID%", powerType),
-						success : function(resp) {
-							console.log(resp);
-							if (resp != null && resp.measureDate != null
-									&& resp.measureValue != null) {
-								$("#page_power_aktuell-last").text(
-										"Strom zuletzt abgelesen am "
-												+ toNiceDate(resp.measureDate)
-												+ "  mit " + resp.measureValue
-												+ "kWh");
-							}
-						},
-						error : function(e) {
-						}
-					});
+			resp = $.ajax({
+				type : 'GET',
+				url : BookIt.Settings.measurePowerURL.replace("%TYPEID%",
+						powerType),
+				success : function(resp) {
+					console.log(resp);
+					ko.mapping.fromJS(resp, lastMeasureModel);
+					console.log("Reading for page_power_aktuell: "
+							+ lastMeasureModel.measureValue());
+
+				},
+				error : function(e) {
+				}
+			});
 
 		});
 
