@@ -21,7 +21,6 @@ import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -50,7 +49,7 @@ import de.milke.ecost.model.User;
  */
 @Path("/login")
 @Stateless
-@RolesAllowed("admin")
+// @RolesAllowed("admin")
 public class LoginService {
 
     static Logger LOG = Logger.getLogger(LoginService.class.getName());
@@ -126,7 +125,8 @@ public class LoginService {
 
     @Context
     public void setSecurityContext(SecurityContext context) {
-	LOG.info(context.getUserPrincipal().getName() + ": getMeasure last ");
+	// LOG.info(context.getUserPrincipal().getName() + ": getMeasure last
+	// ");
 	principal = context.getUserPrincipal();
     }
 

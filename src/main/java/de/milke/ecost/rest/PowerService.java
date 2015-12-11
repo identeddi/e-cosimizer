@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
-import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.servlet.http.HttpServletRequest;
@@ -70,7 +69,7 @@ import de.milke.ecost.service.Check24SupplyResolver;
  */
 @Path("/power")
 @Stateless
-@RolesAllowed("admin")
+// @RolesAllowed("admin")
 public class PowerService {
 
     static Logger LOG = Logger.getLogger(PowerService.class.getName());

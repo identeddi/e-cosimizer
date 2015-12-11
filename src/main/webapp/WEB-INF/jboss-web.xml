@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jboss-web>
-        <security-domain>other</security-domain>
+<!--         <security-domain>ecostdomain</security-domain> -->
         <context-root>/</context-root>
-        <security-domain flushOnSessionInvalidation="true">other</security-domain>
+<!--         <security-domain flushOnSessionInvalidation="true">ecostdomain</security-domain> -->
 </jboss-web>

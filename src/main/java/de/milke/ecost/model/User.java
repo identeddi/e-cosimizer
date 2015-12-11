@@ -16,7 +16,6 @@
  */
 package de.milke.ecost.model;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,12 +29,14 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.jboss.security.SimplePrincipal;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @XmlRootElement
 @Table(name = "User", uniqueConstraints = @UniqueConstraint(columnNames = "username") )
-public class User implements Serializable {
+public class User extends SimplePrincipal {
     /** Default value included to remove warning. Remove or modify at will. **/
     private static final long serialVersionUID = 1L;
 
@@ -66,7 +67,11 @@ public class User implements Serializable {
     private Set<Role> roles = new HashSet<Role>(0);
 
     public User() {
-	super();
+	super("");
+    }
+
+    public User(String userName) {
+	super(userName);
     }
 
     public Long getId() {

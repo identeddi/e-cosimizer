@@ -28,44 +28,28 @@ BookIt.SignInController.prototype.onSigninCommand = function() {
 	me.$txtUsername.removeClass(invalidInputStyle);
 	me.$txtPassword.removeClass(invalidInputStyle);
 
-	callurl = "http://" + window.location.host + BookIt.Settings.signInUrl;
+	callurl = "http://" + window.location.host + "/rest/login/login";
 	resp = $.ajax({
 		type : 'POST',
 		url : callurl,
-		username : 'reset',
-		password : 'reset',
+		j_username : 'reset',
+		j_username : 'reset',
 		async : false
 	});
 
-	auth = "Basic " + make_base_auth(username, password);
 	resp = $.ajax({
 		type : 'POST',
 		url : callurl,
-		username : username,
-		password : password,
-		xhr : function() {
-			// Get new xhr object using default factory
-			var xhr = jQuery.ajaxSettings.xhr();
-			// Copy the browser's native setRequestHeader method
-			var setRequestHeader = xhr.setRequestHeader;
-			// Replace with a wrapper
-			xhr.setRequestHeader = function(name, value) {
-				// Ignore the X-Requested-With header
-				if (name == 'X-Requested-With')
-					return;
-				// Otherwise call the native setRequestHeader method
-				// Note: setRequestHeader requires its 'this' to be the xhr
-				// object,
-				// which is what 'this' is here when executed.
-				setRequestHeader.call(this, name, value);
-			}
-			// pass it on to jQuery
-			return xhr;
+		j_username : username,
+		j_password : password,
+		success : function(resp) {
+			panelModel.fullUserName(resp.firstName + ' ' + resp.lastName);
+			$.mobile.changePage("#info-main");
+
 		},
-		async : false
+		error : function(e) {
+		}
 	});
-
-	panelModel.fullUserName(resp.firstName + ' ' + resp.lastName);
 
 };
 function make_base_auth(user, password) {
