@@ -28,6 +28,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.xml.ws.WebServiceContext;
 
 import org.jboss.security.auth.spi.Util;
+import org.picketlink.authorization.annotations.LoggedIn;
 
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.model.Role;
@@ -41,6 +42,7 @@ import de.milke.ecost.model.User;
  */
 @Path("/account")
 @Stateless
+@LoggedIn
 public class AccountService {
 
     static Logger LOG = Logger.getLogger(AccountService.class.getName());

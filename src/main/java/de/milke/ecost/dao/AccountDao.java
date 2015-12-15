@@ -19,9 +19,9 @@ package de.milke.ecost.dao;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import de.milke.ecost.model.Role;
@@ -31,7 +31,7 @@ import de.milke.ecost.model.User;
 public class AccountDao {
     static Logger LOG = Logger.getLogger(AccountDao.class.getName());
 
-    @Inject
+    @PersistenceContext(name = "primary")
     private EntityManager em;
 
     public User findById(Long id) {

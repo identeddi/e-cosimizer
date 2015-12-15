@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import de.milke.ecost.model.PowerMeasureType;
@@ -31,7 +31,7 @@ import de.milke.ecost.model.User;
 public class PowerMeasureTypeDao {
     static Logger LOG = Logger.getLogger(PowerMeasureTypeDao.class.getName());
 
-    @Inject
+    @PersistenceContext(name = "primary")
     private EntityManager em;
 
     public PowerMeasureType findById(Long id) {

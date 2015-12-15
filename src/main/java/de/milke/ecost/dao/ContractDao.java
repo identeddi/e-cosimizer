@@ -19,9 +19,9 @@ package de.milke.ecost.dao;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import de.milke.ecost.model.Contract;
@@ -31,7 +31,7 @@ import de.milke.ecost.model.PowerMeasureType;
 public class ContractDao {
     static Logger LOG = Logger.getLogger(ContractDao.class.getName());
 
-    @Inject
+    @PersistenceContext(name = "primary")
     private EntityManager em;
 
     public Contract findById(Long id) {

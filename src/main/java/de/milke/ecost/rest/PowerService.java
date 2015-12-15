@@ -40,6 +40,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
+import org.picketlink.authorization.annotations.LoggedIn;
+
 import com.google.visualization.datasource.base.TypeMismatchException;
 import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
@@ -70,6 +72,7 @@ import de.milke.ecost.service.Check24SupplyResolver;
 @Path("/power")
 @Stateless
 // @RolesAllowed("admin")
+@LoggedIn
 public class PowerService {
 
     static Logger LOG = Logger.getLogger(PowerService.class.getName());

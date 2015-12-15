@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.joda.time.DateTime;
@@ -39,7 +39,7 @@ import de.milke.ecost.model.PowerMeasureType;
 public class PowerMeasureDao {
     static Logger LOG = Logger.getLogger(PowerMeasureDao.class.getName());
 
-    @Inject
+    @PersistenceContext(name = "primary")
     private EntityManager em;
 
     public PowerMeasure findById(Long id) {

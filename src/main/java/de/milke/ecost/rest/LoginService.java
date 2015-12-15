@@ -38,6 +38,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
+import org.picketlink.authorization.annotations.LoggedIn;
+
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.model.User;
 
@@ -47,9 +49,11 @@ import de.milke.ecost.model.User;
  * This class produces a RESTful service to read/write the contents of the
  * members table.
  */
+
 @Path("/login")
 @Stateless
 // @RolesAllowed("admin")
+@LoggedIn
 public class LoginService {
 
     static Logger LOG = Logger.getLogger(LoginService.class.getName());
@@ -125,8 +129,7 @@ public class LoginService {
 
     @Context
     public void setSecurityContext(SecurityContext context) {
-	// LOG.info(context.getUserPrincipal().getName() + ": getMeasure last
-	// ");
+	LOG.info(context.getUserPrincipal().getName() + ": getMeasure last");
 	principal = context.getUserPrincipal();
     }
 
