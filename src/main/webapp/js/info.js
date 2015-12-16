@@ -1,7 +1,7 @@
 var BookIt = BookIt || {};
 var usr=null;
 $( document ).on( "pagebeforeshow" , function(e, data) {
-   if(usr ==null)
+ if(usr ==null)
    {
       callurl="http://" + window.location.host + BookIt.Settings.signInUrl;
    	    $.ajax({
@@ -15,6 +15,7 @@ $( document ).on( "pagebeforeshow" , function(e, data) {
         }
     });
    }
+   
 });
 
 

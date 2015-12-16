@@ -53,7 +53,6 @@ import de.milke.ecost.model.User;
 @Path("/login")
 @Stateless
 // @RolesAllowed("admin")
-@LoggedIn
 public class LoginService {
 
     static Logger LOG = Logger.getLogger(LoginService.class.getName());
@@ -64,8 +63,16 @@ public class LoginService {
     @Resource
     WebServiceContext webServiceContext;
 
+    @POST
+    @Path("/logout")
+    public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response)
+	    throws ServletException, IOException {
+	int xx = 3;
+    }
+
     @DELETE
     @Path("/session")
+    @LoggedIn
     public void deleteSession(@Context HttpServletRequest request,
 	    @Context HttpServletResponse response) throws ServletException, IOException {
 	LOG.info("Delete session: " + request.getSession().getId());
@@ -93,6 +100,7 @@ public class LoginService {
     @POST
     @Path("/login")
     @Produces("application/json")
+    @LoggedIn
     public User registerget(@QueryParam("username") String username,
 	    @QueryParam("password") String password) {
 	LOG.info("logged in - username: " + username + "password: " + password);
@@ -104,6 +112,7 @@ public class LoginService {
     @Path("/login")
     @Produces("application/json")
     @Consumes("application/json")
+    @LoggedIn
     public User updateUser(User usr) {
 	LOG.info("start update user - username: " + usr.getFirstName() + "password: "
 		+ usr.getLastName());
@@ -119,6 +128,7 @@ public class LoginService {
     @GET
     @Path("/login")
     @Produces("application/json")
+    @LoggedIn
     public User getLoggedInUser() {
 	User user = getUser();
 	LOG.info("getuser - username: " + user.getUsername() + "password: " + user.getPassword());

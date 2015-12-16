@@ -229,6 +229,26 @@ $(document).on("click", "#nav-panel-list li a", function() {
 	if (powerMeasureType > 0) {
 		powerType = powerMeasureType;
 	}
+	else if(powerMeasureType = -3)
+	{
+			callurl = "http://" + window.location.host + "/rest/login/logout";
+	resp = $.ajax({
+		type : 'POST',
+		url : callurl,
+		async : false
+	});
+
+	callurl = "http://" + window.location.host + "/rest/login/login";
+	resp = $.ajax({
+		type : 'POST',
+		url : callurl,
+		headers : {
+			"Authorization" : "Basic " + btoa("reset:reset")
+		},
+		async : false
+	});
+
+	}
 	var href = $(this).attr('href');
 	var e = 2;
 	// your code
@@ -251,7 +271,19 @@ $(document).on("panelbeforeopen", "#nav-panel", function(event) {
 
 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
 	if (jqxhr.status == 500) {
-		// $.mobile.changePage("#info-main");
+		$.mobile.changePage("#info-main");
+	} else if (jqxhr.status == 403) {
+		console.log($.mobile.activePage);
+		if($.mobile.activePage != undefined)
+		{
+			pageName = $.mobile.activePage[0].id;
+			console.log(pageName);
+			if(pageName != 'page-signin')
+			{
+//				runtimePopup("Sie sind nicht eingeloggt und werden deshalb automatisch zur Login-Seite navigiert.");
+				$.mobile.changePage("#page-signin");
+			}
+		}
 	}
 	console.log("Triggered ajaxError handler.");
 });

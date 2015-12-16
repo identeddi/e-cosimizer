@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -40,6 +41,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
+import org.picketlink.Identity;
 import org.picketlink.authorization.annotations.LoggedIn;
 
 import com.google.visualization.datasource.base.TypeMismatchException;
@@ -94,6 +96,9 @@ public class PowerService {
 
     @EJB
     Check24SupplyResolver check24SupplyResolver;
+
+    @Inject
+    Identity identity;
 
     @POST
     @Path("/type/{powerMeasureType}/measure")
@@ -305,6 +310,8 @@ public class PowerService {
     }
 
     protected User getUser() {
+	LOG.info(identity.getAccount().getId());
+	LOG.info(identity.toString());
 	return accountDao.getByUsername(principal.getName());
     }
 }

@@ -27,21 +27,14 @@ BookIt.SignInController.prototype.onSigninCommand = function() {
 	me.$ctnErr.removeClass().addClass(invisibleStyle);
 	me.$txtUsername.removeClass(invalidInputStyle);
 	me.$txtPassword.removeClass(invalidInputStyle);
-
 	callurl = "http://" + window.location.host + "/rest/login/login";
-	resp = $.ajax({
-		type : 'POST',
-		url : callurl,
-		j_username : 'reset',
-		j_username : 'reset',
-		async : false
-	});
 
 	resp = $.ajax({
 		type : 'POST',
 		url : callurl,
-		j_username : username,
-		j_password : password,
+		headers : {
+			"Authorization" : "Basic " + btoa(username + ":" + password)
+		},
 		success : function(resp) {
 			panelModel.fullUserName(resp.firstName + ' ' + resp.lastName);
 			$.mobile.changePage("#info-main");
@@ -68,6 +61,6 @@ $(document).delegate("#page-signin", "pagebeforecreate", function() {
 });
 
 $(document).on("pagebeforeshow", "#page-signin", function(event) {
-	app.signinController.resetSessionForm();
+//	app.signinController.resetSessionForm();
 
 });
