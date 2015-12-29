@@ -21,7 +21,9 @@
  */
 package org.jboss.as.quickstarts.picketlink.angularjs.security.model;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.model.Person;
+import static org.picketlink.idm.model.annotation.IdentityStereotype.Stereotype.USER;
+import static org.picketlink.idm.model.annotation.StereotypeProperty.Property.IDENTITY_USER_NAME;
+
 import org.picketlink.idm.model.AbstractIdentityType;
 import org.picketlink.idm.model.Account;
 import org.picketlink.idm.model.annotation.AttributeProperty;
@@ -31,34 +33,47 @@ import org.picketlink.idm.model.annotation.Unique;
 import org.picketlink.idm.query.AttributeParameter;
 import org.picketlink.idm.query.QueryParameter;
 
-import static org.picketlink.idm.model.annotation.IdentityStereotype.Stereotype.USER;
-import static org.picketlink.idm.model.annotation.StereotypeProperty.Property.IDENTITY_USER_NAME;
+import de.milke.ecost.model.User;
 
 /**
- * <p>This is a custom {@link org.picketlink.idm.model.Account} type to represent the application users.</p>
+ * <p>
+ * This is a custom {@link org.picketlink.idm.model.Account} type to represent
+ * the application users.
+ * </p>
  *
- * <p>Instead of using the {@link org.picketlink.idm.model.basic.User} type provided by PicketLink the application is using its
- * own type to map users to/from the configured identity stores.</p>
+ * <p>
+ * Instead of using the {@link org.picketlink.idm.model.basic.User} type
+ * provided by PicketLink the application is using its own type to map users
+ * to/from the configured identity stores.
+ * </p>
  *
- * <p>This is a perfect example about how to integrate PicketLink IDM with existing models. The <code>person</code> association
- * is basically a link between application's data model with the identity model provided by PicketLink.</p>
+ * <p>
+ * This is a perfect example about how to integrate PicketLink IDM with existing
+ * models. The <code>person</code> association is basically a link between
+ * application's data model with the identity model provided by PicketLink.
+ * </p>
  *
  * @author Pedro Igor
  */
 @IdentityStereotype(USER)
 public class MyUser extends AbstractIdentityType implements Account {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
-     * <p>Can be used to query users by their activation code.</p>
+     * <p>
+     * Can be used to query users by their activation code.
+     * </p>
      */
-    public static final AttributeParameter ACTIVATION_CODE = QUERY_ATTRIBUTE.byName("activationCode");
+    public static final AttributeParameter ACTIVATION_CODE = QUERY_ATTRIBUTE
+	    .byName("activationCode");
 
     /**
-     * <p>Can be used to query users by their login name.</p>
+     * <p>
+     * Can be used to query users by their login name.
+     * </p>
      */
-	public static final QueryParameter USER_NAME = QUERY_ATTRIBUTE.byName("loginName");
+    public static final QueryParameter USER_NAME = QUERY_ATTRIBUTE.byName("loginName");
 
     @StereotypeProperty(IDENTITY_USER_NAME)
     @AttributeProperty
@@ -69,41 +84,42 @@ public class MyUser extends AbstractIdentityType implements Account {
     private String activationCode;
 
     @AttributeProperty
-    private Person person;
+    private User user;
 
     public MyUser() {
-        this(null);
+	this(null);
     }
 
     public MyUser(String loginName) {
-        this.loginName = loginName;
+	this.loginName = loginName;
     }
 
     public String getLoginName() {
-        return this.loginName;
+	return this.loginName;
     }
 
     public void setLoginName(String loginName) {
-        this.loginName = loginName;
-    }
-
-    public Person getPerson() {
-        return this.person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
+	this.loginName = loginName;
     }
 
     public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
+	this.activationCode = activationCode;
     }
 
     public void invalidateActivationCode() {
-        this.activationCode = null;
+	this.activationCode = null;
     }
 
     public String getActivationCode() {
-        return this.activationCode;
+	return this.activationCode;
     }
+
+    public User getUser() {
+	return user;
+    }
+
+    public void setUser(User user) {
+	this.user = user;
+    }
+
 }

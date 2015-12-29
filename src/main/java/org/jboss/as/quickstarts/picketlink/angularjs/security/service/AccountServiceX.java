@@ -1,12 +1,5 @@
 package org.jboss.as.quickstarts.picketlink.angularjs.security.service;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.model.Person;
-import org.jboss.as.quickstarts.picketlink.angularjs.security.model.ApplicationRole;
-import org.jboss.as.quickstarts.picketlink.angularjs.security.model.IdentityModelManager;
-import org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser;
-import org.jboss.as.quickstarts.picketlink.angularjs.util.MessageBuilder;
-import org.picketlink.authorization.annotations.RolesAllowed;
-
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -15,6 +8,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jboss.as.quickstarts.picketlink.angularjs.security.model.ApplicationRole;
+import org.jboss.as.quickstarts.picketlink.angularjs.security.model.IdentityModelManager;
+import org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser;
+import org.jboss.as.quickstarts.picketlink.angularjs.util.MessageBuilder;
+import org.picketlink.authorization.annotations.RolesAllowed;
+
+import de.milke.ecost.model.User;
+
 @Stateless
 @Path("/private/account")
 @RolesAllowed(ApplicationRole.ADMINISTRATOR)
@@ -22,46 +23,46 @@ public class AccountServiceX {
 
     @Inject
     private IdentityModelManager identityModelManager;
-    
+
     @POST
     @Path("enableAccount")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response enable(Person passedUser) {
-        MessageBuilder message;
+    public Response enable(User passedUser) {
+	MessageBuilder message;
 
-        MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
+	MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
 
-        if (user == null) {
-            return MessageBuilder.badRequest().message("Invalid account.").build();
-        }
+	if (user == null) {
+	    return MessageBuilder.badRequest().message("Invalid account.").build();
+	}
 
-        if(user.isEnabled()) {
-            return MessageBuilder.badRequest().message("Account is already enabled.").build();
-        }
+	if (user.isEnabled()) {
+	    return MessageBuilder.badRequest().message("Account is already enabled.").build();
+	}
 
-        this.identityModelManager.enableAccount(user);
+	this.identityModelManager.enableAccount(user);
 
-        return MessageBuilder.ok().message("Account is now enabled.").build();
+	return MessageBuilder.ok().message("Account is now enabled.").build();
     }
 
     @POST
     @Path("disableAccount")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response disable(Person passedUser) {
-        MessageBuilder message;
+    public Response disable(User passedUser) {
+	MessageBuilder message;
 
-        MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
+	MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
 
-        if (user == null) {
-            return MessageBuilder.badRequest().message("Invalid account.").build();
-        }
+	if (user == null) {
+	    return MessageBuilder.badRequest().message("Invalid account.").build();
+	}
 
-        if(!user.isEnabled()) {
-            return MessageBuilder.badRequest().message("Accound is already disabled.").build();
-        }
+	if (!user.isEnabled()) {
+	    return MessageBuilder.badRequest().message("Accound is already disabled.").build();
+	}
 
-        this.identityModelManager.disableAccount(user);
+	this.identityModelManager.disableAccount(user);
 
-        return MessageBuilder.ok().message("Account is now disabled.").build();
+	return MessageBuilder.ok().message("Account is now disabled.").build();
     }
 }

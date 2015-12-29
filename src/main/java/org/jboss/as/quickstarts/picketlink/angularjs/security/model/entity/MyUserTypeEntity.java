@@ -21,21 +21,29 @@
  */
 package org.jboss.as.quickstarts.picketlink.angularjs.security.model.entity;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.model.Person;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
 import org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser;
 import org.picketlink.idm.jpa.annotations.AttributeValue;
 import org.picketlink.idm.jpa.annotations.entity.IdentityManaged;
 import org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import de.milke.ecost.model.User;
 
 /**
- * <p>This is a simple example about how to extend the entity classes provided by the Basic Identity Model to map your own types.
- * In this case, this entity is responsible to map {@link org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser}.</p>
+ * <p>
+ * This is a simple example about how to extend the entity classes provided by
+ * the Basic Identity Model to map your own types. In this case, this entity is
+ * responsible to map
+ * {@link org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser}.
+ * </p>
  *
- * <p>You are not forced to use the Basic Identity Model all the time. This is just an example.</p>
+ * <p>
+ * You are not forced to use the Basic Identity Model all the time. This is just
+ * an example.
+ * </p>
  *
  * @author Pedro Igor
  */
@@ -50,30 +58,31 @@ public class MyUserTypeEntity extends IdentityTypeEntity {
     private String activationCode;
 
     @AttributeValue
-    @OneToOne (cascade = CascadeType.ALL)
-    private Person person;
+    @OneToOne(cascade = CascadeType.ALL)
+    private User user;
 
     public String getLoginName() {
-        return this.loginName;
+	return this.loginName;
     }
 
     public void setLoginName(String loginName) {
-        this.loginName = loginName;
+	this.loginName = loginName;
     }
 
     public String getActivationCode() {
-        return this.activationCode;
+	return this.activationCode;
     }
 
     public void setActivationCode(String activationCode) {
-        this.activationCode = activationCode;
+	this.activationCode = activationCode;
     }
 
-    public Person getPerson() {
-        return this.person;
+    public User getUser() {
+	return user;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setUser(User user) {
+	this.user = user;
     }
+
 }

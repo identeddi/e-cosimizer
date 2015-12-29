@@ -33,7 +33,6 @@ import java.security.UnrecoverableKeyException;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.model.Person;
 import org.jboss.as.quickstarts.picketlink.angularjs.security.model.ApplicationRole;
 import org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser;
 import org.picketlink.event.PartitionManagerCreateEvent;
@@ -44,6 +43,8 @@ import org.picketlink.idm.credential.Password;
 import org.picketlink.idm.model.Attribute;
 import org.picketlink.idm.model.basic.Realm;
 import org.picketlink.idm.model.basic.Role;
+
+import de.milke.ecost.model.User;
 
 /**
  * <p>
@@ -136,7 +137,7 @@ public class SecurityInitializer {
 	    return;
 	}
 
-	Person person = new Person();
+	User person = new User();
 
 	person.setFirstName("Almight");
 	person.setLastName("Administrator");
@@ -144,7 +145,7 @@ public class SecurityInitializer {
 
 	MyUser admin = new MyUser(person.getEmail());
 
-	admin.setPerson(person);
+	admin.setUser(person);
 
 	identityManager.add(admin);
 

@@ -21,7 +21,12 @@
  */
 package org.jboss.as.quickstarts.picketlink.angularjs.security.model;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.model.Person;
+import java.util.List;
+import java.util.UUID;
+
+import javax.ejb.Stateless;
+import javax.inject.Inject;
+
 import org.jboss.as.quickstarts.picketlink.angularjs.security.authentication.JWSToken;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.RelationshipManager;
@@ -33,20 +38,29 @@ import org.picketlink.idm.model.basic.Role;
 import org.picketlink.idm.query.IdentityQuery;
 import org.picketlink.idm.query.IdentityQueryBuilder;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import java.util.List;
-import java.util.UUID;
+import de.milke.ecost.model.User;
 
 /**
- * <p>This class provides an abstraction point to the Identity Management operations required by the application./p>
+ * <p>
+ * This class provides an abstraction point to the Identity Management
+ * operations required by the application./p>
  *
- * <p>The main objective of this class is avoid the spread use of the <code>IdentityManager</code> by different components of
- * the application and code duplication, providing a centralized point of access for the most common operations like create/update/query users and so forth.</p>
+ * <p>
+ * The main objective of this class is avoid the spread use of the
+ * <code>IdentityManager</code> by different components of the application and
+ * code duplication, providing a centralized point of access for the most common
+ * operations like create/update/query users and so forth.
+ * </p>
  *
- * <p>Also it is very useful to understand how PicketLink Identity Management is being used and what is being used by the application from a IDM perspective.</p>
+ * <p>
+ * Also it is very useful to understand how PicketLink Identity Management is
+ * being used and what is being used by the application from a IDM perspective.
+ * </p>
  *
- * <p>Please note that PicketLink IDM provides a very flexible and poweful identity model and API, from which you can extend and fulfill your own requirements.</p>
+ * <p>
+ * Please note that PicketLink IDM provides a very flexible and poweful identity
+ * model and API, from which you can extend and fulfill your own requirements.
+ * </p>
  *
  * @author Pedro Igor
  */
@@ -63,132 +77,134 @@ public class IdentityModelManager {
     private Token.Provider<JWSToken> tokenProvider;
 
     public static MyUser findByLoginName(String loginName, IdentityManager identityManager) {
-        if (loginName == null) {
-            throw new IllegalArgumentException("Invalid login name.");
-        }
+	if (loginName == null) {
+	    throw new IllegalArgumentException("Invalid login name.");
+	}
 
-        IdentityQueryBuilder queryBuilder = identityManager.getQueryBuilder();
-        IdentityQuery<MyUser> query = queryBuilder.createIdentityQuery(MyUser.class);
+	IdentityQueryBuilder queryBuilder = identityManager.getQueryBuilder();
+	IdentityQuery<MyUser> query = queryBuilder.createIdentityQuery(MyUser.class);
 
-        query.where(queryBuilder.equal(MyUser.USER_NAME, loginName));
+	query.where(queryBuilder.equal(MyUser.USER_NAME, loginName));
 
-        List<MyUser> result = query.getResultList();
+	List<MyUser> result = query.getResultList();
 
-        if (!result.isEmpty()) {
-            return result.get(0);
-        }
+	if (!result.isEmpty()) {
+	    return result.get(0);
+	}
 
-        return null;
+	return null;
     }
 
     public MyUser createAccount(UserRegistration request) {
-        if (!request.isValid()) {
-            throw new IllegalArgumentException("Insuficient information.");
-        }
+	if (!request.isValid()) {
+	    throw new IllegalArgumentException("Insuficient information.");
+	}
 
-        Person person = new Person();
+	User person = new User();
 
-        person.setEmail(request.getEmail());
-        person.setFirstName(request.getFirstName());
-        person.setLastName(request.getLastName());
+	person.setEmail(request.getEmail());
+	person.setFirstName(request.getFirstName());
+	person.setLastName(request.getLastName());
 
-        MyUser newUser = new MyUser(request.getEmail());
+	MyUser newUser = new MyUser(request.getEmail());
 
-        newUser.setPerson(person);
+	newUser.setUser(person);
 
-        String activationCode = UUID.randomUUID().toString();
+	String activationCode = UUID.randomUUID().toString();
 
-        newUser.setActivationCode(activationCode); // we set an activation code for future use.
+	newUser.setActivationCode(activationCode); // we set an activation code
+						   // for future use.
 
-        this.identityManager.add(newUser);
+	this.identityManager.add(newUser);
 
-        updatePassword(newUser, request.getPassword());
+	updatePassword(newUser, request.getPassword());
 
-        disableAccount(newUser);
+	disableAccount(newUser);
 
-        return newUser;
+	return newUser;
     }
 
     public void updatePassword(Account account, String password) {
-        this.identityManager.updateCredential(account, new Password(password));
+	this.identityManager.updateCredential(account, new Password(password));
     }
 
     public void grantRole(MyUser account, String roleName) {
-        Role storedRole = BasicModel.getRole(this.identityManager, roleName);
-        BasicModel.grantRole(this.relationshipManager, account, storedRole);
+	Role storedRole = BasicModel.getRole(this.identityManager, roleName);
+	BasicModel.grantRole(this.relationshipManager, account, storedRole);
     }
 
     public boolean hasRole(MyUser account, String roleName) {
-        Role storedRole = BasicModel.getRole(this.identityManager, roleName);
-        return BasicModel.hasRole(this.relationshipManager, account, storedRole);
+	Role storedRole = BasicModel.getRole(this.identityManager, roleName);
+	return BasicModel.hasRole(this.relationshipManager, account, storedRole);
     }
 
     public Token activateAccount(String activationCode) {
-        MyUser user = findUserByActivationCode(activationCode);
+	MyUser user = findUserByActivationCode(activationCode);
 
-        if (user == null) {
-            throw new IllegalArgumentException("Invalid activation code.");
-        }
+	if (user == null) {
+	    throw new IllegalArgumentException("Invalid activation code.");
+	}
 
-        user.setEnabled(true);
-        user.invalidateActivationCode();
+	user.setEnabled(true);
+	user.invalidateActivationCode();
 
-        this.identityManager.update(user);
+	this.identityManager.update(user);
 
-        return issueToken(user);
+	return issueToken(user);
     }
 
     public MyUser findByLoginName(String loginName) {
-        return findByLoginName(loginName, this.identityManager);
+	return findByLoginName(loginName, this.identityManager);
     }
 
     public MyUser findUserByActivationCode(String activationCode) {
-        if (activationCode == null) {
-            throw new IllegalArgumentException("Invalid activation code.");
-        }
+	if (activationCode == null) {
+	    throw new IllegalArgumentException("Invalid activation code.");
+	}
 
-        IdentityQueryBuilder queryBuilder = identityManager.getQueryBuilder();
-        IdentityQuery<MyUser> query = queryBuilder.createIdentityQuery(MyUser.class);
-        List<MyUser> result = query
-            .where(queryBuilder.equal(MyUser.ACTIVATION_CODE, activationCode.replaceAll("\"", "")))
-            .getResultList();
+	IdentityQueryBuilder queryBuilder = identityManager.getQueryBuilder();
+	IdentityQuery<MyUser> query = queryBuilder.createIdentityQuery(MyUser.class);
+	List<MyUser> result = query.where(
+		queryBuilder.equal(MyUser.ACTIVATION_CODE, activationCode.replaceAll("\"", "")))
+		.getResultList();
 
-        if (!result.isEmpty()) {
-            return result.get(0);
-        }
+	if (!result.isEmpty()) {
+	    return result.get(0);
+	}
 
-        return null;
+	return null;
     }
 
     public void disableAccount(MyUser user) {
-        if (hasRole(user, ApplicationRole.ADMINISTRATOR)) {
-            throw new IllegalArgumentException("Administrators can not be disabled.");
-        }
+	if (hasRole(user, ApplicationRole.ADMINISTRATOR)) {
+	    throw new IllegalArgumentException("Administrators can not be disabled.");
+	}
 
-        user.setEnabled(false);
+	user.setEnabled(false);
 
-        if (user.getId() != null) {
-            issueToken(user); // we invalidate the current token and create a new one. so any token stored by clients will be no longer valid.
-            this.identityManager.update(user);
-        }
+	if (user.getId() != null) {
+	    issueToken(user); // we invalidate the current token and create a
+			      // new one. so any token stored by clients will be
+			      // no longer valid.
+	    this.identityManager.update(user);
+	}
     }
 
     public void enableAccount(MyUser user) {
-        if (hasRole(user, ApplicationRole.ADMINISTRATOR)) {
-            throw new IllegalArgumentException("Administrators can not be enabled.");
-        }
+	if (hasRole(user, ApplicationRole.ADMINISTRATOR)) {
+	    throw new IllegalArgumentException("Administrators can not be enabled.");
+	}
 
-        user.setEnabled(true);
-        user.invalidateActivationCode();
+	user.setEnabled(true);
+	user.invalidateActivationCode();
 
-        if (user.getId() != null) {
-            this.identityManager.update(user);
-        }
-
+	if (user.getId() != null) {
+	    this.identityManager.update(user);
+	}
 
     }
 
     private Token issueToken(Account account) {
-        return this.tokenProvider.issue(account);
+	return this.tokenProvider.issue(account);
     }
 }
