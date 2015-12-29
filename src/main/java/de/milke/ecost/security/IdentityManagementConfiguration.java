@@ -19,12 +19,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.as.quickstarts.picketlink.angularjs.security;
+package de.milke.ecost.security;
 
 import javax.enterprise.event.Observes;
 
 import org.picketlink.config.SecurityConfigurationBuilder;
 import org.picketlink.event.SecurityConfigurationEvent;
+
+import de.milke.ecost.model.MyUser;
 
 /**
  * <p>
@@ -38,18 +40,18 @@ import org.picketlink.event.SecurityConfigurationEvent;
  * </p>
  *
  * <p>
- * All the configuration related with Http Security is provided from this bean.
+ * All the configuration to PicketLink Identity Management is provided from this
+ * bean.
  * </p>
  *
  * @author Pedro Igor
  */
-public class HttpSecurityConfiguration {
+public class IdentityManagementConfiguration {
 
-    public void onInit(@Observes SecurityConfigurationEvent event) {
+    public void configureIdentityManagement(@Observes SecurityConfigurationEvent event) {
 	SecurityConfigurationBuilder builder = event.getBuilder();
 
-	builder.identity().stateless().http().forPath("/rest/*").authenticateWith().basic()
-		.realmName("PicketLink HTTP Basic Quickstart Realm");
+	builder.idmConfig().named("default.config").stores().jpa().supportType(MyUser.class)
+		.supportAllFeatures();
     }
-
 }

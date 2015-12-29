@@ -114,7 +114,7 @@ public class PowerMeasureDao {
     }
 
     public List<PowerMeasureHistoryDTO> getMeasureHistory(PowerMeasureType powerMeasureType) {
-	LOG.info(powerMeasureType.getUser().getUsername() + ": getMeasure");
+	LOG.info(powerMeasureType.getUser().getFirstName() + ": getMeasure");
 	List<PowerMeasure> listMeasures = getByType(powerMeasureType);
 	List<PowerMeasureHistoryDTO> listHistory = new ArrayList<>();
 	for (int i = 0; i < listMeasures.size() - 1; i++) {
@@ -187,14 +187,14 @@ public class PowerMeasureDao {
 		// .getDays();
 
 		int estimatedValue = (int) (consumptionPerDay * 30);
-		LOG.info(powerMeasureType.getUser().getUsername() + ": estimation for " + searchDate
-			+ " Value: " + estimatedValue);
+		LOG.info(powerMeasureType.getUser().getFirstName() + ": estimation for "
+			+ searchDate + " Value: " + estimatedValue);
 
 		return estimatedValue;
 	    }
 
 	}
-	LOG.info(powerMeasureType.getUser().getUsername() + ": no estimation found for "
+	LOG.info(powerMeasureType.getUser().getFirstName() + ": no estimation found for "
 		+ searchDate);
 	return null;
     }

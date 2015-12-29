@@ -19,9 +19,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.as.quickstarts.picketlink.angularjs.security;
+package de.milke.ecost.security;
 
-import static org.jboss.as.quickstarts.picketlink.angularjs.security.model.IdentityModelManager.findByLoginName;
+import static de.milke.ecost.model.IdentityModelManager.findByLoginName;
 import static org.picketlink.idm.model.basic.BasicModel.getRole;
 import static org.picketlink.idm.model.basic.BasicModel.grantRole;
 
@@ -33,8 +33,6 @@ import java.security.UnrecoverableKeyException;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.security.model.ApplicationRole;
-import org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser;
 import org.picketlink.event.PartitionManagerCreateEvent;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.PartitionManager;
@@ -44,6 +42,8 @@ import org.picketlink.idm.model.Attribute;
 import org.picketlink.idm.model.basic.Realm;
 import org.picketlink.idm.model.basic.Role;
 
+import de.milke.ecost.model.ApplicationRole;
+import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.User;
 
 /**

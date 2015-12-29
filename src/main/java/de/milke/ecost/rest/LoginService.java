@@ -131,7 +131,8 @@ public class LoginService {
     @LoggedIn
     public User getLoggedInUser() {
 	User user = getUser();
-	LOG.info("getuser - username: " + user.getUsername() + "password: " + user.getPassword());
+	LOG.info(
+		"getuser - firstname: " + user.getFirstName() + " lastname: " + user.getLastName());
 	return user;
     }
 

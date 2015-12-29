@@ -1,4 +1,4 @@
-package org.jboss.as.quickstarts.picketlink.angularjs.util;
+package de.milke.ecost.util;
 
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;

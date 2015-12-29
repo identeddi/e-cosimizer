@@ -1,4 +1,4 @@
-package org.jboss.as.quickstarts.picketlink.angularjs.model;
+package de.milke.ecost.model;
 
 import java.util.Arrays;
 import java.util.List;

@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.quickstarts.picketlink.angularjs.security.model;
+package de.milke.ecost.model;
 
 /**
  * @author Pedro Silva

@@ -1,4 +1,4 @@
-package org.jboss.as.quickstarts.picketlink.angularjs.service;
+package de.milke.ecost.rest;
 
 import java.util.List;
 

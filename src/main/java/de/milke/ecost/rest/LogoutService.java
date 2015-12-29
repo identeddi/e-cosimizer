@@ -20,17 +20,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.jboss.as.quickstarts.picketlink.angularjs.security.service;
+package de.milke.ecost.rest;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.security.authentication.JWSToken;
+import javax.inject.Inject;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+
 import org.picketlink.Identity;
 import org.picketlink.authorization.annotations.LoggedIn;
 import org.picketlink.idm.credential.Token;
 import org.picketlink.idm.model.Account;
 
-import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import de.milke.ecost.security.JWSToken;
 
 /**
  *
@@ -47,10 +48,10 @@ public class LogoutService {
     @POST
     @LoggedIn
     public void logout() {
-        Account account = this.identity.getAccount();
+	Account account = this.identity.getAccount();
 
-        this.tokenProvider.invalidate(account);
+	this.tokenProvider.invalidate(account);
 
-        this.identity.logout();
+	this.identity.logout();
     }
 }

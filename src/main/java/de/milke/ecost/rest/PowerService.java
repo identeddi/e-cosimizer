@@ -17,7 +17,6 @@
 package de.milke.ecost.rest;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +37,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
 import org.picketlink.Identity;
@@ -57,6 +55,7 @@ import de.milke.ecost.dao.PowerMeasureTypeDao;
 import de.milke.ecost.model.Contract;
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.MenuItemDTO;
+import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.PowerMeasureHistoryDTO;
 import de.milke.ecost.model.PowerMeasureType;
@@ -107,18 +106,18 @@ public class PowerService {
 	    @QueryParam("measureDate") DateParam measureDate) throws GeneralException {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 	if (measureValue == null) {
-	    String msg = getUser().getUsername() + ": measureValue ist: " + measureValue;
+	    String msg = getUser().getFirstName() + ": measureValue ist: " + measureValue;
 	    LOG.info(msg);
 	    throw new WebApplicationException(msg);
 
 	}
 	if (measureDate == null) {
-	    String msg = getUser().getUsername() + ": measureDate ist: " + measureDate;
+	    String msg = getUser().getFirstName() + ": measureDate ist: " + measureDate;
 	    LOG.info(msg);
 	    throw new WebApplicationException(msg);
 
 	}
-	LOG.info(getUser().getUsername() + ": measureValue: " + measureValue + " measureDate"
+	LOG.info(getUser().getFirstName() + ": measureValue: " + measureValue + " measureDate"
 		+ measureDate.getDate());
 
 	// check measure valid
@@ -229,7 +228,7 @@ public class PowerService {
     public Contract getContract(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
-	LOG.info(getUser().getUsername() + ": getMeasure");
+	LOG.info(getUser().getFirstName() + ": getMeasure");
 
 	return contractDao.getByType(powerMeasureType);
     }
@@ -243,7 +242,7 @@ public class PowerService {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
 	contract.setPowerMeasureType(powerMeasureType);
-	LOG.info(getUser().getUsername() + ": getContract");
+	LOG.info(getUser().getFirstName() + ": getContract");
 
 	return contractDao.save(contract);
     }
@@ -264,8 +263,8 @@ public class PowerService {
 	    }
 	}
 	LOG.info(request.toString());
-	LOG.info(getUser().getUsername() + ": getMeasure last ");
-	LOG.info(getUser().getUsername() + ": session: " + request.getSession().getId());
+	LOG.info(getUser().getFirstName() + ": getMeasure last ");
+	LOG.info(getUser().getFirstName() + ": session: " + request.getSession().getId());
 	return lastMeasures;
     }
 
@@ -301,17 +300,10 @@ public class PowerService {
 	return new SupplySettingsDTO(zipcode, estimatedConsumtion, passedConsumtion);
     }
 
-    private Principal principal;
-
-    @Context
-    public void setSecurityContext(SecurityContext context) {
-	LOG.info(context.getUserPrincipal().getName() + ": getMeasure last ");
-	principal = context.getUserPrincipal();
-    }
-
     protected User getUser() {
+	MyUser user = (MyUser) identity.getAccount();
 	LOG.info(identity.getAccount().getId());
 	LOG.info(identity.toString());
-	return accountDao.getByUsername(principal.getName());
+	return user.getUser();
     }
 }

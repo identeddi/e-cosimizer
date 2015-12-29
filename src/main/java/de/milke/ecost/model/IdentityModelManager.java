@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.as.quickstarts.picketlink.angularjs.security.model;
+package de.milke.ecost.model;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +27,6 @@ import java.util.UUID;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.security.authentication.JWSToken;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.RelationshipManager;
 import org.picketlink.idm.credential.Password;
@@ -38,7 +37,7 @@ import org.picketlink.idm.model.basic.Role;
 import org.picketlink.idm.query.IdentityQuery;
 import org.picketlink.idm.query.IdentityQueryBuilder;
 
-import de.milke.ecost.model.User;
+import de.milke.ecost.security.JWSToken;
 
 /**
  * <p>

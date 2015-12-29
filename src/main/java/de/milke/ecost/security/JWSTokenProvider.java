@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.as.quickstarts.picketlink.angularjs.security.authentication;
+package de.milke.ecost.security;
 
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.PartitionManager;

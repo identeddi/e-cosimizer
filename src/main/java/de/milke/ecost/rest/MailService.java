@@ -1,4 +1,4 @@
-package org.jboss.as.quickstarts.picketlink.angularjs.service;
+package de.milke.ecost.rest;
 
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.ws.rs.core.MediaType;
 
-import org.jboss.as.quickstarts.picketlink.angularjs.model.Email;
+import de.milke.ecost.model.Email;
 
 /**
  * Session Bean implementation class MailService

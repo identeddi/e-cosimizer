@@ -23,13 +23,22 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceContext;
 
 import org.picketlink.authorization.annotations.LoggedIn;
+import org.picketlink.authorization.annotations.RolesAllowed;
 
 import de.milke.ecost.dao.AccountDao;
+import de.milke.ecost.model.ApplicationRole;
+import de.milke.ecost.model.IdentityModelManager;
+import de.milke.ecost.model.MyUser;
+import de.milke.ecost.model.User;
+import de.milke.ecost.util.MessageBuilder;
 
 /**
  * JAX-RS Example
@@ -40,6 +49,7 @@ import de.milke.ecost.dao.AccountDao;
 @Path("/account")
 @Stateless
 @LoggedIn
+@RolesAllowed(ApplicationRole.ADMINISTRATOR)
 public class AccountService {
 
     static Logger LOG = Logger.getLogger(AccountService.class.getName());
@@ -73,5 +83,50 @@ public class AccountService {
 	 * firstName + " lastName: " + lastName + "password: " + password +
 	 * " passwortconfirmed: " + passwordConfirm);
 	 */ return "Successfully registered " + email;
+    }
+
+    @Inject
+    private IdentityModelManager identityModelManager;
+
+    @POST
+    @Path("enableAccount")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response enable(User passedUser) {
+	MessageBuilder message;
+
+	MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
+
+	if (user == null) {
+	    return MessageBuilder.badRequest().message("Invalid account.").build();
+	}
+
+	if (user.isEnabled()) {
+	    return MessageBuilder.badRequest().message("Account is already enabled.").build();
+	}
+
+	this.identityModelManager.enableAccount(user);
+
+	return MessageBuilder.ok().message("Account is now enabled.").build();
+    }
+
+    @POST
+    @Path("disableAccount")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response disable(User passedUser) {
+	MessageBuilder message;
+
+	MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
+
+	if (user == null) {
+	    return MessageBuilder.badRequest().message("Invalid account.").build();
+	}
+
+	if (!user.isEnabled()) {
+	    return MessageBuilder.badRequest().message("Accound is already disabled.").build();
+	}
+
+	this.identityModelManager.disableAccount(user);
+
+	return MessageBuilder.ok().message("Account is now disabled.").build();
     }
 }

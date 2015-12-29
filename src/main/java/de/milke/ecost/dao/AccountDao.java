@@ -60,7 +60,7 @@ public class AccountDao {
 	lQuery.setParameter("username", userName);
 	try {
 	    User usr = lQuery.getSingleResult();
-	    LOG.info("User found " + usr.getUsername());
+	    LOG.info("User found " + usr.getFirstName());
 	    return usr;
 	} catch (NoResultException e) {
 	    LOG.info("User not found " + userName);
