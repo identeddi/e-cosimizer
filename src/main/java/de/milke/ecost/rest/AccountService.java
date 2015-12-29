@@ -27,12 +27,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.xml.ws.WebServiceContext;
 
-import org.jboss.security.auth.spi.Util;
 import org.picketlink.authorization.annotations.LoggedIn;
 
 import de.milke.ecost.dao.AccountDao;
-import de.milke.ecost.model.Role;
-import de.milke.ecost.model.User;
 
 /**
  * JAX-RS Example
@@ -60,24 +57,21 @@ public class AccountService {
 	    @QueryParam("lastName") String lastName, @QueryParam("password") String password,
 	    @QueryParam("passwordConfirm") String passwordConfirm) {
 
-	Role adminRole = accountDao.getOrCreateRole("admin");
+	// Role adminRole = accountDao.getOrCreateRole("admin");
 
 	// check user exists
 	if (null != accountDao.getByUsername(email)) {
 	    throw new WebApplicationException(email + " bereits registriert.");
 	}
-
-	User user = new User();
-	user.setPassword(Util.createPasswordHash("SHA-256", "BASE64", null, null, password));
-	user.setEmail(email);
-	user.setUsername(username);
-	user.setFirstName(firstName);
-	user.setLastName(lastName);
-	user.getRoles().add(adminRole);
-	accountDao.save(user);
-	LOG.info("username: " + username + "email: " + email + " firstname" + firstName
-		+ " lastName: " + lastName + "password: " + password + " passwortconfirmed: "
-		+ passwordConfirm);
-	return "Successfully registered " + email;
+	/*
+	 * User user = new User();
+	 * user.setPassword(Util.createPasswordHash("SHA-256", "BASE64", null,
+	 * null, password)); user.setEmail(email); user.setUsername(username);
+	 * user.setFirstName(firstName); user.setLastName(lastName); //
+	 * user.getRoles().add(adminRole); accountDao.save(user); LOG.info(
+	 * "username: " + username + "email: " + email + " firstname" +
+	 * firstName + " lastName: " + lastName + "password: " + password +
+	 * " passwortconfirmed: " + passwordConfirm);
+	 */ return "Successfully registered " + email;
     }
 }

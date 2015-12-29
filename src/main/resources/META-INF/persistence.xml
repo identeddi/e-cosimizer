@@ -24,18 +24,18 @@
       <!-- If you are running in a production environment, add a managed 
          data source, the example data source is just for proofs of concept! -->
       <jta-data-source>java:jboss/datasources/ecostimizer</jta-data-source>
-<!--         <class>org.picketlink.idm.jpa.model.sample.simple.AttributedTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.RoleTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.GroupTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.RelationshipTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.RelationshipIdentityTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.AttributeTypeEntity</class> -->
-<!-- 		<class>org.picketlink.idm.jpa.model.sample.simple.PasswordCredentialTypeEntity</class> -->
-<!--         <class>org.picketlink.idm.jpa.model.sample.simple.TokenCredentialTypeEntity</class> -->
-		
-      <properties>
+         <class>de.milke.ecost.model.User</class>
+        <class>org.picketlink.idm.jpa.model.sample.simple.AttributedTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.RoleTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.GroupTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.RelationshipTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.RelationshipIdentityTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.PartitionTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.AttributeTypeEntity</class>
+		<class>org.picketlink.idm.jpa.model.sample.simple.PasswordCredentialTypeEntity</class>
+        <class>org.picketlink.idm.jpa.model.sample.simple.TokenCredentialTypeEntity</class>
+         <properties>
          <!-- Properties for Hibernate -->
          <property name="hibernate.hbm2ddl.auto" value="update" />
          <property name="hibernate.show_sql" value="false" />

@@ -6,16 +6,15 @@
 	metadata-complete="false">
 	<display-name>Restful Web Application</display-name>
 
-	<!-- Auto scan REST service -->
-	<context-param>
-		<param-name>resteasy.scan</param-name>
-		<param-value>true</param-value>
-	</context-param>
-
-	<listener>
-		<listener-class>
-			org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
-	</listener>
-
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>JaxRsActivator</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+<!-- 		<user-data-constraint> -->
+<!-- 			<transport-guarantee>CONFIDENTIAL</transport-guarantee> -->
+<!-- 		</user-data-constraint> -->
+	</security-constraint>
+	
 </web-app>
 

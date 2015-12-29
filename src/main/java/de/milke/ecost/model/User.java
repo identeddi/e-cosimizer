@@ -16,27 +16,17 @@
  */
 package de.milke.ecost.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.jboss.security.SimplePrincipal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@XmlRootElement
-@Table(name = "User", uniqueConstraints = @UniqueConstraint(columnNames = "username") )
-public class User extends SimplePrincipal {
+public class User implements Serializable {
     /** Default value included to remove warning. Remove or modify at will. **/
     private static final long serialVersionUID = 1L;
 
@@ -63,17 +53,6 @@ public class User extends SimplePrincipal {
     @JsonIgnore
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles = new HashSet<Role>(0);
-
-    public User() {
-	super("");
-    }
-
-    public User(String userName) {
-	super(userName);
-    }
-
     public Long getId() {
 	return id;
     }
@@ -96,14 +75,6 @@ public class User extends SimplePrincipal {
 
     public void setPassword(String password) {
 	this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-	return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-	this.roles = roles;
     }
 
     public String getFirstName() {

@@ -24,7 +24,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import de.milke.ecost.model.Role;
 import de.milke.ecost.model.User;
 
 @Stateless
@@ -43,22 +42,19 @@ public class AccountDao {
 	return user;
     }
 
-    public Role getOrCreateRole(String roleName) {
-	TypedQuery<Role> lQuery = em.createQuery("from Role where rolename=:rolename", Role.class);
-	lQuery.setParameter("rolename", roleName);
-	try {
-	    Role foundRole = lQuery.getSingleResult();
-	    return foundRole;
-	} catch (NoResultException e) {
-	    Role role = new Role(roleName);
-
-	    em.persist(role);
-	    return role;
-
-	}
-
-    }
-
+    /*
+     * public Role getOrCreateRole(String roleName) { TypedQuery<Role> lQuery =
+     * em.createQuery("from Role where rolename=:rolename", Role.class);
+     * lQuery.setParameter("rolename", roleName); try { Role foundRole =
+     * lQuery.getSingleResult(); return foundRole; } catch (NoResultException e)
+     * { Role role = new Role(roleName);
+     * 
+     * em.persist(role); return role;
+     * 
+     * }
+     * 
+     * }
+     */
     public User getByUsername(String userName) {
 	TypedQuery<User> lQuery = em.createQuery("from User where username=:username", User.class);
 	lQuery.setParameter("username", userName);

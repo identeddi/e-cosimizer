@@ -19,37 +19,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package de.milke.ecost.rest;
+package org.jboss.as.quickstarts.picketlink.angularjs.security;
 
-import javax.enterprise.event.Observes;
-
+import org.jboss.as.quickstarts.picketlink.angularjs.security.model.MyUser;
 import org.picketlink.config.SecurityConfigurationBuilder;
 import org.picketlink.event.SecurityConfigurationEvent;
 
+import javax.enterprise.event.Observes;
+
 /**
- * <p>
- * A simple CDI observer for the
- * {@link org.picketlink.event.SecurityConfigurationEvent}.
- * </p>
+ * <p>A simple CDI observer for the {@link org.picketlink.event.SecurityConfigurationEvent}.</p>
  *
- * <p>
- * The event is fired during application startup and allows you to provide any
- * configuration to PicketLink before it is initialized.
- * </p>
+ * <p>The event is fired during application startup and allows you to provide any configuration to PicketLink
+ * before it is initialized.</p>
  *
- * <p>
- * All the configuration related with Http Security is provided from this bean.
- * </p>
+ * <p>All the configuration to PicketLink Identity Management is provided from this bean.</p>
  *
  * @author Pedro Igor
  */
-public class HttpSecurityConfiguration {
+public class IdentityManagementConfiguration {
 
-    public void onInit(@Observes SecurityConfigurationEvent event) {
-	SecurityConfigurationBuilder builder = event.getBuilder();
+    public void configureIdentityManagement(@Observes SecurityConfigurationEvent event) {
+        SecurityConfigurationBuilder builder = event.getBuilder();
 
-	builder.http().forPath("/rest/*").authenticateWith().basic()
-		.realmName("PicketLink HTTP Basic Quickstart Realm");
+        builder
+            .idmConfig()
+                .named("default.config")
+                    .stores()
+                        .jpa()
+                            .supportType(MyUser.class)
+                            .supportAllFeatures();
     }
-
 }
