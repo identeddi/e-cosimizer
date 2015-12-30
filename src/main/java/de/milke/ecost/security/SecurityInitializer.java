@@ -33,6 +33,8 @@ import java.security.UnrecoverableKeyException;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.picketlink.event.PartitionManagerCreateEvent;
 import org.picketlink.idm.IdentityManager;
@@ -66,6 +68,9 @@ public class SecurityInitializer {
 
     @EJB
     PowerMeasureTypeDao powerMeasureTypeDao;
+
+    @PersistenceContext(name = "primary")
+    private EntityManager em;
 
     public void configureDefaultPartition(@Observes PartitionManagerCreateEvent event) {
 	PartitionManager partitionManager = event.getPartitionManager();
@@ -148,7 +153,7 @@ public class SecurityInitializer {
 	person.setFirstName("Almight");
 	person.setLastName("Administrator");
 	person.setEmail(email);
-
+	em.persist(person);
 	MyUser admin = new MyUser(username);
 
 	admin.setUser(person);
