@@ -72,7 +72,6 @@ import de.milke.ecost.service.Check24SupplyResolver;
  */
 @Path("/power")
 @Stateless
-// @RolesAllowed("admin")
 @LoggedIn
 public class PowerService {
 
