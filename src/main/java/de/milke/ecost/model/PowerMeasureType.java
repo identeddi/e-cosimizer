@@ -40,6 +40,9 @@ public class PowerMeasureType implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private MeasureTypeEnum typeEnum;
+
+    @Column(nullable = false)
     private String typeName;
 
     @Column(nullable = false)
@@ -83,6 +86,14 @@ public class PowerMeasureType implements Serializable {
 
     public void setReferenceId(String referenceId) {
 	this.referenceId = referenceId;
+    }
+
+    public MeasureTypeEnum getTypeEnum() {
+	return typeEnum;
+    }
+
+    public void setTypeEnum(MeasureTypeEnum typeEnum) {
+	this.typeEnum = typeEnum;
     }
 
 }

@@ -150,10 +150,6 @@ BookIt.SignUpController.prototype.onSignupCommand = function() {
 								$.mobile.changePage("#page-signin")
 							});
 					return;
-				},
-				error : function(e) {
-					runtimePopup("Opps, unerwarteter Fehler bei der Registrierung des Benutzers "
-							+ emailAddress + ".");
 				}
 			});
 };

@@ -29,20 +29,25 @@ BookIt.SignInController.prototype.onSigninCommand = function() {
 	me.$txtPassword.removeClass(invalidInputStyle);
 	callurl = "http://" + window.location.host + "/rest/login/login";
 
-	resp = $.ajax({
-		type : 'POST',
-		url : callurl,
-		headers : {
-			"Authorization" : "Basic " + btoa(username + ":" + password)
-		},
-		success : function(resp) {
-			panelModel.fullUserName(resp.firstName + ' ' + resp.lastName);
-			$.mobile.changePage("#info-main");
+	resp = $
+			.ajax({
+				type : 'POST',
+				url : callurl,
+				headers : {
+					"Authorization" : "Basic "
+							+ btoa(username + ":" + password)
+				},
+				success : function(resp) {
+					panelModel.fullUserName(resp.firstName + ' '
+							+ resp.lastName);
+					$.mobile.changePage("#info-main");
 
-		},
-		error : function(e) {
-		}
-	});
+				},
+				error : function(e) {
+					runtimePopup("Benutzername oder Passwort stimmen nicht überein, bitter erneut versuchen.");
+					console.log("login failed");
+				}
+			});
 
 };
 function make_base_auth(user, password) {
@@ -61,6 +66,6 @@ $(document).delegate("#page-signin", "pagebeforecreate", function() {
 });
 
 $(document).on("pagebeforeshow", "#page-signin", function(event) {
-//	app.signinController.resetSessionForm();
+	// app.signinController.resetSessionForm();
 
 });

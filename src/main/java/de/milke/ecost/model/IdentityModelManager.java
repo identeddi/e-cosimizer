@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.xml.ws.WebServiceException;
 
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.RelationshipManager;
@@ -96,7 +97,7 @@ public class IdentityModelManager {
 
     public MyUser createAccount(UserRegistration request) {
 	if (!request.isValid()) {
-	    throw new IllegalArgumentException("Insuficient information.");
+	    throw new WebServiceException("Insuficient information.");
 	}
 
 	User person = new User();
@@ -105,7 +106,7 @@ public class IdentityModelManager {
 	person.setFirstName(request.getFirstName());
 	person.setLastName(request.getLastName());
 
-	MyUser newUser = new MyUser(request.getEmail());
+	MyUser newUser = new MyUser(request.getUserName());
 
 	newUser.setUser(person);
 
@@ -118,7 +119,7 @@ public class IdentityModelManager {
 
 	updatePassword(newUser, request.getPassword());
 
-	disableAccount(newUser);
+	enableAccount(newUser);
 
 	return newUser;
     }

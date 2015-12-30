@@ -21,6 +21,7 @@
  */
 package de.milke.ecost.rest;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Any;
@@ -28,13 +29,17 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.picketlink.idm.credential.Token;
 
+import de.milke.ecost.dao.AccountDao;
+import de.milke.ecost.dao.PowerMeasureTypeDao;
 import de.milke.ecost.model.ApplicationRole;
 import de.milke.ecost.model.Email;
+import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.IdentityModelManager;
 import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.UserRegistration;
@@ -70,37 +75,49 @@ public class RegistrationService {
     @Any
     private Event<Email> event;
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response createMember(UserRegistration request) {
-	if (!request.getPassword().equals(request.getPasswordConfirmation())) {
-	    return MessageBuilder.badRequest().message("Password mismatch.").build();
-	}
+    @EJB
+    AccountDao accountDao;
 
-	MessageBuilder message;
+    @EJB
+    PowerMeasureTypeDao powerMeasureTypeDao;
+
+    @POST
+    public String register(@QueryParam("email") String email,
+	    @QueryParam("firstName") String firstName, @QueryParam("username") String username,
+	    @QueryParam("lastName") String lastName, @QueryParam("password") String password,
+	    @QueryParam("passwordConfirm") String passwordConfirm) throws GeneralException {
+
+	if (!password.equals(passwordConfirm)) {
+	    throw new GeneralException("Passwörter sind nicht gleich.");
+	}
 
 	try {
 	    // if there is no user with the provided e-mail, perform
 	    // registration
-	    if (this.identityModelManager.findByLoginName(request.getEmail()) == null) {
-		MyUser newUser = this.identityModelManager.createAccount(request);
+	    if (this.identityModelManager.findByLoginName(username) == null) {
+		UserRegistration userRegistration = new UserRegistration();
+		userRegistration.setUserName(username);
+		userRegistration.setEmail(email);
+		userRegistration.setFirstName(firstName);
+		userRegistration.setLastName(lastName);
+		userRegistration.setPassword(passwordConfirm);
+		userRegistration.setPasswordConfirmation(passwordConfirm);
+		MyUser newUser = this.identityModelManager.createAccount(userRegistration);
 
 		this.identityModelManager.grantRole(newUser, ApplicationRole.USER);
-
+		powerMeasureTypeDao.createDefaults(newUser.getUser());
 		String activationCode = newUser.getActivationCode();
 
-		sendNotification(request, activationCode);
+		sendNotification(userRegistration, activationCode);
 
-		message = MessageBuilder.ok().activationCode(activationCode);
+		return activationCode;
 	    } else {
-		message = MessageBuilder.badRequest()
-			.message("This username is already in use. Try another one.");
+		throw new GeneralException(
+			username + " Benutzer bereits registriert, bitte einen anderen wählen");
 	    }
 	} catch (Exception e) {
-	    message = MessageBuilder.badRequest().message(e.getMessage());
+	    throw new GeneralException(username + " Unbekannter Fehler: " + e.getMessage());
 	}
-
-	return message.build();
     }
 
     @POST

@@ -199,59 +199,24 @@ jQuery(function($) {
 $(document).on('click', '#button-page-signin', function(e) {
 	callurl = "http://" + window.location.host + BookIt.Settings.signInUrl
 
-	// If the return is 401, refresh the page to request new details.
-
-	callurl = "http://" + window.location.host + BookIt.Settings.signInUrl
-	resp = $.ajax({
-		type : 'POST',
-		url : callurl,
-		username : 'reset',
-		password : 'reset',
-		async : false
-	});
 	$.mobile.changePage("#page-signin");
-	//	
-	// resp = $.ajax({
-	// type : 'POST',
-	// url : callurl,
-	// success : function(resp) {
-	// $.mobile.changePage("#page-signin");
-	// },
-	// error : function(e) {
-	// runtimePopup(e)
-	// }
-	// });
-
 });
 
 $(document).on("click", "#nav-panel-list li a", function() {
 	var powerMeasureType = $(this).attr('id');
 	if (powerMeasureType > 0) {
 		powerType = powerMeasureType;
-	}
-	else if(powerMeasureType = -3)
-	{
-			callurl = "http://" + window.location.host + "/rest/login/logout";
-	resp = $.ajax({
-		type : 'POST',
-		url : callurl,
-		async : false
-	});
-
-	callurl = "http://" + window.location.host + "/rest/login/login";
-	resp = $.ajax({
-		type : 'POST',
-		url : callurl,
-		headers : {
-			"Authorization" : "Basic " + btoa("reset:reset")
-		},
-		async : false
-	});
+	} else if (powerMeasureType == -3) {
+		callurl = "http://" + window.location.host + "/rest/login/logout";
+		resp = $.ajax({
+			type : 'POST',
+			url : callurl,
+			async : false
+		});
 
 	}
 	var href = $(this).attr('href');
-	var e = 2;
-	// your code
+
 });
 
 $(document).on("panelbeforeopen", "#nav-panel", function(event) {
@@ -271,19 +236,20 @@ $(document).on("panelbeforeopen", "#nav-panel", function(event) {
 
 $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
 	if (jqxhr.status == 500) {
-		$.mobile.changePage("#info-main");
+		runtimePopup("Unerwarteter Fehler aufgetreten: " + jqxhr.statusText);
+	} else if (jqxhr.status == 400) {
+		runtimePopup(jqxhr.responseText);
 	} else if (jqxhr.status == 403) {
 		console.log($.mobile.activePage);
-		if($.mobile.activePage != undefined)
-		{
+		if ($.mobile.activePage != undefined) {
 			pageName = $.mobile.activePage[0].id;
 			console.log(pageName);
-			if(pageName != 'page-signin')
-			{
-//				runtimePopup("Sie sind nicht eingeloggt und werden deshalb automatisch zur Login-Seite navigiert.");
+			if (pageName != 'page-signin') {
+				// runtimePopup("Sie sind nicht eingeloggt und werden deshalb
+				// automatisch zur Login-Seite navigiert.");
 				$.mobile.changePage("#page-signin");
 			}
 		}
 	}
-	console.log("Triggered ajaxError handler.");
+	console.log("Triggered ajaxError handler." + jqxhr.status);
 });

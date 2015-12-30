@@ -1,6 +1,13 @@
 var BookIt = BookIt || {};
 var usr=null;
 $( document ).on( "pagebeforeshow" , function(e, data) {
+ 
+ if(data.toPage.attr('id') === 'page-signin' ||
+ data.toPage.attr('id') === 'page-signup' ||
+ data.toPage.attr('id') === 'page-index')
+ {
+ 	return;
+ }
  if(usr ==null)
    {
       callurl="http://" + window.location.host + BookIt.Settings.signInUrl;

@@ -302,8 +302,8 @@ public class PowerService {
 
     protected User getUser() {
 	MyUser user = (MyUser) identity.getAccount();
-	LOG.info(identity.getAccount().getId());
-	LOG.info(identity.toString());
+	LOG.info("userinfo: " + user.getUser().getId() + " firstname: "
+		+ user.getUser().getFirstName());
 	return user.getUser();
     }
 }

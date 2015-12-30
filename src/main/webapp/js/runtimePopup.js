@@ -5,7 +5,7 @@ function runtimePopup(message, popupafterclose) {
       + "<a href='#' data-role='button' data-theme='g' data-icon='check' data-iconpos='notext' " 
       + " class='ui-btn-right closePopup'>Close</a> <span> " 
       + message + " </span> </div>";
-  
+  console.log("call runtimePopup: " + message);
   popupafterclose = popupafterclose ? popupafterclose : function () {};
 
   $.mobile.activePage.append(template).trigger("create");

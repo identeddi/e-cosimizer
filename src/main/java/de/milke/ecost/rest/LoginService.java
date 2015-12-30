@@ -17,7 +17,6 @@
 package de.milke.ecost.rest;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -33,14 +32,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 import javax.xml.ws.WebServiceContext;
 
+import org.picketlink.Identity;
 import org.picketlink.authorization.annotations.LoggedIn;
 
 import de.milke.ecost.dao.AccountDao;
+import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.User;
 
 /**
@@ -52,7 +51,6 @@ import de.milke.ecost.model.User;
 
 @Path("/login")
 @Stateless
-// @RolesAllowed("admin")
 public class LoginService {
 
     static Logger LOG = Logger.getLogger(LoginService.class.getName());
@@ -63,11 +61,15 @@ public class LoginService {
     @Resource
     WebServiceContext webServiceContext;
 
+    @Inject
+    private Identity identity;
+
     @POST
     @Path("/logout")
     public void logout(@Context HttpServletRequest request, @Context HttpServletResponse response)
 	    throws ServletException, IOException {
 	int xx = 3;
+	this.identity.logout();
     }
 
     @DELETE
@@ -101,10 +103,13 @@ public class LoginService {
     @Path("/login")
     @Produces("application/json")
     @LoggedIn
-    public User registerget(@QueryParam("username") String username,
-	    @QueryParam("password") String password) {
-	LOG.info("logged in - username: " + username + "password: " + password);
+    public User registerget() {
 	User user = getUser();
+	LOG.info("logged in - firstname: " + user.getFirstName() + "lastname: "
+		+ user.getLastName());
+	if (!this.identity.isLoggedIn()) {
+	    this.identity.login();
+	}
 	return user;
     }
 
@@ -136,15 +141,10 @@ public class LoginService {
 	return user;
     }
 
-    private Principal principal;
-
-    @Context
-    public void setSecurityContext(SecurityContext context) {
-	LOG.info(context.getUserPrincipal().getName() + ": getMeasure last");
-	principal = context.getUserPrincipal();
-    }
-
     protected User getUser() {
-	return accountDao.getByUsername(principal.getName());
+	MyUser user = (MyUser) identity.getAccount();
+	LOG.info(identity.getAccount().getId());
+	LOG.info(identity.toString());
+	return user.getUser();
     }
 }

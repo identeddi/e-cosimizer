@@ -48,8 +48,9 @@ public class HttpSecurityConfiguration {
     public void onInit(@Observes SecurityConfigurationEvent event) {
 	SecurityConfigurationBuilder builder = event.getBuilder();
 
-	builder.identity().stateless().http().forPath("/rest/*").authenticateWith().basic()
-		.realmName("PicketLink HTTP Basic Quickstart Realm");
+	builder.identity().http().forPath("/rest/*").authenticateWith().basic()
+		.realmName("PicketLink HTTP Basic Quickstart Realm").forPath("/rest/register")
+		.unprotected();
     }
 
 }

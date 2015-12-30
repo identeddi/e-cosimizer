@@ -30,6 +30,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
 
@@ -42,6 +43,7 @@ import org.picketlink.idm.model.Attribute;
 import org.picketlink.idm.model.basic.Realm;
 import org.picketlink.idm.model.basic.Role;
 
+import de.milke.ecost.dao.PowerMeasureTypeDao;
 import de.milke.ecost.model.ApplicationRole;
 import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.User;
@@ -61,6 +63,9 @@ public class SecurityInitializer {
     public static final String KEYSTORE_FILE_PATH = "/keystore.jks";
 
     private KeyStore keyStore;
+
+    @EJB
+    PowerMeasureTypeDao powerMeasureTypeDao;
 
     public void configureDefaultPartition(@Observes PartitionManagerCreateEvent event) {
 	PartitionManager partitionManager = event.getPartitionManager();
@@ -130,10 +135,11 @@ public class SecurityInitializer {
 
     public void createAdminAccount(PartitionManager partitionManager) {
 	IdentityManager identityManager = partitionManager.createIdentityManager();
-	String email = "aa";
+	String email = "admin@costimizer.de";
+	String username = "aa";
 
 	// if admin exists dont create again
-	if (findByLoginName(email, identityManager) != null) {
+	if (findByLoginName(username, identityManager) != null) {
 	    return;
 	}
 
@@ -143,7 +149,7 @@ public class SecurityInitializer {
 	person.setLastName("Administrator");
 	person.setEmail(email);
 
-	MyUser admin = new MyUser(person.getEmail());
+	MyUser admin = new MyUser(username);
 
 	admin.setUser(person);
 
@@ -154,5 +160,7 @@ public class SecurityInitializer {
 	Role adminRole = getRole(identityManager, ApplicationRole.ADMINISTRATOR);
 
 	grantRole(partitionManager.createRelationshipManager(), admin, adminRole);
+
+	powerMeasureTypeDao.createDefaults(person);
     }
 }

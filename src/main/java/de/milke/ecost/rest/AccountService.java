@@ -24,8 +24,6 @@ import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceContext;
@@ -59,31 +57,6 @@ public class AccountService {
 
     @Resource
     WebServiceContext webServiceContext;
-
-    @POST
-    @Path("/register")
-    public String register(@QueryParam("email") String email,
-	    @QueryParam("firstName") String firstName, @QueryParam("username") String username,
-	    @QueryParam("lastName") String lastName, @QueryParam("password") String password,
-	    @QueryParam("passwordConfirm") String passwordConfirm) {
-
-	// Role adminRole = accountDao.getOrCreateRole("admin");
-
-	// check user exists
-	if (null != accountDao.getByUsername(email)) {
-	    throw new WebApplicationException(email + " bereits registriert.");
-	}
-	/*
-	 * User user = new User();
-	 * user.setPassword(Util.createPasswordHash("SHA-256", "BASE64", null,
-	 * null, password)); user.setEmail(email); user.setUsername(username);
-	 * user.setFirstName(firstName); user.setLastName(lastName); //
-	 * user.getRoles().add(adminRole); accountDao.save(user); LOG.info(
-	 * "username: " + username + "email: " + email + " firstname" +
-	 * firstName + " lastName: " + lastName + "password: " + password +
-	 * " passwortconfirmed: " + passwordConfirm);
-	 */ return "Successfully registered " + email;
-    }
 
     @Inject
     private IdentityModelManager identityModelManager;

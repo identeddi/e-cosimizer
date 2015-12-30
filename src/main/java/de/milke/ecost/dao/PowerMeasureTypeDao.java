@@ -16,6 +16,7 @@
  */
 package de.milke.ecost.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -24,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import de.milke.ecost.model.MeasureTypeEnum;
 import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.User;
 
@@ -56,5 +58,66 @@ public class PowerMeasureTypeDao {
 	}
 	return powerMeasureType;
 
+    }
+
+    public List<PowerMeasureType> createDefaults(User user) {
+
+	List<PowerMeasureType> powerMeasureTypeList = new ArrayList<>();
+
+	// Gas
+	PowerMeasureType powerMeasureType = new PowerMeasureType();
+	powerMeasureType.setReferenceId("Z...");
+	powerMeasureType.setTypeEnum(MeasureTypeEnum.GAS);
+	powerMeasureType.setTypeName("Gas");
+	powerMeasureType.setUser(user);
+	em.persist(powerMeasureType);
+	powerMeasureTypeList.add(powerMeasureType);
+
+	// Strom
+	powerMeasureType = new PowerMeasureType();
+	powerMeasureType.setReferenceId("S...");
+	powerMeasureType.setTypeEnum(MeasureTypeEnum.STROM);
+	powerMeasureType.setTypeName("Strom");
+	powerMeasureType.setUser(user);
+	em.persist(powerMeasureType);
+	powerMeasureTypeList.add(powerMeasureType);
+
+	// Auto
+	powerMeasureType = new PowerMeasureType();
+	powerMeasureType.setReferenceId("A...");
+	powerMeasureType.setTypeEnum(MeasureTypeEnum.AUTO);
+	powerMeasureType.setTypeName("Autoversicherung");
+	powerMeasureType.setUser(user);
+	em.persist(powerMeasureType);
+	powerMeasureTypeList.add(powerMeasureType);
+
+	// DSL
+	powerMeasureType = new PowerMeasureType();
+	powerMeasureType.setReferenceId("D...");
+	powerMeasureType.setTypeEnum(MeasureTypeEnum.DSL);
+	powerMeasureType.setTypeName("DSL");
+	powerMeasureType.setUser(user);
+	em.persist(powerMeasureType);
+	powerMeasureTypeList.add(powerMeasureType);
+
+	// Mobil
+	powerMeasureType = new PowerMeasureType();
+	powerMeasureType.setReferenceId("M...");
+	powerMeasureType.setTypeEnum(MeasureTypeEnum.MOBILE);
+	powerMeasureType.setTypeName("Mobil");
+	powerMeasureType.setUser(user);
+	em.persist(powerMeasureType);
+	powerMeasureTypeList.add(powerMeasureType);
+
+	// Sonstiges
+	powerMeasureType = new PowerMeasureType();
+	powerMeasureType.setReferenceId("S...");
+	powerMeasureType.setTypeEnum(MeasureTypeEnum.OTHER);
+	powerMeasureType.setTypeName("Sonstiges");
+	powerMeasureType.setUser(user);
+	em.persist(powerMeasureType);
+	powerMeasureTypeList.add(powerMeasureType);
+
+	return powerMeasureTypeList;
     }
 }
