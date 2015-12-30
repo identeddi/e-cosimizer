@@ -120,7 +120,6 @@ public class PowerService {
 		+ measureDate.getDate());
 
 	// check measure valid
-
 	PowerMeasure powerMeasure = new PowerMeasure();
 	powerMeasure.setPowerMeasureType(powerMeasureType);
 	powerMeasure.setMeasureDate(measureDate.getDate());
