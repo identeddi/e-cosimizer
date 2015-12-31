@@ -26,6 +26,8 @@ import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.xml.ws.WebServiceException;
 
 import org.picketlink.idm.IdentityManager;
@@ -76,6 +78,9 @@ public class IdentityModelManager {
     @Inject
     private Token.Provider<JWSToken> tokenProvider;
 
+    @PersistenceContext(name = "primary")
+    private EntityManager em;
+
     public static MyUser findByLoginName(String loginName, IdentityManager identityManager) {
 	if (loginName == null) {
 	    throw new IllegalArgumentException("Invalid login name.");
@@ -115,6 +120,7 @@ public class IdentityModelManager {
 	newUser.setActivationCode(activationCode); // we set an activation code
 						   // for future use.
 
+	em.persist(newUser);
 	this.identityManager.add(newUser);
 
 	updatePassword(newUser, request.getPassword());
