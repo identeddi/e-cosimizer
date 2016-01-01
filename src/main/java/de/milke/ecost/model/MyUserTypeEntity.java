@@ -22,6 +22,7 @@
 package de.milke.ecost.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 import org.picketlink.idm.jpa.annotations.AttributeValue;
@@ -43,9 +44,14 @@ import org.picketlink.idm.jpa.model.sample.simple.IdentityTypeEntity;
  *
  * @author Pedro Igor
  */
-// @Entity
+@Entity
 @IdentityManaged(MyUser.class)
 public class MyUserTypeEntity extends IdentityTypeEntity {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
     @AttributeValue
     private String loginName;
