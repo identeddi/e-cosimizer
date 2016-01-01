@@ -33,8 +33,6 @@ import org.picketlink.idm.model.annotation.Unique;
 import org.picketlink.idm.query.AttributeParameter;
 import org.picketlink.idm.query.QueryParameter;
 
-import de.milke.ecost.model.User;
-
 /**
  * <p>
  * This is a custom {@link org.picketlink.idm.model.Account} type to represent
@@ -62,7 +60,7 @@ public class MyUser extends AbstractIdentityType implements Account {
 
     /**
      * <p>
-     * Can be used to query users by their activation code.
+     * Can bxe used to query users by their activation code.
      * </p>
      */
     public static final AttributeParameter ACTIVATION_CODE = QUERY_ATTRIBUTE
