@@ -29,10 +29,13 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.picketlink.event.PartitionManagerCreateEvent;
 import org.picketlink.idm.IdentityManager;
@@ -59,6 +62,7 @@ import de.milke.ecost.model.User;
  */
 @Stateless
 public class SecurityInitializer {
+    static Logger LOG = Logger.getLogger(SecurityInitializer.class.getName());
 
     public static final String KEYSTORE_FILE_PATH = "/keystore.jks";
 
@@ -67,12 +71,17 @@ public class SecurityInitializer {
     @EJB
     PowerMeasureTypeDao powerMeasureTypeDao;
 
+    @PersistenceContext(name = "primary")
+    private EntityManager em;
+
     public void configureDefaultPartition(@Observes PartitionManagerCreateEvent event) {
+	LOG.info("Start Picketlink configureDefaultPartition");
 	PartitionManager partitionManager = event.getPartitionManager();
 
 	createDefaultPartition(partitionManager);
 	createDefaultRoles(partitionManager);
 	createAdminAccount(partitionManager);
+	LOG.info("Finish Picketlink configureDefaultPartition");
     }
 
     private void createDefaultRoles(PartitionManager partitionManager) {
@@ -148,7 +157,7 @@ public class SecurityInitializer {
 	person.setFirstName("Almight");
 	person.setLastName("Administrator");
 	person.setEmail(email);
-
+	em.persist(person);
 	MyUser admin = new MyUser(username);
 
 	admin.setUser(person);

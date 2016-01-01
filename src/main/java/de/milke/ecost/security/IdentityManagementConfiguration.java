@@ -21,6 +21,8 @@
  */
 package de.milke.ecost.security;
 
+import java.util.logging.Logger;
+
 import javax.enterprise.event.Observes;
 
 import org.picketlink.config.SecurityConfigurationBuilder;
@@ -47,11 +49,14 @@ import de.milke.ecost.model.MyUser;
  * @author Pedro Igor
  */
 public class IdentityManagementConfiguration {
+    static Logger LOG = Logger.getLogger(IdentityManagementConfiguration.class.getName());
 
     public void configureIdentityManagement(@Observes SecurityConfigurationEvent event) {
+	LOG.info("Start Picketlink configureIdentityManagement");
 	SecurityConfigurationBuilder builder = event.getBuilder();
 
 	builder.idmConfig().named("default.config").stores().jpa().supportType(MyUser.class)
 		.supportAllFeatures();
+	LOG.info("Finish Picketlink configureIdentityManagement");
     }
 }
