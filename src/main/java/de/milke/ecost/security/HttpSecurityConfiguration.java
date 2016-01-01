@@ -21,6 +21,8 @@
  */
 package de.milke.ecost.security;
 
+import java.util.logging.Logger;
+
 import javax.enterprise.event.Observes;
 
 import org.picketlink.config.SecurityConfigurationBuilder;
@@ -44,13 +46,16 @@ import org.picketlink.event.SecurityConfigurationEvent;
  * @author Pedro Igor
  */
 public class HttpSecurityConfiguration {
+    static Logger LOG = Logger.getLogger(HttpSecurityConfiguration.class.getName());
 
     public void onInit(@Observes SecurityConfigurationEvent event) {
+	LOG.info("Start Picketlink onInit");
 	SecurityConfigurationBuilder builder = event.getBuilder();
 
 	builder.identity().http().forPath("/rest/*").authenticateWith().basic()
 		.realmName("PicketLink HTTP Basic Quickstart Realm").forPath("/rest/register")
 		.unprotected();
+	LOG.info("Finish Picketlink onInit");
     }
 
 }

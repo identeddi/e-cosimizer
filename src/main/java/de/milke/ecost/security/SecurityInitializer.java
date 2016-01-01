@@ -29,6 +29,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -61,6 +62,7 @@ import de.milke.ecost.model.User;
  */
 @Stateless
 public class SecurityInitializer {
+    static Logger LOG = Logger.getLogger(SecurityInitializer.class.getName());
 
     public static final String KEYSTORE_FILE_PATH = "/keystore.jks";
 
@@ -73,11 +75,13 @@ public class SecurityInitializer {
     private EntityManager em;
 
     public void configureDefaultPartition(@Observes PartitionManagerCreateEvent event) {
+	LOG.info("Start Picketlink configureDefaultPartition");
 	PartitionManager partitionManager = event.getPartitionManager();
 
 	createDefaultPartition(partitionManager);
 	createDefaultRoles(partitionManager);
 	createAdminAccount(partitionManager);
+	LOG.info("Finish Picketlink configureDefaultPartition");
     }
 
     private void createDefaultRoles(PartitionManager partitionManager) {
