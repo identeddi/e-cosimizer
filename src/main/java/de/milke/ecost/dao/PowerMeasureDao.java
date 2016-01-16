@@ -172,7 +172,10 @@ public class PowerMeasureDao {
 
 	for (int i = 0; i < listMeasures.size() - 1; i++) {
 
-	    if (listMeasures.get(i).getMeasureDate().after(searchDate)) {
+	    if (listMeasures.get(i).getMeasureDate().before(searchDate)) {
+		// LOG.info(listMeasures.get(i).getMeasureDate() + " before " +
+		// searchDate);
+
 		PowerMeasure current = listMeasures.get(i + 1);
 		PowerMeasure next = listMeasures.get(i);
 		int days = Days.daysBetween(new DateTime(current.getMeasureDate()),
