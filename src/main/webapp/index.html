@@ -224,7 +224,7 @@
 						<p><strong>Nächste Ablesung: <span data-bind="date: nextMeasureDate, dateFormat: 'DD.MM.YYYY'"> </strong></p>
 					</div>
 				</div>	
-			<a href="#power_zaehler_erfassen" data-role="button">Erfassen</a>
+			<a id="neue_zaehler_erfassen" data-role="button">Erfassen</a>
 		</div>
 		<!-- /content -->
 
@@ -241,6 +241,7 @@
 						data-transition="fade" class="ui-btn-active">Angebote</a></li>
 
 				</ul>
+				
 			</div>
 						<!-- /navbar -->
 		</div>
@@ -260,26 +261,28 @@
 		<div class="ui-content" role="main">
 			<div id="line" class="is-gchart">
 			</div>
-			<table data-role="table" id="table-custom-2" data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive ui-table ui-table-columntoggle" data-column-btn-theme="b" data-column-btn-text="Spalten..." data-column-popup-theme="a">
+			<table data-role="table" id="table-custom-2" data-mode="reflow" class="ui-responsive ui-table">
 
                 <thead>
                   <tr class="ui-bar-d">
-                    <th data-priority="2" data-colstart="1" class="ui-table-priority-2 ui-table-cell-visible">Datum</th>
-                    <th data-colstart="2">Zählerstand</th>
-                    <th data-priority="3" data-colstart="3" class="ui-table-priority-3 ui-table-cell-visible">Tagesverbrauch</th>
-                    <th data-priority="1" data-colstart="4" class="ui-table-priority-1 ui-table-cell-visible">Jahresverbrauch</th>
-                    <th data-priority="5" data-colstart="5" class="ui-table-priority-5">Ableseart</th>
-                    <th data-priority="6" data-colstart="6" class="ui-table-priority-5"></th>
+                    <th data-priority="1">Datum</th>
+                    <th data-priority="2">Zählerstand</th>
+                    <th data-priority="4">Tagesverbrauch</th>
+                    <th data-priority="5">Jahresverbrauch</th>
+                    <th data-priority="6">Ableseart</th>
+                    <th data-priority="3">Toolbar</th>
                   </tr>
                 </thead>
                 <tbody data-bind="foreach: historyMeasures" >
                   <tr>
-                    <th class="ui-table-priority-2 ui-table-cell-visible"><span data-bind="date: measureDate, dateFormat: 'DD.MM.YYYY'"></span></th>
+                    <th class="title"><span data-bind="date: measureDate, dateFormat: 'DD.MM.YYYY'"></span></th>
                     <td><span data-bind="text: measureValue"></span>kWh</td>
-                    <td class="ui-table-priority-3 ui-table-cell-visible"><span data-bind="text: dailyConsumption"></span>kWh </td>
-                    <td class="ui-table-priority-1 ui-table-cell-visible"><span data-bind="text: dailyConsumption"></span>kWh</td>
-                    <td class="ui-table-priority-5"><span data-bind="text: dataType"></span></td>
-                    <td class="ui-table-priority-6"> <div class="ui-block-a"><a href="#power_zaehler_erfassen" class="ui-shadow ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext ui-btn-inline">Button</a></div></td>            
+                    <td ><span data-bind="text: dailyConsumption"></span>kWh </td>
+                    <td><span data-bind="text: dailyConsumption"></span>kWh</td>
+                    <td><span data-bind="text: dataType"></span></td>
+                     <td> 
+                     <a data-bind="attr : {id : id}"  class="edit_measure ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-edit ui-btn-icon-notext ui-btn-inline">Button</a>
+                     <a data-bind="attr : {id : id}" class="delete_measure ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-b ui-btn-inline" >Button</a></td>            
                   </tr>
                 </tbody>
               </table>
@@ -442,10 +445,12 @@
 		<!-- /header -->
 		<div class="ui-content" role="main">
 			<label>Zähler-Stand</label> <input type="text" id="zaehler_stand"
-				name="Zähler-Stand"> <label>Erfassungs-Datum</label> <input
+				name="Zähler-Stand" data-bind="value: measureValue"> 
+				<label>Erfassungs-Datum</label> 
+				<input
 				type="text" data-role="date" class="auto-adjustable-date"
 				id="zaehler_datum" name="Erfassungs-Datum"
-				data-date-format="dd.mm.yy">
+				data-date-format="dd.mm.yy" data-bind="date: measureDate, dateFormat: 'DD.MM.YYYY'" >
 			<button type="button" id="power_zaehler_erfassen_btn-submit">OK</button>
 		</div>
 		<!-- /content -->

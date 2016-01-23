@@ -4,21 +4,6 @@ BookIt.PowerController = function() {
 
 };
 
-BookIt.PowerController.prototype.init = function() {
-	this.$dialogzaehlerErfassen = $("#power_zaehler_erfassen");
-	this.$btnSubmit = $("#power_zaehler_erfassen_btn-submit",
-			this.$dialogzaehlerErfassen);
-	this.$zaehlerStand = $("#zaehler_stand", this.$dialogzaehlerErfassen);
-	this.$zaehlerDatum = $("#zaehler_datum", this.$dialogzaehlerErfassen);
-	this.afterErfassenMsg = null;
-
-};
-
-BookIt.PowerController.prototype.resetStromErfassenForm = function() {
-
-	this.afterErfassenMsg = null;
-};
-
 BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 	var me = this, zaehlerStand = me.$zaehlerStand.val().trim(), zaehlerDatum = me.$zaehlerDatum
@@ -26,17 +11,18 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 	var tep = $.datepicker.parseDate('dd.mm.yy', zaehlerDatum);
 	zaehlerDatum = tep.toJSON();
-	callurl = "http://" + window.location.host
-			+ BookIt.Settings.measurePowerURL.replace("%TYPEID%", powerType)
-			+ "?" + "measureValue=" + zaehlerStand + "&measureDate="
-			+ zaehlerDatum
+	callurl = "http://"
+			+ window.location.host
+			+ BookIt.Settings.measurePowerURL.replace("%TYPEID%",
+					localStorage.powerType) + "?" + "measureValue="
+			+ zaehlerStand + "&measureDate=" + zaehlerDatum
 
 	$.ajax({
 		type : 'POST',
 		url : callurl,
 		success : function() {
 			runtimePopup("Daten erfolgreich verbucht", function() {
-				$.mobile.changePage("#info-main");
+				$.mobile.changePage("#page_power_verlauf");
 			});
 			return;
 		},
@@ -78,7 +64,7 @@ $(document).on(
 			resp = $.ajax({
 				type : 'GET',
 				url : BookIt.Settings.getAllPowerMeasureGraph.replace(
-						"%TYPEID%", powerType),
+						"%TYPEID%", localStorage.powerType),
 				success : function(resp) {
 					drawChart(resp);
 				}
@@ -87,7 +73,7 @@ $(document).on(
 			resp = $.ajax({
 				type : 'GET',
 				url : BookIt.Settings.measurePowerHistoryURL.replace(
-						"%TYPEID%", powerType),
+						"%TYPEID%", localStorage.powerType),
 				success : function(resp) {
 					// drawChart();
 					ko.mapping.fromJS(resp, historyMeasures);
@@ -111,7 +97,7 @@ $(document).on(
 			resp = $.ajax({
 				type : 'GET',
 				url : BookIt.Settings.measurePowerURL.replace("%TYPEID%",
-						powerType),
+						localStorage.powerType),
 				success : function(resp) {
 					console.log(resp);
 					ko.mapping.fromJS(resp, lastMeasureModel);
@@ -126,33 +112,123 @@ $(document).on(
 		});
 
 $(document).on("pagebeforeshow", "#power_zaehler_erfassen", function(event) {
-	app.powerController.resetStromErfassenForm();
-});
-
-$(document).delegate("#power_zaehler_erfassen", "pagebeforecreate", function() {
-
-	app.powerController.init();
-
-	app.powerController.$btnSubmit.off("tap").on("tap", function() {
-		app.powerController.onErfassenCommand();
-	});
 
 });
 
-$(document).delegate("#page_power_supply", "pagebeforeshow", function() {
-	$.ajax({
+$(document)
+		.on(
+				'click',
+				'#power_zaehler_erfassen_btn-submit',
+				function(e) {
+					jsobj = ko.mapping.toJS(powerMeasureModel);
+					var jsonString = JSON.stringify(jsobj);
+					$
+							.ajax({
+								type : 'POST',
+								url : BookIt.Settings.measurePowerURL.replace(
+										"%TYPEID%", localStorage.powerType),
+								data : jsonString,
+								contentType : "application/json",
+								success : function() {
+									runtimePopup(
+											"Daten erfolgreich verbucht",
+											function() {
+												$.mobile
+														.changePage("#page_power_verlauf");
+											});
+									return;
+								},
+								error : function(e) {
+									var afterErfassenMsg = e.responseText;
+									if (afterErfassenMsg.length == 0) {
+										afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten.";
+									}
+									runtimePopup(afterErfassenMsg);
+									console.log(afterErfassenMsg);
+									return;
+								}
+							});
+
+				});
+$(document)
+		.on(
+				'click',
+				'.delete_measure',
+				function(e) {
+					var id = this.id;
+					jsobj = ko.mapping.toJS(powerMeasureModel);
+					var jsonString = JSON.stringify(jsobj);
+					$
+							.ajax({
+								type : 'DELETE',
+								url : BookIt.Settings.measurePowerURL.replace(
+										"%TYPEID%", localStorage.powerType)
+										+ "/" + id,
+								data : jsonString,
+								contentType : "application/json",
+								success : function() {
+									runtimePopup(
+											"Daten erfolgreich gelöscht",
+											function() {
+												$.mobile
+														.changePage("#page_power_verlauf");
+											});
+									return;
+								},
+								error : function(e) {
+									var afterErfassenMsg = e.responseText;
+									if (afterErfassenMsg.length == 0) {
+										afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten.";
+									}
+									runtimePopup(afterErfassenMsg);
+									console.log(afterErfassenMsg);
+									return;
+								}
+							});
+
+				});
+
+$(document).on('click', '.edit_measure', function(e) {
+	var id = this.id;
+	resp = $.ajax({
 		type : 'GET',
-		url : BookIt.Settings.getSupplySettings.replace("%TYPEID%", powerType),
+		url : BookIt.Settings.getMeasureByIDURL + id,
 		success : function(resp) {
-			ko.mapping.fromJS(resp, powerSupplyModel);
-
+			ko.mapping.fromJS(resp, powerMeasureModel);
 		},
 		error : function(e) {
-			$.mobile.loading("hide");
 		}
 	});
-
+	$.mobile.changePage("#power_zaehler_erfassen");
 });
+$(document).on('click', '#neue_zaehler_erfassen', function(e) {
+	PowerMeasureModel
+	newPowerMeasureModel = new PowerMeasureModel();
+	newPowerMeasureModel.measureDate = new Date();
+	newPowerMeasureModel.measureDate.setHours(0, 0, 0, 0);
+	ko.mapping.fromJS(newPowerMeasureModel, powerMeasureModel);
+
+	$.mobile.changePage("#power_zaehler_erfassen");
+});
+
+$(document).delegate(
+		"#page_power_supply",
+		"pagebeforeshow",
+		function() {
+			$.ajax({
+				type : 'GET',
+				url : BookIt.Settings.getSupplySettings.replace("%TYPEID%",
+						localStorage.powerType),
+				success : function(resp) {
+					ko.mapping.fromJS(resp, powerSupplyModel);
+
+				},
+				error : function(e) {
+					$.mobile.loading("hide");
+				}
+			});
+
+		});
 
 $(document)
 		.on(
@@ -170,7 +246,8 @@ $(document)
 							.ajax({
 								type : 'GET',
 								url : BookIt.Settings.getAllPowerSuppliesURL
-										.replace("%TYPEID%", powerType),
+										.replace("%TYPEID%",
+												localStorage.powerType),
 								data : {
 									zipcode : powerSupplyZipcode,
 									consumption : powerSupplyVal
@@ -243,38 +320,46 @@ $(document)
 							});
 				});
 
-$(document).delegate("#page_power_contract", "pagebeforeshow", function() {
-	$.ajax({
-		type : 'GET',
-		url : BookIt.Settings.powerContract.replace("%TYPEID%", powerType),
-		success : function(resp) {
-			if (resp.dueDate != null) {
-				resp.dueDate = new Date(resp.dueDate);
-			}
-			ko.mapping.fromJS(resp, contractModel);
-		},
-		error : function(e) {
-			$.mobile.loading("hide");
-		}
-	});
+$(document).delegate(
+		"#page_power_contract",
+		"pagebeforeshow",
+		function() {
+			$.ajax({
+				type : 'GET',
+				url : BookIt.Settings.powerContract.replace("%TYPEID%",
+						localStorage.powerType),
+				success : function(resp) {
+					if (resp.dueDate != null) {
+						resp.dueDate = new Date(resp.dueDate);
+					}
+					ko.mapping.fromJS(resp, contractModel);
+				},
+				error : function(e) {
+					$.mobile.loading("hide");
+				}
+			});
 
-});
+		});
 
-$(document).on('click', '#save_contract_settings', function(e) {
+$(document).on(
+		'click',
+		'#save_contract_settings',
+		function(e) {
 
-	jsobj = ko.mapping.toJS(contractModel);
-	var jsonString = JSON.stringify(jsobj);
-	$.ajax({
-		type : 'PUT',
-		url : BookIt.Settings.powerContract.replace("%TYPEID%", powerType),
-		data : jsonString,
-		contentType : "application/json",
-		success : function(resp) {
-			runtimePopup("Daten erfolgreich verbucht");
-		},
-		error : function(e) {
-			runtimePopup("Daten konnten nicht gespeichert werden");
-		}
-	});
+			jsobj = ko.mapping.toJS(contractModel);
+			var jsonString = JSON.stringify(jsobj);
+			$.ajax({
+				type : 'PUT',
+				url : BookIt.Settings.powerContract.replace("%TYPEID%",
+						localStorage.powerType),
+				data : jsonString,
+				contentType : "application/json",
+				success : function(resp) {
+					runtimePopup("Daten erfolgreich verbucht");
+				},
+				error : function(e) {
+					runtimePopup("Daten konnten nicht gespeichert werden");
+				}
+			});
 
-});
+		});

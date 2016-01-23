@@ -77,10 +77,16 @@ function LastMeasureModel() {
 	self.dataType = '';
 }
 
+function PowerMeasureModel() {
+	self = this;
+	self.measureDate = '';
+	self.measureValue = '';
+	self.id = '';
+}
 var userModel;
 var contractModel;
 var powerSupplyModel;
-var powerType = 0;
+
 var lastMeasureModel;
 var panelitems;
 
@@ -170,12 +176,16 @@ jQuery(function($) {
 	lastMeasures = ko.mapping.fromJS([]);
 	historyMeasures = ko.mapping.fromJS([]);
 	lastMeasureModel = ko.mapping.fromJS(new LastMeasureModel());
-
+	powerMeasureModel = ko.mapping.fromJS(new PowerMeasureModel());
+	if (localStorage.powerType == "undefined") {
+		localStorage.powerType = 0;
+	}
 	ko.applyBindings(contractModel, $('#page_power_contract')[0]);
 	ko.applyBindings(powerSupplyModel, $('#page_power_supply')[0]);
 	ko.applyBindings(panelModel, $('#nav-panel-profile')[0]);
 	ko.applyBindings(panelitems, $('#nav-panel-list')[0]);
 	ko.applyBindings(lastMeasureModel, $('#page_power_aktuell')[0]);
+	ko.applyBindings(powerMeasureModel, $('#power_zaehler_erfassen')[0]);
 	ko.applyBindings(lastMeasures, $('#info-main')[0]);
 	ko.applyBindings(historyMeasures, $('#page_power_verlauf')[0]);
 
@@ -205,7 +215,7 @@ $(document).on('click', '#button-page-signin', function(e) {
 $(document).on("click", "#nav-panel-list li a", function() {
 	var powerMeasureType = $(this).attr('id');
 	if (powerMeasureType > 0) {
-		powerType = powerMeasureType;
+		localStorage.powerType = powerMeasureType;
 	} else if (powerMeasureType == -3) {
 		callurl = "http://" + window.location.host + "/rest/login/logout";
 		resp = $.ajax({

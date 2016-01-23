@@ -25,6 +25,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.joda.time.DateTime;
@@ -60,6 +61,23 @@ public class PowerMeasureDao {
 
     }
 
+    public PowerMeasure deleteLastMeasure(PowerMeasureType powerMeasureType) {
+	TypedQuery<PowerMeasure> lQuery = em.createQuery(
+		"from PowerMeasure where powerMeasureType=:powerMeasureType order by measureDate desc",
+		PowerMeasure.class);
+	lQuery.setParameter("powerMeasureType", powerMeasureType);
+	List<PowerMeasure> measureList = lQuery.getResultList();
+
+	if (measureList.size() > 0) {
+	    Query query = em.createQuery("delete from PowerMeasure where id=:id");
+	    query.setParameter("id", measureList.get(0).getId());
+	    query.executeUpdate();
+	    return measureList.get(0);
+
+	}
+	return null;
+    }
+
     public PowerMeasure save(PowerMeasure power) throws GeneralException {
 
 	List<PowerMeasure> listPM = getByType(power.getPowerMeasureType());
@@ -72,18 +90,23 @@ public class PowerMeasureDao {
 	for (PowerMeasure pm : listPM) {
 
 	    if (power.getMeasureDate().before(pm.getMeasureDate())
-		    && power.getMeasureValue() > pm.getMeasureValue()) {
+		    && power.getMeasureValue() > pm.getMeasureValue()
+		    && pm.getId() != power.getId()) {
 		// Ablesung höher aber Datum jünger, Fehler
 		throw new GeneralException("Ablesung höher aber Datum jünger, Fehler");
 	    }
 
 	    if (power.getMeasureDate().after(pm.getMeasureDate())
-		    && power.getMeasureValue() < pm.getMeasureValue()) {
+		    && power.getMeasureValue() < pm.getMeasureValue()
+		    && pm.getId() != power.getId()) {
 		// Ablesung höher aber Datum jünger, Fehler
 		throw new GeneralException("Ablesung niedriger aber Datum später, Fehler");
 	    }
 	}
 	for (PowerMeasure pm : listPM) {
+	    System.out.println("pm: " + pm.getMeasureDate().getTime() + " power: "
+		    + power.getMeasureDate().getTime() + " cmp: "
+		    + (pm.getMeasureDate().compareTo(power.getMeasureDate()) == 0));
 	    if (pm.getMeasureDate().compareTo(power.getMeasureDate()) == 0) {
 		// update measure value
 		pm.setMeasureValue(power.getMeasureValue());
@@ -92,7 +115,12 @@ public class PowerMeasureDao {
 
 	    }
 	}
-	em.persist(power);
+	if (power.getId() != null) {
+	    em.merge(power);
+	} else {
+
+	    em.persist(power);
+	}
 	return power;
 
     }
@@ -138,15 +166,18 @@ public class PowerMeasureDao {
 		// estimated date
 		DateTime estimatedDate = new DateTime(1900 + next.getMeasureDate().getYear(), 1, 1,
 			0, 0);
-		int daysToEstimated = Days
-			.daysBetween(new DateTime(current.getMeasureDate()), estimatedDate)
-			.getDays();
+		if (!estimatedDate.equals(current.getMeasureDate())
+			&& estimatedDate.equals(next.getMeasureDate())) {
+		    int daysToEstimated = Days
+			    .daysBetween(new DateTime(current.getMeasureDate()), estimatedDate)
+			    .getDays();
 
-		int estimatedValue = (int) (consumptionPerDay * daysToEstimated);
+		    int estimatedValue = (int) (consumptionPerDay * daysToEstimated);
 
-		listHistory.add(new PowerMeasureHistoryDTO(null, estimatedDate.toDate(),
-			(current.getMeasureValue() + estimatedValue), "geschätzt", powerMeasureType,
-			consumptionPerDay));
+		    listHistory.add(new PowerMeasureHistoryDTO(null, estimatedDate.toDate(),
+			    (current.getMeasureValue() + estimatedValue), "geschätzt",
+			    powerMeasureType, consumptionPerDay));
+		}
 	    }
 
 	}
@@ -200,5 +231,21 @@ public class PowerMeasureDao {
 	LOG.info(powerMeasureType.getUser().getFirstName() + ": no estimation found for "
 		+ searchDate);
 	return null;
+    }
+
+    public void deleteMeasure(Long id) {
+	Query query = em.createQuery("delete from PowerMeasure where id=:id");
+	query.setParameter("id", id);
+	query.executeUpdate();
+
+    }
+
+    public PowerMeasure get(Long id) {
+	TypedQuery<PowerMeasure> lQuery = em.createQuery("from PowerMeasure where id=:id",
+		PowerMeasure.class);
+	lQuery.setParameter("id", id);
+	lQuery.setMaxResults(1);
+	return lQuery.getSingleResult();
+
     }
 }

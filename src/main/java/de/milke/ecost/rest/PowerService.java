@@ -28,6 +28,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -98,32 +99,37 @@ public class PowerService {
     @Inject
     Identity identity;
 
+    @DELETE
+    @Path("/type/{powerMeasureType}/measure/{id}")
+    public void deleteMeasure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
+	    @PathParam("id") Long id) throws GeneralException {
+	powerMeasureDao.deleteMeasure(id);
+    }
+
     @POST
     @Path("/type/{powerMeasureType}/measure")
     public void measure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
-	    @QueryParam("measureValue") Double measureValue,
-	    @QueryParam("measureDate") DateParam measureDate) throws GeneralException {
+	    PowerMeasure powerMeasure) throws GeneralException {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-	if (measureValue == null) {
-	    String msg = getUser().getFirstName() + ": measureValue ist: " + measureValue;
+	if (powerMeasure.getMeasureValue() == null) {
+	    String msg = getUser().getFirstName() + ": measureValue ist: "
+		    + powerMeasure.getMeasureValue();
 	    LOG.info(msg);
 	    throw new WebApplicationException(msg);
 
 	}
-	if (measureDate == null) {
-	    String msg = getUser().getFirstName() + ": measureDate ist: " + measureDate;
+	if (powerMeasure.getMeasureDate() == null) {
+	    String msg = getUser().getFirstName() + ": measureDate ist: "
+		    + powerMeasure.getMeasureDate();
 	    LOG.info(msg);
 	    throw new WebApplicationException(msg);
 
 	}
-	LOG.info(getUser().getFirstName() + ": measureValue: " + measureValue + " measureDate"
-		+ measureDate.getDate());
+	LOG.info(getUser().getFirstName() + ": measureValue: " + powerMeasure.getMeasureValue()
+		+ " measureDate" + powerMeasure.getMeasureDate().getDate());
 
 	// check measure valid
-	PowerMeasure powerMeasure = new PowerMeasure();
 	powerMeasure.setPowerMeasureType(powerMeasureType);
-	powerMeasure.setMeasureDate(measureDate.getDate());
-	powerMeasure.setMeasureValue(measureValue);
 	powerMeasureDao.save(powerMeasure);
     }
 
@@ -135,6 +141,13 @@ public class PowerService {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
 	return powerMeasureDao.getMeasureHistory(powerMeasureType);
+    }
+
+    @GET
+    @Path("/measure/{id}")
+    @Produces("application/json")
+    public PowerMeasure getMeasureById(@PathParam("id") Long id) {
+	return powerMeasureDao.get(id);
     }
 
     @GET
