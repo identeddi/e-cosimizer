@@ -201,6 +201,7 @@ $(document).on('click', '.edit_measure', function(e) {
 	});
 	$.mobile.changePage("#power_zaehler_erfassen");
 });
+
 $(document).on('click', '#neue_zaehler_erfassen', function(e) {
 	PowerMeasureModel
 	newPowerMeasureModel = new PowerMeasureModel();

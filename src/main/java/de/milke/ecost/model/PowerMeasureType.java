@@ -48,6 +48,9 @@ public class PowerMeasureType implements Serializable {
     @Column(nullable = false)
     private String referenceId;
 
+    @Column(nullable = false)
+    private Boolean enabled;
+
     @JsonIgnore
     @ManyToOne
     private User user;
@@ -94,6 +97,14 @@ public class PowerMeasureType implements Serializable {
 
     public void setTypeEnum(MeasureTypeEnum typeEnum) {
 	this.typeEnum = typeEnum;
+    }
+
+    public Boolean getEnabled() {
+	return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+	this.enabled = enabled;
     }
 
 }

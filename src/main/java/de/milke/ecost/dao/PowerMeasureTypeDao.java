@@ -40,10 +40,20 @@ public class PowerMeasureTypeDao {
 	return em.find(PowerMeasureType.class, id);
     }
 
-    public List<PowerMeasureType> getByUser(User user) {
+    public List<PowerMeasureType> getAllByUser(User user) {
 	TypedQuery<PowerMeasureType> lQuery = em.createQuery(
 		"from PowerMeasureType where user=:user order by typeName", PowerMeasureType.class);
 	lQuery.setParameter("user", user);
+	return lQuery.getResultList();
+
+    }
+
+    public List<PowerMeasureType> getEnabledByUser(User user) {
+	TypedQuery<PowerMeasureType> lQuery = em.createQuery(
+		"from PowerMeasureType where user=:user and enabled=:enabled order by typeName",
+		PowerMeasureType.class);
+	lQuery.setParameter("user", user);
+	lQuery.setParameter("enabled", true);
 	return lQuery.getResultList();
 
     }

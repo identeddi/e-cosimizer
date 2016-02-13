@@ -427,6 +427,8 @@
 				<ul>
 					<li><a href="#settings_general" data-prefetch="true"
 						data-transition="fade" class="ui-btn-active">Allgemein</a></li>
+					<li><a href="#settings_powertype" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Erfassungslisten</a></li>
 				</ul>
 			</div>
 			<!-- /navbar -->
@@ -435,7 +437,58 @@
 	</div>
 	<!-- /page -->
 
+	<div id="settings_powertype" data-role="page" data-title="Strom">
+		<div data-role="header" data-position="fixed">
+			<a href="#nav-panel"
+				class="ui-btn ui-shadow ui-corner-all ui-icon-grid ui-btn-icon-notext">Menü</a>
+			<h1>Erfassungslisten</h1>
+		</div>
+		<!-- /header -->
 
+
+		<div class="ui-content" role="main">
+<table data-role="table" id="table-custom-2" data-mode="reflow" class="ui-responsive ui-table">
+
+                <thead>
+                  <tr class="ui-bar-d">
+                    <th data-priority="1">Bezeichner</th>
+                    <th data-priority="2">Referenz</th>
+                    <th data-priority="4">Typ</th>
+                    <th data-priority="3">Toolbar</th>
+                  </tr>
+                </thead>
+                <tbody data-bind="foreach: powerMeasureTypesModel" >
+                  <tr>
+                    <th class="title"><span data-bind="text: typeName"></span></th>
+                    <td><span data-bind="text: referenceId"></span></td>
+                    <td ><span data-bind="text: typeEnum"></span></td>
+
+                     <td> 
+                     <a data-bind="attr : {id : id}"  class="edit_powertype ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-edit ui-btn-icon-notext ui-btn-inline">Button</a>
+                     <a data-bind="attr : {id : id}" class="delete_powertype ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-b ui-btn-inline" >Button</a></td>            
+                  </tr>
+                </tbody>
+              </table>
+              <a id="neuen_typ_erfassen" data-role="button">Neu</a>
+		</div>
+		<!-- /content -->
+
+		<div data-role="footer" data-position="fixed">
+			<div data-role="navbar">
+				<ul>
+					<li><a href="#settings_general" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Allgemein</a></li>
+					<li><a href="#settings_powertype" data-prefetch="true"
+						data-transition="fade" class="ui-btn-active">Erfassungslisten</a></li>
+				</ul>
+			</div>
+			<!-- /navbar -->
+		</div>
+		<!-- /footer -->
+	</div>
+	<!-- /page -->
+
+	
 	<div id="power_zaehler_erfassen" data-role="page" data-dialog="true"
 		data-transition="pop" data-close-btn="right"
 		data-title="Zähler erfassen">
@@ -452,6 +505,41 @@
 				id="zaehler_datum" name="Erfassungs-Datum"
 				data-date-format="dd.mm.yy" data-bind="date: measureDate, dateFormat: 'DD.MM.YYYY'" >
 			<button type="button" id="power_zaehler_erfassen_btn-submit">OK</button>
+		</div>
+		<!-- /content -->
+
+	</div>
+	<!-- /page -->
+	
+	<div id="power_typ_erfassen" data-role="page" data-dialog="true"
+		data-transition="pop" data-close-btn="right"
+		data-title="Zählertyp erfassen">
+		<div data-role="header" data-dismissible="false">
+			<h1>Zählertyp erfassen</h1>
+		</div>
+		<!-- /header -->
+		<div class="ui-content" role="main">
+			<label>Typ</label> <input type="text" id="typ"
+				name="Typ" data-bind="value: typeEnum"> 
+				<label>Bezeichner</label> 
+				<input
+				type="text" id="Bezeichner" name="Bezeichner" data-bind="value: typeName" >
+				<label>Referenz-Nr</label> 
+				<input
+				type="text" id="Bezeichner" name="Bezeichner" data-bind="value: referenceId" >
+				<label>Aktiviert</label> 
+				<input
+				type="text" id="aktiv2" name="aktiv2" data-bind="value: enabled" >
+<!-- 				<input type="checkbox" name="typeEnabled" id="typeEnabled" value="true" data-bind="checked: enabled.ForEditing" /> -->
+<!-- 		<label for="typeEnabled">Aktiv</label> -->
+<!-- 		<label>enabled -->
+<!--    <input type="radio" name="IsMale" value="true" data-bind="checked:enabled.ForEditing"/> -->
+<!-- </label>  -->
+<!-- <label>desenabled -->
+<!--    <input type="radio" name="IsMale" value="false" data-bind="checked:enabled.ForEditing"/> -->
+<!-- </label> -->
+
+			<button type="button" id="power_type_erfassen_btn-submit">OK</button>
 		</div>
 		<!-- /content -->
 

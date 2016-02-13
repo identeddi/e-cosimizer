@@ -57,7 +57,9 @@ $(document).on('click', '#save_general_settings', function(e) {
 		data : jsonString,
 		contentType : "application/json",
 		success : function(resp) {
-			runtimePopup("Daten erfolgreich verbucht");
+			runtimePopup("Daten erfolgreich verbucht", function() {
+				$.mobile.changePage("#settings_powertype");
+			});
 		},
 		error : function(e) {
 			runtimePopup("Daten konnten nicht gespeichert werden");
@@ -83,4 +85,97 @@ $(document).delegate("#settings_general", "pagebeforeshow", function() {
 		}
 	});
 
+});
+
+$(document).delegate("#settings_powertype", "pagebeforeshow", function() {
+	$.ajax({
+		type : 'GET',
+		url : BookIt.Settings.powerMeasureTypes,
+		success : function(resp) {
+			ko.mapping.fromJS(resp, powerMeasureTypesModel);
+		},
+		error : function(e) {
+			$.mobile.loading("hide");
+		}
+	});
+
+});
+$(document)
+		.on(
+				'click',
+				'.delete_powertype',
+				function(e) {
+					var id = this.id;
+					jsobj = ko.mapping.toJS(powerMeasureModel);
+					var jsonString = JSON.stringify(jsobj);
+					$
+							.ajax({
+								type : 'DELETE',
+								url : BookIt.Settings.measurePowerURL.replace(
+										"%TYPEID%", localStorage.powerType)
+										+ "/" + id,
+								data : jsonString,
+								contentType : "application/json",
+								success : function() {
+									runtimePopup(
+											"Daten erfolgreich gelöscht",
+											function() {
+												$.mobile
+														.changePage("#page_power_verlauf");
+											});
+									return;
+								},
+								error : function(e) {
+									var afterErfassenMsg = e.responseText;
+									if (afterErfassenMsg.length == 0) {
+										afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten.";
+									}
+									runtimePopup(afterErfassenMsg);
+									console.log(afterErfassenMsg);
+									return;
+								}
+							});
+
+				});
+
+$(document).on('click', '.edit_powertype', function(e) {
+	var id = this.id;
+	resp = $.ajax({
+		type : 'GET',
+		url : BookIt.Settings.powerMeasureType + "/" + id,
+		success : function(resp) {
+			ko.mapping.fromJS(resp, powerTypeModel);
+			console.log("enabled2: " + powerTypeModel.enabled())
+		},
+		error : function(e) {
+		}
+	});
+	$.mobile.changePage("#power_typ_erfassen");
+});
+
+$(document).on('click', '#neuen_typ_erfassen', function(e) {
+
+	$.mobile.changePage("#power_typ_erfassen");
+});
+
+$(document).on('click', '#power_type_erfassen_btn-submit', function(e) {
+
+	jsobj = ko.mapping.toJS(powerTypeModel);
+	console.log("enabled3: " + powerTypeModel.enabled())
+	var jsonString = JSON.stringify(jsobj);
+	resp = $.ajax({
+		type : 'PUT',
+		url : BookIt.Settings.powerMeasureType,
+		data : jsonString,
+		contentType : "application/json",
+		success : function(resp) {
+			runtimePopup("Daten erfolgreich verbucht", function() {
+				$.mobile.changePage("#settings_powertype");
+			});
+		},
+		error : function(e) {
+			runtimePopup("Daten konnten nicht gespeichert werden");
+		}
+	});
+	$.mobile.changePage("#power_typ_erfassen");
 });

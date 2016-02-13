@@ -83,10 +83,19 @@ function PowerMeasureModel() {
 	self.measureValue = '';
 	self.id = '';
 }
+function PowerTypeModel() {
+	self = this;
+	self.id = '';
+	self.typeEnum = '';
+	self.typeName = '';
+	self.referenceId = '';
+	self.enabled = ko.observable(true);
+}
 var userModel;
 var contractModel;
 var powerSupplyModel;
-
+var powerMeasureTypesModel;
+var powerTypeModel;
 var lastMeasureModel;
 var panelitems;
 
@@ -175,8 +184,10 @@ jQuery(function($) {
 	panelitems = ko.mapping.fromJS([]);
 	lastMeasures = ko.mapping.fromJS([]);
 	historyMeasures = ko.mapping.fromJS([]);
+	powerMeasureTypesModel = ko.mapping.fromJS([]);
 	lastMeasureModel = ko.mapping.fromJS(new LastMeasureModel());
 	powerMeasureModel = ko.mapping.fromJS(new PowerMeasureModel());
+	powerTypeModel = ko.mapping.fromJS(new PowerTypeModel());
 	if (localStorage.powerType == "undefined") {
 		localStorage.powerType = 0;
 	}
@@ -186,8 +197,10 @@ jQuery(function($) {
 	ko.applyBindings(panelitems, $('#nav-panel-list')[0]);
 	ko.applyBindings(lastMeasureModel, $('#page_power_aktuell')[0]);
 	ko.applyBindings(powerMeasureModel, $('#power_zaehler_erfassen')[0]);
+	ko.applyBindings(powerTypeModel, $('#power_typ_erfassen')[0]);
 	ko.applyBindings(lastMeasures, $('#info-main')[0]);
 	ko.applyBindings(historyMeasures, $('#page_power_verlauf')[0]);
+	ko.applyBindings(powerMeasureTypesModel, $('#settings_powertype')[0]);
 
 	app.signupController = new BookIt.SignUpController();
 	app.signinController = new BookIt.SignInController();

@@ -175,13 +175,37 @@ public class PowerService {
 
 	List<MenuItemDTO> listMenuItems = new ArrayList<>();
 	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main", -1));
-	for (PowerMeasureType powerMeasureType : powerMeasureTypeDao.getByUser(getUser())) {
+	for (PowerMeasureType powerMeasureType : powerMeasureTypeDao.getEnabledByUser(getUser())) {
 	    listMenuItems.add(new MenuItemDTO(powerMeasureType.getTypeName(), "#page_power_aktuell",
 		    powerMeasureType.getId()));
 	}
 	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general", -2));
 	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index", -3));
 	return listMenuItems;
+    }
+
+    @GET
+    @Path("/powermeasuretypes")
+    @Produces("application/json")
+    public List<PowerMeasureType> getPowerMeasureTypes() {
+
+	return powerMeasureTypeDao.getAllByUser(getUser());
+    }
+
+    @GET
+    @Path("/powermeasuretype/{id}")
+    @Produces("application/json")
+    public PowerMeasureType getPowerMeasureType(@PathParam("id") Long id) {
+
+	return powerMeasureTypeDao.findById(id);
+    }
+
+    @PUT
+    @Path("/powermeasuretype")
+    @Produces("application/json")
+    public PowerMeasureType updatePowerMeasureType(PowerMeasureType powerMeasureType) {
+	powerMeasureType.setUser(getUser());
+	return powerMeasureTypeDao.save(powerMeasureType);
     }
 
     @GET
@@ -263,7 +287,7 @@ public class PowerService {
     @Produces("application/json")
     public List<PowerMeasureHistoryDTO> getLastMeasures(@Context HttpServletRequest request)
 	    throws GeneralException {
-	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getByUser(getUser());
+	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getEnabledByUser(getUser());
 
 	List<PowerMeasureHistoryDTO> lastMeasures = new ArrayList<>();
 	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {

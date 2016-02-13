@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +43,7 @@ import org.picketlink.authorization.annotations.LoggedIn;
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.User;
+import de.milke.ecost.model.UserDTO;
 
 /**
  * JAX-RS Example
@@ -63,6 +66,9 @@ public class LoginService {
 
     @Inject
     private Identity identity;
+
+    @PersistenceContext(name = "primary")
+    private EntityManager em;
 
     @POST
     @Path("/logout")
@@ -118,7 +124,7 @@ public class LoginService {
     @Produces("application/json")
     @Consumes("application/json")
     @LoggedIn
-    public User updateUser(User usr) {
+    public User updateUser(UserDTO usr) {
 	LOG.info("start update user - username: " + usr.getFirstName() + "password: "
 		+ usr.getLastName());
 	User user = getUser();
@@ -127,6 +133,9 @@ public class LoginService {
 	user.setEmail(usr.getEmail());
 	user.setZipcode(usr.getZipcode());
 	user = accountDao.save(user);
+	// MyUser myUser = (MyUser) identity.getAccount();
+	// myUser.setLoginName(usr.getUsername());
+	// em.merge(myUser);
 	return user;
     }
 
@@ -134,11 +143,19 @@ public class LoginService {
     @Path("/login")
     @Produces("application/json")
     @LoggedIn
-    public User getLoggedInUser() {
+    public UserDTO getLoggedInUser() {
 	User user = getUser();
+	MyUser myUser = (MyUser) identity.getAccount();
+	UserDTO userDTO = new UserDTO();
 	LOG.info(
 		"getuser - firstname: " + user.getFirstName() + " lastname: " + user.getLastName());
-	return user;
+	userDTO.setEmail(user.getEmail());
+	userDTO.setFirstName(user.getFirstName());
+	userDTO.setId(user.getId());
+	userDTO.setLastName(user.getLastName());
+	userDTO.setZipcode(user.getZipcode());
+	userDTO.setUsername(myUser.getLoginName());
+	return userDTO;
     }
 
     protected User getUser() {
