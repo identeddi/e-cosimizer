@@ -200,6 +200,12 @@ public class PowerService {
 	return powerMeasureTypeDao.findById(id);
     }
 
+    @DELETE
+    @Path("/powermeasuretype/{id}")
+    public void deletePowerMeasureType(@PathParam("id") Long id) throws GeneralException {
+	powerMeasureTypeDao.remove(id);
+    }
+
     @PUT
     @Path("/powermeasuretype")
     @Produces("application/json")

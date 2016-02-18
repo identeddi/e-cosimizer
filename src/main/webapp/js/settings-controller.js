@@ -111,9 +111,7 @@ $(document)
 					$
 							.ajax({
 								type : 'DELETE',
-								url : BookIt.Settings.measurePowerURL.replace(
-										"%TYPEID%", localStorage.powerType)
-										+ "/" + id,
+								url : BookIt.Settings.powerMeasureType + "/" + id,
 								data : jsonString,
 								contentType : "application/json",
 								success : function() {
@@ -121,7 +119,7 @@ $(document)
 											"Daten erfolgreich gelöscht",
 											function() {
 												$.mobile
-														.changePage("#page_power_verlauf");
+														.changePage("#settings_powertype");
 											});
 									return;
 								},

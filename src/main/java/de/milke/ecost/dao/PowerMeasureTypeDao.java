@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import de.milke.ecost.model.MeasureTypeEnum;
@@ -129,5 +130,11 @@ public class PowerMeasureTypeDao {
 	powerMeasureTypeList.add(powerMeasureType);
 
 	return powerMeasureTypeList;
+    }
+
+    public void remove(Long id) {
+	Query query = em.createQuery("delete from PowerMeasureType where id=:id");
+	query.setParameter("id", id);
+	query.executeUpdate();
     }
 }
