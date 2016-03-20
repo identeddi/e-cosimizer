@@ -40,21 +40,100 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 };
 
 function drawChart(jsonData) {
-	if (typeof google != 'undefined') {
-		var data = new google.visualization.DataTable(jsonData);
+	// Get context with jQuery - using jQuery's .get() method.
+	var ctx = $("#myChart").get(0).getContext("2d");
+	// var data = {
+	// labels : [ "January", "February", "March", "April", "May", "June",
+	// "July", "August", "September", "October", "November",
+	// "December" ],
+	// datasets : [ {
+	// label : "My First dataset",
+	// fillColor : "rgba(220,220,220,0.5)",
+	// strokeColor : "rgba(220,220,220,0.8)",
+	// highlightFill : "rgba(220,220,220,0.75)",
+	// highlightStroke : "rgba(220,220,220,1)",
+	// data : [ 65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55, 40 ]
+	// }, {
+	// label : "My Second dataset",
+	// fillColor : "rgba(151,187,205,0.5)",
+	// strokeColor : "rgba(151,187,205,0.8)",
+	// highlightFill : "rgba(151,187,205,0.75)",
+	// highlightStroke : "rgba(151,187,205,1)",
+	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+	// }, {
+	// label : "My Third dataset",
+	// fillColor : "rgba(251,187,205,0.5)",
+	// strokeColor : "rgba(251,187,205,0.8)",
+	// highlightFill : "rgba(251,187,205,0.75)",
+	// highlightStroke : "rgba(251,187,205,1)",
+	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+	// }, {
+	// label : "My Fourth dataset",
+	// fillColor : "rgba(51,187,205,0.5)",
+	// strokeColor : "rgba(51,187,205,0.8)",
+	// highlightFill : "rgba(51,187,205,0.75)",
+	// highlightStroke : "rgba(51,187,205,1)",
+	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+	// } ]
+	// };
+	var options = {
+		// Boolean - Whether the scale should start at zero, or an order of
+		// magnitude down from the lowest value
+		scaleBeginAtZero : true,
 
-		var options = {
-			title : '5-Jahresverbrauch',
-			legend : {
-				position : 'bottom'
-			}
-		};
+		// Boolean - Whether grid lines are shown across the chart
+		scaleShowGridLines : true,
 
-		var chart = new google.visualization.LineChart(document
-				.getElementById('line'));
+		// String - Colour of the grid lines
+		scaleGridLineColor : "rgba(0,0,0,.05)",
 
-		chart.draw(data, options);
-	}
+		// Number - Width of the grid lines
+		scaleGridLineWidth : 1,
+
+		// Boolean - Whether to show horizontal lines (except X axis)
+		scaleShowHorizontalLines : true,
+
+		// Boolean - Whether to show vertical lines (except Y axis)
+		scaleShowVerticalLines : true,
+
+		// Boolean - If there is a stroke on each bar
+		barShowStroke : true,
+
+		// Number - Pixel width of the bar stroke
+		barStrokeWidth : 1,
+
+		// Number - Spacing between each of the X value sets
+		barValueSpacing : 2,
+
+		// Number - Spacing between data sets within X values
+		barDatasetSpacing : 1,
+		// Boolean - whether or not the chart should be responsive and resize
+		// when the browser does.
+		responsive : true,
+
+		// String - A legend template
+		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>"
+
+	};
+	// This will get the first returned node in the jQuery collection.
+	var myBarChart = new Chart(ctx).Bar(jsonData, options);
+	// then you just need to generate the legend
+	var legend = myBarChart.generateLegend();
+
+	// and append it to your page somewhere
+	$('#myChartLegend').html(legend);
+	/*
+	 * if (typeof google != 'undefined') { var data = new
+	 * google.visualization.DataTable(jsonData);
+	 * 
+	 * var options = { title : '5-Jahresverbrauch', legend : { position :
+	 * 'bottom' } };
+	 * 
+	 * var chart = new google.visualization.LineChart(document
+	 * .getElementById('line'));
+	 * 
+	 * chart.draw(data, options); }
+	 */
 }
 
 $(document).on(
@@ -65,6 +144,7 @@ $(document).on(
 				type : 'GET',
 				url : BookIt.Settings.getAllPowerMeasureGraph.replace(
 						"%TYPEID%", localStorage.powerType),
+				contentType : "application/json",
 				success : function(resp) {
 					drawChart(resp);
 				}

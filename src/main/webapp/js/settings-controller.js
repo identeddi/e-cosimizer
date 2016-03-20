@@ -100,41 +100,33 @@ $(document).delegate("#settings_powertype", "pagebeforeshow", function() {
 	});
 
 });
-$(document)
-		.on(
-				'click',
-				'.delete_powertype',
-				function(e) {
-					var id = this.id;
-					jsobj = ko.mapping.toJS(powerMeasureModel);
-					var jsonString = JSON.stringify(jsobj);
-					$
-							.ajax({
-								type : 'DELETE',
-								url : BookIt.Settings.powerMeasureType + "/" + id,
-								data : jsonString,
-								contentType : "application/json",
-								success : function() {
-									runtimePopup(
-											"Daten erfolgreich gelöscht",
-											function() {
-												$.mobile
-														.changePage("#settings_powertype");
-											});
-									return;
-								},
-								error : function(e) {
-									var afterErfassenMsg = e.responseText;
-									if (afterErfassenMsg.length == 0) {
-										afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten.";
-									}
-									runtimePopup(afterErfassenMsg);
-									console.log(afterErfassenMsg);
-									return;
-								}
-							});
+$(document).on('click', '.delete_powertype', function(e) {
+	var id = this.id;
+	jsobj = ko.mapping.toJS(powerMeasureModel);
+	var jsonString = JSON.stringify(jsobj);
+	$.ajax({
+		type : 'DELETE',
+		url : BookIt.Settings.powerMeasureType + "/" + id,
+		data : jsonString,
+		contentType : "application/json",
+		success : function() {
+			runtimePopup("Daten erfolgreich gelöscht", function() {
+				$.mobile.changePage("#settings_powertype");
+			});
+			return;
+		},
+		error : function(e) {
+			var afterErfassenMsg = e.responseText;
+			if (afterErfassenMsg.length == 0) {
+				afterErfassenMsg = "Ein unerwarteter Fehler ist aufgetreten.";
+			}
+			runtimePopup(afterErfassenMsg);
+			console.log(afterErfassenMsg);
+			return;
+		}
+	});
 
-				});
+});
 
 $(document).on('click', '.edit_powertype', function(e) {
 	var id = this.id;
@@ -159,6 +151,8 @@ $(document).on('click', '#neuen_typ_erfassen', function(e) {
 $(document).on('click', '#power_type_erfassen_btn-submit', function(e) {
 
 	jsobj = ko.mapping.toJS(powerTypeModel);
+	// delete jsobj.entryNotificationObject;
+	delete jsobj.periodocNotificationChoices;
 	console.log("enabled3: " + powerTypeModel.enabled())
 	var jsonString = JSON.stringify(jsobj);
 	resp = $.ajax({
@@ -167,13 +161,12 @@ $(document).on('click', '#power_type_erfassen_btn-submit', function(e) {
 		data : jsonString,
 		contentType : "application/json",
 		success : function(resp) {
-			runtimePopup("Daten erfolgreich verbucht", function() {
+//			runtimePopup("Daten erfolgreich verbucht", function() {
 				$.mobile.changePage("#settings_powertype");
-			});
+//			});
 		},
 		error : function(e) {
 			runtimePopup("Daten konnten nicht gespeichert werden");
 		}
 	});
-	$.mobile.changePage("#power_typ_erfassen");
 });

@@ -12,7 +12,7 @@
 	href="lib/datepicker/jquery.mobile.datepicker.css" />
 <link rel="stylesheet" href="css/global.css" />
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="lib/chartjs/Chart.min.js"></script>
 <script src="lib/jquery/jquery-2.1.4.min.js"></script>
 <script src="lib/jqm/jquery.mobile-1.4.5.min.js"></script>
 <script id="mobile-datepicker"
@@ -259,7 +259,8 @@
 
 
 		<div class="ui-content" role="main">
-			<div id="line" class="is-gchart">
+			<canvas id="myChart" auto-legend></canvas>
+			<div id="myChartLegend" class="chart-legend">
 			</div>
 			<table data-role="table" id="table-custom-2" data-mode="reflow" class="ui-responsive ui-table">
 
@@ -454,6 +455,7 @@
                     <th data-priority="1">Bezeichner</th>
                     <th data-priority="2">Referenz</th>
                     <th data-priority="4">Typ</th>
+                    <th data-priority="5">Erinnerung</th>
                     <th data-priority="3">Toolbar</th>
                   </tr>
                 </thead>
@@ -462,7 +464,8 @@
                     <th class="title"><span data-bind="text: typeName"></span></th>
                     <td><span data-bind="text: referenceId"></span></td>
                     <td ><span data-bind="text: typeEnum"></span></td>
-
+                    <td ><span data-bind="text: entryNotification"></span></td>
+ 
                      <td> 
                      <a data-bind="attr : {id : id}"  class="edit_powertype ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-edit ui-btn-icon-notext ui-btn-inline">Button</a>
                      <a data-bind="attr : {id : id}" class="delete_powertype ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-b ui-btn-inline" >Button</a></td>            
@@ -527,6 +530,9 @@
 				<label>Referenz-Nr</label> 
 				<input
 				type="text" id="Bezeichner" name="Bezeichner" data-bind="value: referenceId" >
+				<label for="select-choice-0" class="select">Erfassungserinnerung<label>
+				<select name="select-choice-0" id="select-choice-0" data-bind="options: periodocNotificationChoices, optionsText: 'value', value: entryNotification, optionsValue: 'ID'">
+				</select>
 				<label>Aktiviert</label> 
 				<input
 				type="text" id="aktiv2" name="aktiv2" data-bind="value: enabled" >

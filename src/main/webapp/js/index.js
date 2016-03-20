@@ -90,7 +90,22 @@ function PowerTypeModel() {
 	self.typeName = '';
 	self.referenceId = '';
 	self.enabled = ko.observable(true);
+	self.entryNotification = ko.observable("Wöchentlich");
+	self.periodocNotificationChoices = ko.observableArray([ {
+		ID : "Nie",
+		value : 'Nie'
+	}, {
+		ID : "Wöchentlich",
+		value : 'Wöchentlich'
+	}, {
+		ID : "Monatlich",
+		value : 'Monatlich'
+	}, {
+		ID : "Jährlich",
+		value : 'Jährlich'
+	} ])
 }
+
 var userModel;
 var contractModel;
 var powerSupplyModel;

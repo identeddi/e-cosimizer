@@ -35,6 +35,11 @@ public class PowerMeasureType implements Serializable {
     /** Default value included to remove warning. Remove or modify at will. **/
     private static final long serialVersionUID = 1L;
 
+    public enum PeriodicNotification {
+	Nie, Wöchentlich, Monatlich, Jährlich
+
+    }
+
     @Id
     @GeneratedValue
     private Long id;
@@ -50,6 +55,9 @@ public class PowerMeasureType implements Serializable {
 
     @Column(nullable = false)
     private Boolean enabled;
+
+    @Column(nullable = false)
+    private PeriodicNotification entryNotification;
 
     @JsonIgnore
     @ManyToOne
@@ -105,6 +113,14 @@ public class PowerMeasureType implements Serializable {
 
     public void setEnabled(Boolean enabled) {
 	this.enabled = enabled;
+    }
+
+    public PeriodicNotification getEntryNotification() {
+	return entryNotification;
+    }
+
+    public void setEntryNotification(PeriodicNotification entryNotification) {
+	this.entryNotification = entryNotification;
     }
 
 }

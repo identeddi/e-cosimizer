@@ -43,10 +43,7 @@ import javax.xml.ws.WebServiceContext;
 import org.picketlink.Identity;
 import org.picketlink.authorization.annotations.LoggedIn;
 
-import com.google.visualization.datasource.base.TypeMismatchException;
-import com.google.visualization.datasource.datatable.ColumnDescription;
 import com.google.visualization.datasource.datatable.DataTable;
-import com.google.visualization.datasource.datatable.value.ValueType;
 import com.google.visualization.datasource.render.JsonRenderer;
 
 import de.milke.ecost.dao.AccountDao;
@@ -63,6 +60,8 @@ import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.PowerSupply;
 import de.milke.ecost.model.SupplySettingsDTO;
 import de.milke.ecost.model.User;
+import de.milke.ecost.model.chart.ChartModel;
+import de.milke.ecost.model.chart.Dataset;
 import de.milke.ecost.service.Check24SupplyResolver;
 
 /**
@@ -216,51 +215,113 @@ public class PowerService {
 
     @GET
     @Path("/type/{powerMeasureType}/measuregraph")
-    public String getMeasureGraphData(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
+    @Produces("application/json")
+    public ChartModel getMeasureGraphData(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
 	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
 
 	// Create a data table,
 	DataTable data = new DataTable();
-	ArrayList cd = new ArrayList();
 
 	Date now = new Date();
 	int currentYear = now.getYear() + 1900;
-	int numYears = 3;
 
-	cd.add(new ColumnDescription("Monat", ValueType.TEXT, "Jahr"));
-	for (int i = 0; i < numYears; i++) {
-	    cd.add(new ColumnDescription((currentYear - i) + "", ValueType.NUMBER,
-		    (currentYear - i) + ""));
+	// var data = {
+	// labels : [ "January", "February", "March", "April", "May", "June",
+	// "July", "August", "September", "October", "November",
+	// "December" ],
+	// datasets : [ {
 
-	}
+	// data : [ 65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55, 40 ]
+	// }, {
+	// label : "My Second dataset",
+	// fillColor : "rgba(151,187,205,0.5)",
+	// strokeColor : "rgba(151,187,205,0.8)",
+	// highlightFill : "rgba(151,187,205,0.75)",
+	// highlightStroke : "rgba(151,187,205,1)",
+	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+	// }, {
+	// label : "My Third dataset",
+	// fillColor : "rgba(251,187,205,0.5)",
+	// strokeColor : "rgba(251,187,205,0.8)",
+	// highlightFill : "rgba(251,187,205,0.75)",
+	// highlightStroke : "rgba(251,187,205,1)",
+	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+	// }, {
+	// label : "My Fourth dataset",
+	// fillColor : "rgba(51,187,205,0.5)",
+	// strokeColor : "rgba(51,187,205,0.8)",
+	// highlightFill : "rgba(51,187,205,0.75)",
+	// highlightStroke : "rgba(51,187,205,1)",
+	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+	// } ]
+	// };
 
-	data.addColumns(cd);
+	ChartModel historyChart = new ChartModel();
+	List<String> labels = new ArrayList<>();
+	List<Dataset> datasets = new ArrayList<>();
+	labels.add("Jan");
+	labels.add("Feb");
+	labels.add("Mär");
+	labels.add("Apr");
+	labels.add("Mai");
+	labels.add("Jun");
+	labels.add("Jul");
+	labels.add("Aug");
+	labels.add("Sep");
+	labels.add("Okt");
+	labels.add("Nov");
+	labels.add("Dez");
 
-	// Fill the data table.
-	try {
-	    List<PowerMeasureHistoryDTO> histList = powerMeasureDao
-		    .getMeasureHistory(powerMeasureType);
+	historyChart.setLabels(labels);
 
-	    String[] months = { "Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep",
-		    "Okt", "Nov", "Dez" };
+	List<PowerMeasureHistoryDTO> histList = powerMeasureDao.getMeasureHistory(powerMeasureType);
 
-	    for (int i = 0; i < months.length; i++) {
-		Integer[] yearMeasure = new Integer[numYears];
-		for (int j = 0; j < numYears; j++) {
-		    Date searchDate = new Date(currentYear - 1900 - j, i, 1);
-		    yearMeasure[j] = powerMeasureDao.getEstimationForDate(searchDate,
-			    powerMeasureType);
-		}
-		data.addRowFromValues(months[i], yearMeasure[1], yearMeasure[2]);
+	Dataset yearData = new Dataset();
+	yearData.setFillColor("rgba(220,220,20,0.5)");
+	yearData.setStrokeColor("rgba(220,220,20,0.8)");
+	yearData.setHighlightFill("rgba(220,220,20,0.75)");
+	yearData.setHighlightStroke("rgba(220,220,20,1)");
+	yearData.setLabel("Jahr " + currentYear + "");
+	historyChart.getDatasets().add(yearData);
+
+	yearData = new Dataset();
+	yearData.setFillColor("rgba(220,220,220,0.5)");
+	yearData.setStrokeColor("rgba(220,220,220,0.8)");
+	yearData.setHighlightFill("rgba(220,220,220,0.75)");
+	yearData.setHighlightStroke("rgba(220,220,220,1)");
+	yearData.setLabel("Jahr " + (currentYear - 1) + "");
+	historyChart.getDatasets().add(yearData);
+
+	yearData = new Dataset();
+	yearData.setFillColor("rgba(20,220,220,0.5)");
+	yearData.setStrokeColor("rgba(20,220,220,0.8)");
+	yearData.setHighlightFill("rgba(20,220,220,0.75)");
+	yearData.setHighlightStroke("rgba(20,220,220,1)");
+	yearData.setLabel("Jahr " + (currentYear - 2) + "");
+	historyChart.getDatasets().add(yearData);
+
+	yearData = new Dataset();
+	yearData.setFillColor("rgba(20,120,220,0.5)");
+	yearData.setStrokeColor("rgba(20,120,220,0.8)");
+	yearData.setHighlightFill("rgba(20,120,220,0.75)");
+	yearData.setHighlightStroke("rgba(20,120,220,1)");
+	yearData.setLabel("Jahr " + (currentYear - 3) + "");
+	historyChart.getDatasets().add(yearData);
+
+	for (int j = 0; j < historyChart.getDatasets().size(); j++) {
+	    List<Integer> yearMeasure = new ArrayList<>();
+	    for (int i = 0; i < 12; i++) {
+
+		Date searchDate = new Date(currentYear - 1900 - j, i, 1);
+		yearMeasure.add(powerMeasureDao.getEstimationForDate(searchDate, powerMeasureType));
 	    }
-
-	} catch (TypeMismatchException e) {
-	    System.out.println("Invalid type!");
+	    historyChart.getDatasets().get(j).setData(yearMeasure);
 	}
+
 	String json = JsonRenderer.renderDataTable(data, true, false).toString();
 
 	System.out.println(json);
-	return json;
+	return historyChart;
     }
 
     @GET
