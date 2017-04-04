@@ -217,7 +217,7 @@ public class PowerService {
 
 	    }
 	}
-	return powerMeasureReminders;
+	return newPowerMeasureReminders;
     }
 
     @GET
