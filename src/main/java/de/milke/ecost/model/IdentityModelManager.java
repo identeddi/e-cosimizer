@@ -110,7 +110,6 @@ public class IdentityModelManager {
 	person.setEmail(request.getEmail());
 	person.setFirstName(request.getFirstName());
 	person.setLastName(request.getLastName());
-
 	em.persist(person);
 	MyUser newUser = new MyUser(request.getUserName());
 
@@ -120,12 +119,12 @@ public class IdentityModelManager {
 
 	newUser.setActivationCode(activationCode); // we set an activation code
 						   // for future use.
-
+	newUser.setEnabled(true);
 	this.identityManager.add(newUser);
 
 	updatePassword(newUser, request.getPassword());
 
-	enableAccount(newUser);
+	// enableAccount(newUser);
 
 	return newUser;
     }

@@ -18,7 +18,9 @@ package de.milke.ecost.rest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,13 +51,17 @@ import com.google.visualization.datasource.render.JsonRenderer;
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.dao.ContractDao;
 import de.milke.ecost.dao.PowerMeasureDao;
+import de.milke.ecost.dao.PowerMeasureReminderDao;
 import de.milke.ecost.dao.PowerMeasureTypeDao;
+import de.milke.ecost.mail.MeasureAddedMail;
 import de.milke.ecost.model.Contract;
 import de.milke.ecost.model.GeneralException;
 import de.milke.ecost.model.MenuItemDTO;
 import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.PowerMeasure;
 import de.milke.ecost.model.PowerMeasureHistoryDTO;
+import de.milke.ecost.model.PowerMeasureReminder;
+import de.milke.ecost.model.PowerMeasureReminder.ReminderType;
 import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.PowerSupply;
 import de.milke.ecost.model.SupplySettingsDTO;
@@ -98,6 +104,12 @@ public class PowerService {
     @Inject
     Identity identity;
 
+    @EJB
+    MeasureAddedMail measureAddedMail;
+
+    @EJB
+    PowerMeasureReminderDao powerMeasureReminderDao;
+
     @DELETE
     @Path("/type/{powerMeasureType}/measure/{id}")
     public void deleteMeasure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
@@ -130,6 +142,13 @@ public class PowerService {
 	// check measure valid
 	powerMeasure.setPowerMeasureType(powerMeasureType);
 	powerMeasureDao.save(powerMeasure);
+
+	measureAddedMail.sendEmail(getUser().getEmail(), "e.costimizer@gmail.com",
+		"Eingabe einer neuen Messung für "
+			+ powerMeasure.getPowerMeasureType().getTypeName() + "-"
+			+ powerMeasure.getPowerMeasureType().getReferenceId(),
+		"Abgelesen am: " + powerMeasure.getMeasureDate().getDate() + "\n" + "Wert:"
+			+ powerMeasure.getMeasureValue());
     }
 
     @GET
@@ -147,6 +166,58 @@ public class PowerService {
     @Produces("application/json")
     public PowerMeasure getMeasureById(@PathParam("id") Long id) {
 	return powerMeasureDao.get(id);
+    }
+
+    @GET
+    @Path("/lastmeasure")
+    @Produces("application/json")
+    public List<PowerMeasureReminder> getAllLastMeasures() throws GeneralException {
+	List<PowerMeasure> lastMeasures = powerMeasureDao.getAllLastMeasures();
+	List<PowerMeasure> newReminders = new ArrayList<>();
+	List<PowerMeasureReminder> newPowerMeasureReminders = new ArrayList<>();
+	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getAllByUser(getUser());
+
+	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
+	    List<PowerMeasure> measureList = powerMeasureDao.getByType(powerMeasureType);
+
+	    if (measureList.size() > 0) {
+		PowerMeasure lastMeasure = measureList.get(0);
+
+		if (lastMeasure.getPowerMeasureType().getEnabled()
+			&& lastMeasure.getPowerMeasureType().getEntryNotification() != null) {
+
+		    Calendar lastMeasureCalendar = new GregorianCalendar();
+		    lastMeasureCalendar.setTime(lastMeasure.getMeasureDate());
+		    Calendar nowCalendar = new GregorianCalendar();
+		    nowCalendar.setTime(new Date());
+		    int diffYear = nowCalendar.get(Calendar.YEAR)
+			    - lastMeasureCalendar.get(Calendar.YEAR);
+		    int diffMonth = diffYear * 12 + nowCalendar.get(Calendar.MONTH)
+			    - lastMeasureCalendar.get(Calendar.MONTH);
+
+		    switch (lastMeasure.getPowerMeasureType().getEntryNotification()) {
+		    case NEVER:
+			break;
+		    case MONTHLY:
+			if (diffMonth == 1
+				&& nowCalendar.get(Calendar.DAY_OF_MONTH) >= lastMeasureCalendar
+					.get(Calendar.DAY_OF_MONTH)
+				|| diffMonth > 1) {
+			    List<PowerMeasureReminder> powerMeasureReminders = powerMeasureReminderDao
+				    .getByType(lastMeasure.getPowerMeasureType());
+			    if (powerMeasureReminders.size() == 0) {
+				PowerMeasureReminder powerMeasureReminder = new PowerMeasureReminder(
+					new Date(), ReminderType.MEASURE, powerMeasureType,
+					"Ableseerinnerung", "Bitte ablesen und erfassen", "4711");
+				powerMeasureReminderDao.save(powerMeasureReminder);
+			    }
+			}
+		    }
+		}
+
+	    }
+	}
+	return powerMeasureReminders;
     }
 
     @GET

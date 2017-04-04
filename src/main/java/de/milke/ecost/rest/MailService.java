@@ -1,5 +1,6 @@
 package de.milke.ecost.rest;
 
+import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
@@ -20,7 +21,7 @@ import de.milke.ecost.model.Email;
 @Stateless
 public class MailService {
 
-    // @Resource(mappedName = "java:/mail/gmail")
+    @Resource(mappedName = "java:jboss/mail/Gmail")
     private Session session;
 
     @Asynchronous

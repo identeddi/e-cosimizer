@@ -28,6 +28,7 @@ import javax.persistence.TypedQuery;
 
 import de.milke.ecost.model.MeasureTypeEnum;
 import de.milke.ecost.model.PowerMeasureType;
+import de.milke.ecost.model.PowerMeasureType.PeriodicNotification;
 import de.milke.ecost.model.User;
 
 @Stateless
@@ -81,6 +82,8 @@ public class PowerMeasureTypeDao {
 	powerMeasureType.setTypeEnum(MeasureTypeEnum.GAS);
 	powerMeasureType.setTypeName("Gas");
 	powerMeasureType.setUser(user);
+	powerMeasureType.setEnabled(true);
+	powerMeasureType.setEntryNotification(PeriodicNotification.WEEKLY);
 	em.persist(powerMeasureType);
 	powerMeasureTypeList.add(powerMeasureType);
 
@@ -90,6 +93,8 @@ public class PowerMeasureTypeDao {
 	powerMeasureType.setTypeEnum(MeasureTypeEnum.STROM);
 	powerMeasureType.setTypeName("Strom");
 	powerMeasureType.setUser(user);
+	powerMeasureType.setEnabled(true);
+	powerMeasureType.setEntryNotification(PeriodicNotification.WEEKLY);
 	em.persist(powerMeasureType);
 	powerMeasureTypeList.add(powerMeasureType);
 
@@ -99,6 +104,8 @@ public class PowerMeasureTypeDao {
 	powerMeasureType.setTypeEnum(MeasureTypeEnum.AUTO);
 	powerMeasureType.setTypeName("Autoversicherung");
 	powerMeasureType.setUser(user);
+	powerMeasureType.setEnabled(true);
+	powerMeasureType.setEntryNotification(PeriodicNotification.WEEKLY);
 	em.persist(powerMeasureType);
 	powerMeasureTypeList.add(powerMeasureType);
 
@@ -108,6 +115,8 @@ public class PowerMeasureTypeDao {
 	powerMeasureType.setTypeEnum(MeasureTypeEnum.DSL);
 	powerMeasureType.setTypeName("DSL");
 	powerMeasureType.setUser(user);
+	powerMeasureType.setEnabled(true);
+	powerMeasureType.setEntryNotification(PeriodicNotification.WEEKLY);
 	em.persist(powerMeasureType);
 	powerMeasureTypeList.add(powerMeasureType);
 
@@ -117,6 +126,8 @@ public class PowerMeasureTypeDao {
 	powerMeasureType.setTypeEnum(MeasureTypeEnum.MOBILE);
 	powerMeasureType.setTypeName("Mobil");
 	powerMeasureType.setUser(user);
+	powerMeasureType.setEnabled(true);
+	powerMeasureType.setEntryNotification(PeriodicNotification.WEEKLY);
 	em.persist(powerMeasureType);
 	powerMeasureTypeList.add(powerMeasureType);
 
@@ -126,6 +137,8 @@ public class PowerMeasureTypeDao {
 	powerMeasureType.setTypeEnum(MeasureTypeEnum.OTHER);
 	powerMeasureType.setTypeName("Sonstiges");
 	powerMeasureType.setUser(user);
+	powerMeasureType.setEnabled(true);
+	powerMeasureType.setEntryNotification(PeriodicNotification.WEEKLY);
 	em.persist(powerMeasureType);
 	powerMeasureTypeList.add(powerMeasureType);
 

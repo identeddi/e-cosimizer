@@ -57,11 +57,17 @@ public class AuthenticationService {
 
 	Account account = this.identity.getAccount();
 
-	if (account == null)
+	if (account == null) {
 	    return Response.status(Status.FORBIDDEN).entity(account)
 		    .type(MediaType.APPLICATION_JSON_TYPE).build();
-	else
-	    return Response.ok().entity(account).type(MediaType.APPLICATION_JSON_TYPE).build();
+	} else {
+	    if (!account.isEnabled()) {
+		return Response.status(Status.FORBIDDEN).entity(account)
+			.type(MediaType.APPLICATION_JSON_TYPE).build();
+	    } else {
+		return Response.ok().entity(account).type(MediaType.APPLICATION_JSON_TYPE).build();
+	    }
+	}
     }
 
     @POST

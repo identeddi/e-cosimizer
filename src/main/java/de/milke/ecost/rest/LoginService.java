@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -41,6 +42,7 @@ import org.picketlink.Identity;
 import org.picketlink.authorization.annotations.LoggedIn;
 
 import de.milke.ecost.dao.AccountDao;
+import de.milke.ecost.model.Email;
 import de.milke.ecost.model.MyUser;
 import de.milke.ecost.model.User;
 import de.milke.ecost.model.UserDTO;
@@ -69,6 +71,9 @@ public class LoginService {
 
     @PersistenceContext(name = "primary")
     private EntityManager em;
+
+    @EJB
+    MailService mailService;
 
     @POST
     @Path("/logout")
@@ -116,6 +121,14 @@ public class LoginService {
 	if (!this.identity.isLoggedIn()) {
 	    this.identity.login();
 	}
+	MyUser myUser = (MyUser) identity.getAccount();
+	if (!myUser.isEnabled()) {
+	    // send email for activatio
+	    int dd = 2;
+	}
+
+	Email email = new Email("Loged in" + user.getFirstName(), "Jupiieh", user.getEmail());
+	mailService.send(email);
 	return user;
     }
 

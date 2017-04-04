@@ -141,6 +141,14 @@ public class PowerMeasureDao {
 
     }
 
+    public List<PowerMeasure> getAllLastMeasures() throws GeneralException {
+
+	TypedQuery<PowerMeasure> lQuery = em.createQuery(
+		"FROM PowerMeasure where (powerMeasureType, measureDate) in (SELECT powerMeasureType.id, max(measureDate)  FROM PowerMeasure group by powerMeasureType) ",
+		PowerMeasure.class);
+	return lQuery.getResultList();
+    }
+
     public List<PowerMeasureHistoryDTO> getMeasureHistory(PowerMeasureType powerMeasureType) {
 	LOG.info(powerMeasureType.getUser().getFirstName() + ": getMeasure");
 	List<PowerMeasure> listMeasures = getByType(powerMeasureType);

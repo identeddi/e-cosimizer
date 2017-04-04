@@ -102,6 +102,7 @@ public class RegistrationService {
 		userRegistration.setLastName(lastName);
 		userRegistration.setPassword(passwordConfirm);
 		userRegistration.setPasswordConfirmation(passwordConfirm);
+		userRegistration.setPasswordConfirmation(passwordConfirm);
 		MyUser newUser = this.identityModelManager.createAccount(userRegistration);
 
 		this.identityModelManager.grantRole(newUser, ApplicationRole.USER);
@@ -138,8 +139,7 @@ public class RegistrationService {
 
     private void sendNotification(UserRegistration request, String activationCode) {
 	Email email = new Email("Please complete the signup",
-		"http://localhost:8080/picketlink-angularjs-rest/#/activate/" + activationCode,
-		request.getEmail());
+		"http://localhost:8080/rest/#/activate/" + activationCode, request.getEmail());
 
 	event.fire(email);
     }
