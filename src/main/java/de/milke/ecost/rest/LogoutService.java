@@ -36,7 +36,7 @@ import de.milke.ecost.security.JWSToken;
 /**
  *
  */
-@Path("/private/logout")
+@Path("/logout")
 public class LogoutService {
 
     @Inject

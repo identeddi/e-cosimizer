@@ -67,79 +67,75 @@ public class SecurityInitializer {
     public static final String KEYSTORE_FILE_PATH = "/keystore.jks";
 
     private KeyStore keyStore;
-
+    
     @EJB
     PowerMeasureTypeDao powerMeasureTypeDao;
 
     @PersistenceContext(name = "primary")
     private EntityManager em;
-
+    
     public void configureDefaultPartition(@Observes PartitionManagerCreateEvent event) {
-	LOG.info("Start Picketlink configureDefaultPartition");
-	PartitionManager partitionManager = event.getPartitionManager();
+        PartitionManager partitionManager = event.getPartitionManager();
 
-	createDefaultPartition(partitionManager);
-	createDefaultRoles(partitionManager);
-	createAdminAccount(partitionManager);
-	LOG.info("Finish Picketlink configureDefaultPartition");
+        createDefaultPartition(partitionManager);
+        createDefaultRoles(partitionManager);
+        createAdminAccount(partitionManager);
     }
 
     private void createDefaultRoles(PartitionManager partitionManager) {
-	IdentityManager identityManager = partitionManager.createIdentityManager();
+        IdentityManager identityManager = partitionManager.createIdentityManager();
 
-	createRole(ApplicationRole.ADMINISTRATOR, identityManager);
-	createRole(ApplicationRole.USER, identityManager);
+        createRole(ApplicationRole.ADMINISTRATOR, identityManager);
+        createRole(ApplicationRole.USER, identityManager);
     }
 
     private void createDefaultPartition(PartitionManager partitionManager) {
-	Realm partition = partitionManager.getPartition(Realm.class, Realm.DEFAULT_REALM);
+        Realm partition = partitionManager.getPartition(Realm.class, Realm.DEFAULT_REALM);
 
-	if (partition == null) {
-	    try {
-		partition = new Realm(Realm.DEFAULT_REALM);
+        if (partition == null) {
+            try {
+                partition = new Realm(Realm.DEFAULT_REALM);
 
-		partition.setAttribute(new Attribute<byte[]>("PublicKey", getPublicKey()));
-		partition.setAttribute(new Attribute<byte[]>("PrivateKey", getPrivateKey()));
+                partition.setAttribute(new Attribute<byte[]>("PublicKey", getPublicKey()));
+                partition.setAttribute(new Attribute<byte[]>("PrivateKey", getPrivateKey()));
 
-		partitionManager.add(partition);
-	    } catch (Exception e) {
-		throw new SecurityConfigurationException("Could not create default partition.", e);
-	    }
-	}
+                partitionManager.add(partition);
+            } catch (Exception e) {
+                throw new SecurityConfigurationException("Could not create default partition.", e);
+            }
+        }
     }
 
     public static Role createRole(String roleName, IdentityManager identityManager) {
-	Role role = getRole(identityManager, roleName);
+        Role role = getRole(identityManager, roleName);
 
-	if (role == null) {
-	    role = new Role(roleName);
-	    identityManager.add(role);
-	}
+        if (role == null) {
+            role = new Role(roleName);
+            identityManager.add(role);
+        }
 
-	return role;
+        return role;
     }
 
-    private byte[] getPrivateKey()
-	    throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-	return getKeyStore().getKey("servercert", "test123".toCharArray()).getEncoded();
+    private byte[] getPrivateKey() throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+        return getKeyStore().getKey("servercert", "test123".toCharArray()).getEncoded();
     }
 
     private byte[] getPublicKey() throws KeyStoreException {
-	return getKeyStore().getCertificate("servercert").getPublicKey().getEncoded();
+        return getKeyStore().getCertificate("servercert").getPublicKey().getEncoded();
     }
 
     private KeyStore getKeyStore() {
-	if (this.keyStore == null) {
-	    try {
-		this.keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		getKeyStore().load(getClass().getResourceAsStream(KEYSTORE_FILE_PATH),
-			"store123".toCharArray());
-	    } catch (Exception e) {
-		throw new SecurityException("Could not load key store.", e);
-	    }
-	}
+        if (this.keyStore == null) {
+            try {
+                this.keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                getKeyStore().load(getClass().getResourceAsStream(KEYSTORE_FILE_PATH), "store123".toCharArray());
+            } catch (Exception e) {
+                throw new SecurityException("Could not load key store.", e);
+            }
+        }
 
-	return this.keyStore;
+        return this.keyStore;
     }
 
     public void createAdminAccount(PartitionManager partitionManager) {

@@ -21,8 +21,8 @@ import de.milke.ecost.model.Email;
 @Stateless
 public class MailService {
 
-    @Resource(mappedName = "java:jboss/mail/Gmail")
-    private Session session;
+	@Resource(mappedName = "java:/mail/gmail")
+	private Session session;
 
     @Asynchronous
     public void send(@Observes Email email) {

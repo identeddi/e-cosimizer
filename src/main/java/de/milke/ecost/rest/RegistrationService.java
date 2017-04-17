@@ -26,8 +26,11 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -68,79 +71,71 @@ import de.milke.ecost.util.MessageBuilder;
 @Path("/register")
 public class RegistrationService {
 
-    @Inject
-    private IdentityModelManager identityModelManager;
+	@Inject
+	private IdentityModelManager identityModelManager;
 
-    @Inject
-    @Any
-    private Event<Email> event;
+	@Inject
+	@Any
+	private Event<Email> event;
 
-    @EJB
-    AccountDao accountDao;
+	@EJB
+	AccountDao accountDao;
 
-    @EJB
-    PowerMeasureTypeDao powerMeasureTypeDao;
+	@EJB
+	PowerMeasureTypeDao powerMeasureTypeDao;
 
-    @POST
-    public String register(@QueryParam("email") String email,
-	    @QueryParam("firstName") String firstName, @QueryParam("username") String username,
-	    @QueryParam("lastName") String lastName, @QueryParam("password") String password,
-	    @QueryParam("passwordConfirm") String passwordConfirm) throws GeneralException {
+	@POST
+	@Consumes("application/json")
+	public String register(UserRegistration userRegistration) throws GeneralException {
 
-	if (!password.equals(passwordConfirm)) {
-	    throw new GeneralException("Passwörter sind nicht gleich.");
+		if (!userRegistration.getPassword().equals(userRegistration.getPasswordConfirmation())) {
+			throw new GeneralException("Passwörter sind nicht gleich.");
+		}
+
+		try {
+			// if there is no user with the provided e-mail, perform
+			// registration
+			if (this.identityModelManager.findByLoginName(userRegistration.getUserName()) == null) {
+
+				MyUser newUser = this.identityModelManager.createAccount(userRegistration);
+
+				this.identityModelManager.grantRole(newUser, ApplicationRole.USER);
+				powerMeasureTypeDao.createDefaults(newUser.getUser());
+				String activationCode = newUser.getActivationCode();
+
+				sendNotification(userRegistration, activationCode);
+
+				return activationCode;
+			} else {
+				throw new GeneralException(
+						userRegistration.getUserName() + " Benutzer bereits registriert, bitte einen anderen wählen");
+			}
+		} catch (Exception e) {
+			throw new GeneralException(userRegistration.getUserName() + " Unbekannter Fehler: " + e.getMessage());
+		}
 	}
 
-	try {
-	    // if there is no user with the provided e-mail, perform
-	    // registration
-	    if (this.identityModelManager.findByLoginName(username) == null) {
-		UserRegistration userRegistration = new UserRegistration();
-		userRegistration.setUserName(username);
-		userRegistration.setEmail(email);
-		userRegistration.setFirstName(firstName);
-		userRegistration.setLastName(lastName);
-		userRegistration.setPassword(passwordConfirm);
-		userRegistration.setPasswordConfirmation(passwordConfirm);
-		userRegistration.setPasswordConfirmation(passwordConfirm);
-		MyUser newUser = this.identityModelManager.createAccount(userRegistration);
+	@POST
+	@Path("/activation/{activationcode}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes("application/json")
+	public Response activateAccount(@PathParam("activationcode") String activationCode) {
+		MessageBuilder message;
 
-		this.identityModelManager.grantRole(newUser, ApplicationRole.USER);
-		powerMeasureTypeDao.createDefaults(newUser.getUser());
-		String activationCode = newUser.getActivationCode();
+		try {
+			Token token = this.identityModelManager.activateAccount(activationCode);
+			 message = MessageBuilder.ok().message("Account erfolgreich aktiviert. Sie können sich nun einloggen");
+		} catch (Exception e) {
+			 message = MessageBuilder.badRequest().message("Fehler beim Aktivieren des Accounts");
+		}
 
-		sendNotification(userRegistration, activationCode);
-
-		return activationCode;
-	    } else {
-		throw new GeneralException(
-			username + " Benutzer bereits registriert, bitte einen anderen wählen");
-	    }
-	} catch (Exception e) {
-	    throw new GeneralException(username + " Unbekannter Fehler: " + e.getMessage());
-	}
-    }
-
-    @POST
-    @Path("/activation")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response activateAccount(String activationCode) {
-	MessageBuilder message;
-
-	try {
-	    Token token = this.identityModelManager.activateAccount(activationCode);
-	    message = MessageBuilder.ok().token(token.getToken());
-	} catch (Exception e) {
-	    message = MessageBuilder.badRequest().message(e.getMessage());
+		return message.build();
 	}
 
-	return message.build();
-    }
+	private void sendNotification(UserRegistration request, String activationCode) {
+		Email email = new Email("Please complete the signup",
+				"http://localhost:8100/?activationcode=" + activationCode, request.getEmail());
 
-    private void sendNotification(UserRegistration request, String activationCode) {
-	Email email = new Email("Please complete the signup",
-		"http://localhost:8080/rest/#/activate/" + activationCode, request.getEmail());
-
-	event.fire(email);
-    }
+		event.fire(email);
+	}
 }

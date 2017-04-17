@@ -132,6 +132,7 @@ public class LoginService {
 	return user;
     }
 
+    
     @PUT
     @Path("/login")
     @Produces("application/json")
@@ -153,7 +154,7 @@ public class LoginService {
     }
 
     @GET
-    @Path("/login")
+    @Path("/info")
     @Produces("application/json")
     @LoggedIn
     public UserDTO getLoggedInUser() {

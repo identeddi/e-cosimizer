@@ -49,13 +49,19 @@ public class HttpSecurityConfiguration {
     static Logger LOG = Logger.getLogger(HttpSecurityConfiguration.class.getName());
 
     public void onInit(@Observes SecurityConfigurationEvent event) {
-	LOG.info("Start Picketlink onInit");
-	SecurityConfigurationBuilder builder = event.getBuilder();
+        SecurityConfigurationBuilder builder = event.getBuilder();
 
-	builder.identity().http().forPath("/rest/*").authenticateWith().basic()
-		.realmName("PicketLink HTTP Basic Quickstart Realm").forPath("/rest/register")
-		.unprotected();
-	LOG.info("Finish Picketlink onInit");
+        builder
+            .identity()
+                .stateless()
+            .http()
+                .forPath("/rest/*")
+                .authenticateWith()
+                .token()
+            .cors()
+                .allowAll().forPath("/rest/register/*")
+		.unprotected().cors().allowAll();
+
     }
 
 }

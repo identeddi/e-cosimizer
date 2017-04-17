@@ -2,7 +2,6 @@ package de.milke.ecost.mail;
 
 import java.util.logging.Logger;
 
-import javax.annotation.Resource;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.mail.Message;
@@ -16,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 public class MeasureAddedMail {
     static Logger LOG = Logger.getLogger(MeasureAddedMail.class.getName());
 
-    @Resource(mappedName = "java:jboss/mail/Gmail")
+    // @Resource(mappedName = "java:jboss/mail/Gmail")
     Session gmailSession;
 
     /**

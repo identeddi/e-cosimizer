@@ -119,7 +119,7 @@ public class IdentityModelManager {
 
 	newUser.setActivationCode(activationCode); // we set an activation code
 						   // for future use.
-	newUser.setEnabled(true);
+	newUser.setEnabled(false);
 	this.identityManager.add(newUser);
 
 	updatePassword(newUser, request.getPassword());

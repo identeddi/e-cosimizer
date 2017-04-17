@@ -22,10 +22,12 @@
 
 package de.milke.ecost.model;
 
+import java.io.Serializable;
+
 /**
  * @author Pedro Silva
  */
-public class UserRegistration {
+public class UserRegistration implements Serializable{
 
     private String userName;
     private String firstName;
