@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AlertController, LoadingController, Loading } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
+import { AlertController, LoadingController, Loading, MenuController } from 'ionic-angular';
 import { AuthService } from '../../providers/auth-service';
 import { RegisterPage } from '../register/register';
-import { HomePage } from '../home/home';
+import { DashboardPage } from '../dashboard/dashboard';
 import { ActivationPage } from '../activation/activation';
 
 @Component({
@@ -14,7 +14,8 @@ export class LoginPage {
   loading: Loading;
   registerCredentials = { email: '', password: '' };
 
-  constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
+  constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController,
+    public menuCtrl: MenuController) {
     let activationCode: string = this.getActivationCodeFromURL();
     if (activationCode != null) {
       nav.push(ActivationPage, {
@@ -22,12 +23,12 @@ export class LoginPage {
       });
 
     }
+    this.menuCtrl.enable(false, "mainMenu");
   }
   getActivationCodeFromURL() {
     let re = /[?&]([^=#&]+)=([^&#]*)/g;
     let match: RegExpExecArray;
     let isMatch = true;
-    let matches = [];
     let activationcode: string = null;
     while (isMatch) {
       match = re.exec(window.location.href);
@@ -60,7 +61,9 @@ export class LoginPage {
       if (allowed) {
         setTimeout(() => {
           this.loading.dismiss();
-          this.nav.setRoot(HomePage)
+          this.menuCtrl.enable(true, "mainMenu");
+          this.nav.setRoot(DashboardPage);
+
         });
       } else {
         this.showError("Zugrif verweigert");

@@ -1,19 +1,52 @@
-<ion-menu [content]="content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Pages</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <button ion-item (click)="openPage(loginPage)">
-        Login
-      </button>
-      <button ion-item (click)="openPage(signupPage)">
-        Signup
-      </button>
-    </ion-list>
-  </ion-content>
-</ion-menu>
+<ion-split-pane>
 
-<ion-nav [root]="rootPage"></ion-nav>
+  <!-- logged out menu -->
+  <ion-menu id="mainMenu" [content]="content">
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="outer-content">
+
+      <ion-list>
+        <ion-list-header>
+          Übersicht
+        </ion-list-header>
+        <button ion-item menuClose (click)="openPage(dashboardItem)">
+          <ion-icon item-left [name]="dashboardItem.icon" [color]="isActive(dashboardItem)"></ion-icon>
+          {{dashboardItem.title}}
+        </button>
+      </ion-list>
+      <ion-list>
+        <ion-list-header>
+          Zähler
+        </ion-list-header>
+        <button ion-item menuClose *ngFor="let p of measureItems" (click)="openPage(p)">
+          <ion-icon item-left [name]="p.icon" [color]="isActive(p)"></ion-icon>
+          {{p.title}}
+        </button>
+      </ion-list>
+      <ion-list>
+        <ion-list-header>
+          Konto
+        </ion-list-header>
+        <button ion-item menuClose (click)="openPage(settingsItem)">
+          <ion-icon item-left [name]="settingsItem.icon" [color]="isActive(settingsItem)"></ion-icon>
+          {{settingsItem.title}}
+        </button>
+        <button ion-item menuClose (click)="openPage(logoutItem)">
+          <ion-icon item-left [name]="logoutItem.icon" [color]="isActive(logoutItem)"></ion-icon>
+          {{logoutItem.title}}
+        </button>
+      </ion-list>
+
+    </ion-content>
+
+  </ion-menu>
+
+  <ion-nav [root]="rootPage" #content swipeBackEnabled="false" main></ion-nav>
+
+</ion-split-pane>
