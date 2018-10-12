@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
+import { MeasuresService } from '../../providers/measures-service';
 /**
  * Generated class for the Dashboard page.
  *
@@ -12,8 +12,11 @@ import { NavController, NavParams } from 'ionic-angular';
   templateUrl: 'dashboard.html',
 })
 export class DashboardPage {
+  lastMeasures: any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, measureService: MeasuresService) {
+    measureService.getLastMeasures().subscribe(measures =>
+      this.lastMeasures = measures);
   }
 
   ionViewDidLoad() {

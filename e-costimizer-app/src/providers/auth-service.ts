@@ -5,6 +5,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
+import { Storage } from '@ionic/storage';
 export class User {
   id: number;
   firstName: string;
@@ -25,16 +26,14 @@ export class AuthService {
   currentUser: User;
   response: any;
   errorMessage: string;
-  authcToken: string;
-  constructor(public http: Http) {
+  constructor(public http: Http, public storage: Storage) {
 
   }
   public login(credentials) {
-
-    return this.getToken(credentials).mergeMap((authcToken) => {
+    return this.getTokenWithCredentials(credentials).mergeMap((authcToken) => {
       let headers: Headers = new Headers();
 
-      headers.append("Authorization", 'Token ' + this.authcToken);
+      headers.append("Authorization", 'Token ' + authcToken);
       headers.append("Content-Type", 'application/json');
       let options = new RequestOptions({ headers: headers });
       var url = 'https://localhost:8443/rest/login/info';
@@ -45,10 +44,12 @@ export class AuthService {
         return true;
       });
 
-
+  }
+  getToken() {
+    return Observable.fromPromise(this.storage.get('id_token'));
   }
 
-  getToken(credentials) {
+  getTokenWithCredentials(credentials) {
     if (credentials.username === null || credentials.password === null) {
       return Observable.throw("Please insert credentials");
     } else {
@@ -61,8 +62,9 @@ export class AuthService {
       var url = 'https://localhost:8443/rest/authc';
       return this.http.get(url, options)
         .map(res => {
-          this.authcToken = res.json().authctoken;
-          return this.authcToken
+          let token: string = res.json().authctoken;
+          this.storage.set('id_token', token);
+          return token;
         }
         )
         .catch(
@@ -113,7 +115,7 @@ export class AuthService {
       .catch(
       error => {
         console.log("serror enableAccount account: " + error.text());
-        return  Observable.throw(error.text());
+        return Observable.throw(error.text());
       });
 
   }

@@ -9,5 +9,16 @@
 
 
 <ion-content padding>
-  Dashboard
+  <ion-card *ngFor="let m of lastMeasures">
+    <ion-card-header>
+      {{m.powerMeasureType.typeName}} ({{m.powerMeasureType.referenceId}})
+    </ion-card-header>
+    <ion-card-content>
+      <p>Zuletzt abgelesen: {{m.measureDate | date: 'dd.MM.yyyy'}} </p>
+      <p>Aktueller Verbrauch: {{m.dailyConsumption}} kWh</p>
+      <p>Zählerstand: {{m.measureValue | number:'1.2-2'}} kWh</p>
+      <p>Nächste Ablesung: {{m.nextMeasureDate | date: 'dd.MM.yyyy'}}</p>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

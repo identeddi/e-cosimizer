@@ -7,6 +7,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { MyApp } from './app.component';
 import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../providers/auth-service';
+import { MeasuresService } from '../providers/measures-service';
 import { RegisterPage } from '../pages/register/register';
 import { ActivationPage } from '../pages/activation/activation';
 import { DashboardPage } from '../pages/dashboard/dashboard';
@@ -15,7 +16,7 @@ import { SettingsGeneralPage } from '../pages/settings-general/settings-general'
 import { SettingsOrderListsPage } from '../pages/settings-orderlists/settings-orderlists';
 import { MeasurePage } from '../pages/measure/measure';
 import { MeasureCurrentPage } from '../pages/measure-current/measure-current';
-
+import { IonicStorageModule } from '@ionic/storage';
 @NgModule({
   declarations: [
     MyApp,
@@ -32,8 +33,10 @@ import { MeasureCurrentPage } from '../pages/measure-current/measure-current';
   imports: [
     BrowserModule,
     HttpModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
+
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
@@ -51,7 +54,9 @@ import { MeasureCurrentPage } from '../pages/measure-current/measure-current';
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    AuthService
+    AuthService,
+    MeasuresService,
+
   ]
 })
 export class AppModule { }

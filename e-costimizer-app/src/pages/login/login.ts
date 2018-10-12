@@ -60,6 +60,7 @@ export class LoginPage {
     this.auth.login(this.registerCredentials).subscribe(allowed => {
       if (allowed) {
         setTimeout(() => {
+
           this.loading.dismiss();
           this.menuCtrl.enable(true, "mainMenu");
           this.nav.setRoot(DashboardPage);
