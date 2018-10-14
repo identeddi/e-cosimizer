@@ -16,7 +16,7 @@ import javax.mail.internet.MimeMessage;
 public class MeasureAddedMail {
     static Logger LOG = Logger.getLogger(MeasureAddedMail.class.getName());
 
-    @Resource(mappedName = "java:jboss/mail/Gmail")
+//    @Resource(mappedName = "java:jboss/mail/Gmail")
     Session gmailSession;
 
     /**

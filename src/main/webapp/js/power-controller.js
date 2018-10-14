@@ -11,7 +11,7 @@ BookIt.PowerController.prototype.onErfassenCommand = function() {
 
 	var tep = $.datepicker.parseDate('dd.mm.yy', zaehlerDatum);
 	zaehlerDatum = tep.toJSON();
-	callurl = "http://"
+	callurl = "https://"
 			+ window.location.host
 			+ BookIt.Settings.measurePowerURL.replace("%TYPEID%",
 					localStorage.powerType) + "?" + "measureValue="

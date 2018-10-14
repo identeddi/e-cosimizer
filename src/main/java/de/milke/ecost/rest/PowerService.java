@@ -65,7 +65,7 @@ import de.milke.ecost.model.PowerMeasureReminder.ReminderType;
 import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.PowerSupply;
 import de.milke.ecost.model.SupplySettingsDTO;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.UserEntity;
 import de.milke.ecost.model.chart.ChartModel;
 import de.milke.ecost.model.chart.Dataset;
 import de.milke.ecost.service.Check24SupplyResolver;
@@ -168,57 +168,57 @@ public class PowerService {
 	return powerMeasureDao.get(id);
     }
 
-    @GET
-    @Path("/lastmeasure")
-    @Produces("application/json")
-    public List<PowerMeasureReminder> getAllLastMeasures() throws GeneralException {
-	List<PowerMeasure> lastMeasures = powerMeasureDao.getAllLastMeasures();
-	List<PowerMeasure> newReminders = new ArrayList<>();
-	List<PowerMeasureReminder> newPowerMeasureReminders = new ArrayList<>();
-	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getAllByUser(getUser());
-
-	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
-	    List<PowerMeasure> measureList = powerMeasureDao.getByType(powerMeasureType);
-
-	    if (measureList.size() > 0) {
-		PowerMeasure lastMeasure = measureList.get(0);
-
-		if (lastMeasure.getPowerMeasureType().getEnabled()
-			&& lastMeasure.getPowerMeasureType().getEntryNotification() != null) {
-
-		    Calendar lastMeasureCalendar = new GregorianCalendar();
-		    lastMeasureCalendar.setTime(lastMeasure.getMeasureDate());
-		    Calendar nowCalendar = new GregorianCalendar();
-		    nowCalendar.setTime(new Date());
-		    int diffYear = nowCalendar.get(Calendar.YEAR)
-			    - lastMeasureCalendar.get(Calendar.YEAR);
-		    int diffMonth = diffYear * 12 + nowCalendar.get(Calendar.MONTH)
-			    - lastMeasureCalendar.get(Calendar.MONTH);
-
-		    switch (lastMeasure.getPowerMeasureType().getEntryNotification()) {
-		    case NEVER:
-			break;
-		    case MONTHLY:
-			if (diffMonth == 1
-				&& nowCalendar.get(Calendar.DAY_OF_MONTH) >= lastMeasureCalendar
-					.get(Calendar.DAY_OF_MONTH)
-				|| diffMonth > 1) {
-			    List<PowerMeasureReminder> powerMeasureReminders = powerMeasureReminderDao
-				    .getByType(lastMeasure.getPowerMeasureType());
-			    if (powerMeasureReminders.size() == 0) {
-				PowerMeasureReminder powerMeasureReminder = new PowerMeasureReminder(
-					new Date(), ReminderType.MEASURE, powerMeasureType,
-					"Ableseerinnerung", "Bitte ablesen und erfassen", "4711");
-				powerMeasureReminderDao.save(powerMeasureReminder);
-			    }
-			}
-		    }
-		}
-
-	    }
-	}
-	return powerMeasureReminders;
-    }
+//    @GET
+//    @Path("/lastmeasure")
+//    @Produces("application/json")
+//    public List<PowerMeasureReminder> getAllLastMeasures() throws GeneralException {
+//	List<PowerMeasure> lastMeasures = powerMeasureDao.getAllLastMeasures();
+//	List<PowerMeasure> newReminders = new ArrayList<>();
+//	List<PowerMeasureReminder> newPowerMeasureReminders = new ArrayList<>();
+//	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getAllByUser(getUser());
+//
+//	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
+//	    List<PowerMeasure> measureList = powerMeasureDao.getByType(powerMeasureType);
+//
+//	    if (measureList.size() > 0) {
+//			PowerMeasure lastMeasure = measureList.get(0);
+//	
+//			if (lastMeasure.getPowerMeasureType().getEnabled()
+//				&& lastMeasure.getPowerMeasureType().getEntryNotification() != null) {
+//	
+//			    Calendar lastMeasureCalendar = new GregorianCalendar();
+//			    lastMeasureCalendar.setTime(lastMeasure.getMeasureDate());
+//			    Calendar nowCalendar = new GregorianCalendar();
+//			    nowCalendar.setTime(new Date());
+//			    int diffYear = nowCalendar.get(Calendar.YEAR)
+//				    - lastMeasureCalendar.get(Calendar.YEAR);
+//			    int diffMonth = diffYear * 12 + nowCalendar.get(Calendar.MONTH)
+//				    - lastMeasureCalendar.get(Calendar.MONTH);
+//	
+//			    switch (lastMeasure.getPowerMeasureType().getEntryNotification()) {
+//			    case NEVER:
+//				break;
+//			    case MONTHLY:
+//				if (diffMonth == 1
+//					&& nowCalendar.get(Calendar.DAY_OF_MONTH) >= lastMeasureCalendar
+//						.get(Calendar.DAY_OF_MONTH)
+//					|| diffMonth > 1) {
+//				    List<PowerMeasureReminder> powerMeasureReminders = powerMeasureReminderDao
+//					    .getByType(lastMeasure.getPowerMeasureType());
+//				    if (powerMeasureReminders.size() == 0) {
+//					PowerMeasureReminder powerMeasureReminder = new PowerMeasureReminder(
+//						new Date(), ReminderType.MEASURE, powerMeasureType,
+//						"Ableseerinnerung", "Bitte ablesen und erfassen", "4711");
+//					powerMeasureReminderDao.save(powerMeasureReminder);
+//				    }
+//				}
+//			    }
+//			}
+//
+//	    }
+//	}
+//	return powerMeasureReminders;
+//    }
 
     @GET
     @Path("/type/{powerMeasureType}/measure")
@@ -473,7 +473,7 @@ public class PowerService {
 	return new SupplySettingsDTO(zipcode, estimatedConsumtion, passedConsumtion);
     }
 
-    protected User getUser() {
+    protected UserEntity getUser() {
 	MyUser user = (MyUser) identity.getAccount();
 	LOG.info("userinfo: " + user.getUser().getId() + " firstname: "
 		+ user.getUser().getFirstName());

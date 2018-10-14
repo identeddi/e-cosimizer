@@ -105,7 +105,7 @@ public class IdentityModelManager {
 	    throw new WebServiceException("Insuficient information.");
 	}
 
-	User person = new User();
+	UserEntity person = new UserEntity();
 
 	person.setEmail(request.getEmail());
 	person.setFirstName(request.getFirstName());

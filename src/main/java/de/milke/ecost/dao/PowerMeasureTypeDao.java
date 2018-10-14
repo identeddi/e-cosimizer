@@ -29,7 +29,7 @@ import javax.persistence.TypedQuery;
 import de.milke.ecost.model.MeasureTypeEnum;
 import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.PowerMeasureType.PeriodicNotification;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.UserEntity;
 
 @Stateless
 public class PowerMeasureTypeDao {
@@ -42,7 +42,7 @@ public class PowerMeasureTypeDao {
 	return em.find(PowerMeasureType.class, id);
     }
 
-    public List<PowerMeasureType> getAllByUser(User user) {
+    public List<PowerMeasureType> getAllByUser(UserEntity user) {
 	TypedQuery<PowerMeasureType> lQuery = em.createQuery(
 		"from PowerMeasureType where user=:user order by typeName", PowerMeasureType.class);
 	lQuery.setParameter("user", user);
@@ -50,7 +50,7 @@ public class PowerMeasureTypeDao {
 
     }
 
-    public List<PowerMeasureType> getEnabledByUser(User user) {
+    public List<PowerMeasureType> getEnabledByUser(UserEntity user) {
 	TypedQuery<PowerMeasureType> lQuery = em.createQuery(
 		"from PowerMeasureType where user=:user and enabled=:enabled order by typeName",
 		PowerMeasureType.class);
@@ -72,7 +72,7 @@ public class PowerMeasureTypeDao {
 
     }
 
-    public List<PowerMeasureType> createDefaults(User user) {
+    public List<PowerMeasureType> createDefaults(UserEntity user) {
 
 	List<PowerMeasureType> powerMeasureTypeList = new ArrayList<>();
 

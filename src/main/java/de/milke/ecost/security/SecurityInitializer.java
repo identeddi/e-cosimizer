@@ -25,6 +25,7 @@ import static de.milke.ecost.model.IdentityModelManager.findByLoginName;
 import static org.picketlink.idm.model.basic.BasicModel.getRole;
 import static org.picketlink.idm.model.basic.BasicModel.grantRole;
 
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +50,7 @@ import org.picketlink.idm.model.basic.Role;
 import de.milke.ecost.dao.PowerMeasureTypeDao;
 import de.milke.ecost.model.ApplicationRole;
 import de.milke.ecost.model.MyUser;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.UserEntity;
 
 /**
  * <p>
@@ -74,102 +75,106 @@ public class SecurityInitializer {
     @PersistenceContext(name = "primary")
     private EntityManager em;
 
+    //doumentation http://www.mastertheboss.com/jboss-server/jboss-security/complete-tutorial-for-configuring-ssl-https-on-wildfly
+    //https://docs.jboss.org/author/pages/viewpage.action?pageId=66322705
+    //https://github.com/jboss-developer/jboss-picketlink-quickstarts/tree/master/picketlink-angularjs-rest
     public void configureDefaultPartition(@Observes PartitionManagerCreateEvent event) {
-	LOG.info("Start Picketlink configureDefaultPartition");
-	PartitionManager partitionManager = event.getPartitionManager();
-
-	createDefaultPartition(partitionManager);
-	createDefaultRoles(partitionManager);
-	createAdminAccount(partitionManager);
-	LOG.info("Finish Picketlink configureDefaultPartition");
-    }
-
-    private void createDefaultRoles(PartitionManager partitionManager) {
-	IdentityManager identityManager = partitionManager.createIdentityManager();
-
-	createRole(ApplicationRole.ADMINISTRATOR, identityManager);
-	createRole(ApplicationRole.USER, identityManager);
+		LOG.info("Start Picketlink configureDefaultPartition");
+		PartitionManager partitionManager = event.getPartitionManager();
+	
+		createDefaultPartition(partitionManager);
+		createDefaultRoles(partitionManager);
+		createAdminAccount(partitionManager);
+		LOG.info("Finish Picketlink configureDefaultPartition");
+	    }
+	
+	    private void createDefaultRoles(PartitionManager partitionManager) {
+		IdentityManager identityManager = partitionManager.createIdentityManager();
+	
+		createRole(ApplicationRole.ADMINISTRATOR, identityManager);
+		createRole(ApplicationRole.USER, identityManager);
     }
 
     private void createDefaultPartition(PartitionManager partitionManager) {
-	Realm partition = partitionManager.getPartition(Realm.class, Realm.DEFAULT_REALM);
-
-	if (partition == null) {
-	    try {
-		partition = new Realm(Realm.DEFAULT_REALM);
-
-		partition.setAttribute(new Attribute<byte[]>("PublicKey", getPublicKey()));
-		partition.setAttribute(new Attribute<byte[]>("PrivateKey", getPrivateKey()));
-
-		partitionManager.add(partition);
-	    } catch (Exception e) {
-		throw new SecurityConfigurationException("Could not create default partition.", e);
-	    }
-	}
+		Realm partition = partitionManager.getPartition(Realm.class, Realm.DEFAULT_REALM);
+	
+		if (partition == null) {
+		    try {
+			partition = new Realm(Realm.DEFAULT_REALM);
+	
+			partition.setAttribute(new Attribute<byte[]>("PublicKey", getPublicKey()));
+			partition.setAttribute(new Attribute<byte[]>("PrivateKey", getPrivateKey()));
+	
+			partitionManager.add(partition);
+		    } catch (Exception e) {
+			throw new SecurityConfigurationException("Could not create default partition.", e);
+		    }
+		}
     }
 
     public static Role createRole(String roleName, IdentityManager identityManager) {
-	Role role = getRole(identityManager, roleName);
-
-	if (role == null) {
-	    role = new Role(roleName);
-	    identityManager.add(role);
-	}
-
-	return role;
+    	Role role = getRole(identityManager, roleName);
+	
+		if (role == null) {
+		    role = new Role(roleName);
+		    identityManager.add(role);
+		}
+	
+		return role;
     }
 
     private byte[] getPrivateKey()
 	    throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
-	return getKeyStore().getKey("servercert", "test123".toCharArray()).getEncoded();
+    	return getKeyStore().getKey("servercert", "test123".toCharArray()).getEncoded();
     }
 
     private byte[] getPublicKey() throws KeyStoreException {
-	return getKeyStore().getCertificate("servercert").getPublicKey().getEncoded();
+    	return getKeyStore().getCertificate("servercert").getPublicKey().getEncoded();
     }
 
     private KeyStore getKeyStore() {
-	if (this.keyStore == null) {
-	    try {
-		this.keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		getKeyStore().load(getClass().getResourceAsStream(KEYSTORE_FILE_PATH),
-			"store123".toCharArray());
-	    } catch (Exception e) {
-		throw new SecurityException("Could not load key store.", e);
-	    }
-	}
+		if (this.keyStore == null) {
+		    try {
+			this.keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			InputStream is = getClass().getResourceAsStream(KEYSTORE_FILE_PATH);
+			getKeyStore().load(is,
+				"store123".toCharArray());
+		    } catch (Exception e) {
+			throw new SecurityException("Could not load key store.", e);
+		    }
+		}
 
-	return this.keyStore;
+		return this.keyStore;
     }
 
     public void createAdminAccount(PartitionManager partitionManager) {
-	IdentityManager identityManager = partitionManager.createIdentityManager();
-	String email = "admin@costimizer.de";
-	String username = "aa";
-
-	// if admin exists dont create again
-	if (findByLoginName(username, identityManager) != null) {
-	    return;
-	}
-
-	User person = new User();
-
-	person.setFirstName("Almight");
-	person.setLastName("Administrator");
-	person.setEmail(email);
-	em.persist(person);
-	MyUser admin = new MyUser(username);
-
-	admin.setUser(person);
-
-	identityManager.add(admin);
-
-	identityManager.updateCredential(admin, new Password("a"));
-
-	Role adminRole = getRole(identityManager, ApplicationRole.ADMINISTRATOR);
-
-	grantRole(partitionManager.createRelationshipManager(), admin, adminRole);
-
-	powerMeasureTypeDao.createDefaults(person);
+		IdentityManager identityManager = partitionManager.createIdentityManager();
+		String email = "admin@costimizer.de";
+		String username = "aa";
+	
+		// if admin exists dont create again
+		if (findByLoginName(username, identityManager) != null) {
+		    return;
+		}
+	
+		UserEntity person = new UserEntity();
+	
+		person.setFirstName("Almight");
+		person.setLastName("Administrator");
+		person.setEmail(email);
+		em.persist(person);
+		MyUser admin = new MyUser(username);
+	
+		admin.setUser(person);
+	
+		identityManager.add(admin);
+	
+		identityManager.updateCredential(admin, new Password("a"));
+	
+		Role adminRole = getRole(identityManager, ApplicationRole.ADMINISTRATOR);
+	
+		grantRole(partitionManager.createRelationshipManager(), admin, adminRole);
+	
+		powerMeasureTypeDao.createDefaults(person);
     }
 }

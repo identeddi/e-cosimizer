@@ -130,7 +130,7 @@ BookIt.SignUpController.prototype.onSignupCommand = function() {
 		return;
 	}
 
-	callurl = "http://" + window.location.host + BookIt.Settings.signUpUrl
+	callurl = "https://" + window.location.host + BookIt.Settings.signUpUrl
 			+ "?" + "email=" + emailAddress + "&firstName=" + firstName
 			+ "&username=" + username + "&lastName=" + lastName + "&password="
 			+ password + "&passwordConfirm=" + passwordConfirm
