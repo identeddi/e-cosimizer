@@ -49,7 +49,7 @@ import org.picketlink.idm.model.basic.Role;
 import de.milke.ecost.dao.PowerMeasureTypeDao;
 import de.milke.ecost.model.ApplicationRole;
 import de.milke.ecost.model.MyUser;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.LoginUser;
 
 /**
  * <p>
@@ -148,7 +148,7 @@ public class SecurityInitializer {
 	    return;
 	}
 
-	User person = new User();
+	LoginUser person = new LoginUser();
 
 	person.setFirstName("Almight");
 	person.setLastName("Administrator");

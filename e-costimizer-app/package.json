@@ -50,6 +50,6 @@
   ],
   "description": "e-costimizer-app: An Ionic project",
   "config": {
-  "ionic_source_map": "source-map"
+    "ionic_source_map": "source-map"
   }
 }

@@ -10,7 +10,7 @@ $( document ).on( "pagebeforeshow" , function(e, data) {
  }
  if(usr ==null)
    {
-      callurl="http://" + window.location.host + BookIt.Settings.signInUrl;
+      callurl="https://" + window.location.host + BookIt.Settings.signInUrl;
    	    $.ajax({
         type: 'POST',
         url: callurl,

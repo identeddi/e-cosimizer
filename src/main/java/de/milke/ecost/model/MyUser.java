@@ -82,7 +82,7 @@ public class MyUser extends AbstractIdentityType implements Account {
     private String activationCode;
 
     @AttributeProperty
-    private User user;
+    private LoginUser user;
 
     public MyUser() {
 	this(null);
@@ -112,11 +112,11 @@ public class MyUser extends AbstractIdentityType implements Account {
 	return this.activationCode;
     }
 
-    public User getUser() {
+    public LoginUser getUser() {
 	return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(LoginUser user) {
 	this.user = user;
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "e-costimizer-app",
-  "app_id": "",
+  "integrations": {},
   "v2": true,
   "typescript": true
 }

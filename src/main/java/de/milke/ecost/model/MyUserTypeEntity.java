@@ -61,7 +61,7 @@ public class MyUserTypeEntity extends IdentityTypeEntity {
 
     @AttributeValue
     @OneToOne(cascade = CascadeType.ALL)
-    private User user;
+    private LoginUser user;
 
     public String getLoginName() {
 	return this.loginName;
@@ -79,11 +79,11 @@ public class MyUserTypeEntity extends IdentityTypeEntity {
 	this.activationCode = activationCode;
     }
 
-    public User getUser() {
+    public LoginUser getUser() {
 	return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(LoginUser user) {
 	this.user = user;
     }
 

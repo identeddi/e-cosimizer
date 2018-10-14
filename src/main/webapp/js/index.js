@@ -235,7 +235,7 @@ jQuery(function($) {
 });
 
 $(document).on('click', '#button-page-signin', function(e) {
-	callurl = "http://" + window.location.host + BookIt.Settings.signInUrl
+	callurl = "https://" + window.location.host + BookIt.Settings.signInUrl
 
 	$.mobile.changePage("#page-signin");
 });
@@ -245,7 +245,7 @@ $(document).on("click", "#nav-panel-list li a", function() {
 	if (powerMeasureType > 0) {
 		localStorage.powerType = powerMeasureType;
 	} else if (powerMeasureType == -3) {
-		callurl = "http://" + window.location.host + "/rest/login/logout";
+		callurl = "https://" + window.location.host + "/rest/login/logout";
 		resp = $.ajax({
 			type : 'POST',
 			url : callurl,
@@ -258,7 +258,7 @@ $(document).on("click", "#nav-panel-list li a", function() {
 });
 
 $(document).on("panelbeforeopen", "#nav-panel", function(event) {
-	callurl = "http://" + window.location.host + BookIt.Settings.getMenuList;
+	callurl = "https://" + window.location.host + BookIt.Settings.getMenuList;
 	$.ajax({
 		type : 'GET',
 		url : callurl,

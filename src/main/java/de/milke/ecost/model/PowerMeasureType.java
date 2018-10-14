@@ -61,7 +61,7 @@ public class PowerMeasureType implements Serializable {
 
     @JsonIgnore
     @ManyToOne
-    private User user;
+    private LoginUser user;
 
     public PowerMeasureType() {
 	super();
@@ -83,11 +83,11 @@ public class PowerMeasureType implements Serializable {
 	this.typeName = typeName;
     }
 
-    public User getUser() {
+    public LoginUser getUser() {
 	return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(LoginUser user) {
 	this.user = user;
     }
 

@@ -44,7 +44,7 @@ import org.picketlink.authorization.annotations.LoggedIn;
 import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.model.Email;
 import de.milke.ecost.model.MyUser;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.LoginUser;
 import de.milke.ecost.model.UserDTO;
 
 /**
@@ -114,8 +114,8 @@ public class LoginService {
     @Path("/login")
     @Produces("application/json")
     @LoggedIn
-    public User registerget() {
-	User user = getUser();
+    public LoginUser registerget() {
+	LoginUser user = getUser();
 	LOG.info("logged in - firstname: " + user.getFirstName() + "lastname: "
 		+ user.getLastName());
 	if (!this.identity.isLoggedIn()) {
@@ -138,10 +138,10 @@ public class LoginService {
     @Produces("application/json")
     @Consumes("application/json")
     @LoggedIn
-    public User updateUser(UserDTO usr) {
+    public LoginUser updateUser(UserDTO usr) {
 	LOG.info("start update user - username: " + usr.getFirstName() + "password: "
 		+ usr.getLastName());
-	User user = getUser();
+	LoginUser user = getUser();
 	user.setFirstName(usr.getFirstName());
 	user.setLastName(usr.getLastName());
 	user.setEmail(usr.getEmail());
@@ -158,7 +158,7 @@ public class LoginService {
     @Produces("application/json")
     @LoggedIn
     public UserDTO getLoggedInUser() {
-	User user = getUser();
+	LoginUser user = getUser();
 	MyUser myUser = (MyUser) identity.getAccount();
 	UserDTO userDTO = new UserDTO();
 	LOG.info(
@@ -172,7 +172,7 @@ public class LoginService {
 	return userDTO;
     }
 
-    protected User getUser() {
+    protected LoginUser getUser() {
 	MyUser user = (MyUser) identity.getAccount();
 	LOG.info(identity.getAccount().getId());
 	LOG.info(identity.toString());

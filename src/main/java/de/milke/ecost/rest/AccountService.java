@@ -35,7 +35,7 @@ import de.milke.ecost.dao.AccountDao;
 import de.milke.ecost.model.ApplicationRole;
 import de.milke.ecost.model.IdentityModelManager;
 import de.milke.ecost.model.MyUser;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.LoginUser;
 import de.milke.ecost.util.MessageBuilder;
 
 /**
@@ -64,7 +64,7 @@ public class AccountService {
     @POST
     @Path("enableAccount")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response enable(User passedUser) {
+    public Response enable(LoginUser passedUser) {
 	MessageBuilder message;
 
 	MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());
@@ -85,7 +85,7 @@ public class AccountService {
     @POST
     @Path("disableAccount")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response disable(User passedUser) {
+    public Response disable(LoginUser passedUser) {
 	MessageBuilder message;
 
 	MyUser user = this.identityModelManager.findByLoginName(passedUser.getEmail());

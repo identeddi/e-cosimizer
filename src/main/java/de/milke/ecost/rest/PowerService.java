@@ -65,7 +65,7 @@ import de.milke.ecost.model.PowerMeasureReminder.ReminderType;
 import de.milke.ecost.model.PowerMeasureType;
 import de.milke.ecost.model.PowerSupply;
 import de.milke.ecost.model.SupplySettingsDTO;
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.LoginUser;
 import de.milke.ecost.model.chart.ChartModel;
 import de.milke.ecost.model.chart.Dataset;
 import de.milke.ecost.service.Check24SupplyResolver;
@@ -473,7 +473,7 @@ public class PowerService {
 	return new SupplySettingsDTO(zipcode, estimatedConsumtion, passedConsumtion);
     }
 
-    protected User getUser() {
+    protected LoginUser getUser() {
 	MyUser user = (MyUser) identity.getAccount();
 	LOG.info("userinfo: " + user.getUser().getId() + " firstname: "
 		+ user.getUser().getFirstName());

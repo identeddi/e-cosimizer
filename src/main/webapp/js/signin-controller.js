@@ -27,7 +27,7 @@ BookIt.SignInController.prototype.onSigninCommand = function() {
 	me.$ctnErr.removeClass().addClass(invisibleStyle);
 	me.$txtUsername.removeClass(invalidInputStyle);
 	me.$txtPassword.removeClass(invalidInputStyle);
-	callurl = "http://" + window.location.host + "/rest/login/login";
+	callurl = "https://" + window.location.host + "/rest/login/login";
 
 	resp = $
 			.ajax({

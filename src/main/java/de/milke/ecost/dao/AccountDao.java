@@ -24,7 +24,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import de.milke.ecost.model.User;
+import de.milke.ecost.model.LoginUser;
 
 @Stateless
 public class AccountDao {
@@ -33,11 +33,11 @@ public class AccountDao {
     @PersistenceContext(name = "primary")
     private EntityManager em;
 
-    public User findById(Long id) {
-	return em.find(User.class, id);
+    public LoginUser findById(Long id) {
+	return em.find(LoginUser.class, id);
     }
 
-    public User persist(User user) {
+    public LoginUser persist(LoginUser user) {
 	em.persist(user);
 	return user;
     }
@@ -55,11 +55,11 @@ public class AccountDao {
      * 
      * }
      */
-    public User getByUsername(String userName) {
-	TypedQuery<User> lQuery = em.createQuery("from User where username=:username", User.class);
+    public LoginUser getByUsername(String userName) {
+	TypedQuery<LoginUser> lQuery = em.createQuery("from User where username=:username", LoginUser.class);
 	lQuery.setParameter("username", userName);
 	try {
-	    User usr = lQuery.getSingleResult();
+	    LoginUser usr = lQuery.getSingleResult();
 	    LOG.info("User found " + usr.getFirstName());
 	    return usr;
 	} catch (NoResultException e) {
@@ -71,7 +71,7 @@ public class AccountDao {
 
     }
 
-    public User save(User user) {
+    public LoginUser save(LoginUser user) {
 
 	if (user.getId() == null || user.getId() == 0) {
 	    em.persist(user);
