@@ -29,7 +29,7 @@ export class AuthService {
   constructor(public http: Http, public storage: Storage) {
 
   }
-  public login(credentials) {
+  public login(credentials) : Observable<boolean>{
     return this.getTokenWithCredentials(credentials).mergeMap((authcToken) => {
       let headers: Headers = new Headers();
 
@@ -45,11 +45,12 @@ export class AuthService {
       });
 
   }
-  getToken() {
-    return Observable.fromPromise(this.storage.get('id_token'));
+  getToken() : Observable<string> {
+    return Observable.defer(()=>
+      Observable.fromPromise(this.storage.get('id_token')));
   }
 
-  getTokenWithCredentials(credentials) {
+  getTokenWithCredentials(credentials)  : Observable<string>{
     if (credentials.username === null || credentials.password === null) {
       return Observable.throw("Please insert credentials");
     } else {
@@ -73,7 +74,7 @@ export class AuthService {
 
   }
 
-  public register(credentials) {
+  public register(credentials) : Observable<string> {
     if (credentials.email === null || credentials.password === null) {
       return Observable.throw("Bitte E-Mail und Passwort eingeben");
     } else if (credentials.password != credentials.passwordConfirmation) {
@@ -100,7 +101,7 @@ export class AuthService {
     }
   }
 
-  public enableAccount(activationcode: string) {
+  public enableAccount(activationcode: string)  : Observable<string> {
 
     let headers: Headers = new Headers();
 
@@ -119,11 +120,11 @@ export class AuthService {
       });
 
   }
-  public getCurrentUser() {
+  public getCurrentUser() : User{
     return this.currentUser;
   }
 
-  public logout() {
+  public logout() : Observable<User> {
     return Observable.create(observer => {
       this.currentUser = null;
       observer.next(true);

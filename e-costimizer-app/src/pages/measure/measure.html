@@ -1,3 +1,12 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{title}}</ion-title>
+  </ion-navbar>
+</ion-header>
 <ion-tabs #myTabs>
-  <ion-tab [root]="tab1Root" tabTitle="Aktuell" tabIcon="calendar">></ion-tab>
+  <ion-tab [root]="tab1Root" tabTitle="Aktuell" tabIcon="calendar"  [rootParams]="navParams">></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="Verlauf" tabIcon="calendar"  [rootParams]="navParams">></ion-tab>
 </ion-tabs>

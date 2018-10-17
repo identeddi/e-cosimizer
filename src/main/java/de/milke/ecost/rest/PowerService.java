@@ -114,41 +114,41 @@ public class PowerService {
     @Path("/type/{powerMeasureType}/measure/{id}")
     public void deleteMeasure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
 	    @PathParam("id") Long id) throws GeneralException {
-	powerMeasureDao.deleteMeasure(id);
+    	powerMeasureDao.deleteMeasure(id);
     }
 
     @POST
     @Path("/type/{powerMeasureType}/measure")
     public void measure(@PathParam("powerMeasureType") Long powerMeasureTypeId,
 	    PowerMeasure powerMeasure) throws GeneralException {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-	if (powerMeasure.getMeasureValue() == null) {
-	    String msg = getUser().getFirstName() + ": measureValue ist: "
-		    + powerMeasure.getMeasureValue();
-	    LOG.info(msg);
-	    throw new WebApplicationException(msg);
-
-	}
-	if (powerMeasure.getMeasureDate() == null) {
-	    String msg = getUser().getFirstName() + ": measureDate ist: "
-		    + powerMeasure.getMeasureDate();
-	    LOG.info(msg);
-	    throw new WebApplicationException(msg);
-
-	}
-	LOG.info(getUser().getFirstName() + ": measureValue: " + powerMeasure.getMeasureValue()
-		+ " measureDate" + powerMeasure.getMeasureDate().getDate());
-
-	// check measure valid
-	powerMeasure.setPowerMeasureType(powerMeasureType);
-	powerMeasureDao.save(powerMeasure);
-
-	measureAddedMail.sendEmail(getUser().getEmail(), "e.costimizer@gmail.com",
-		"Eingabe einer neuen Messung für "
-			+ powerMeasure.getPowerMeasureType().getTypeName() + "-"
-			+ powerMeasure.getPowerMeasureType().getReferenceId(),
-		"Abgelesen am: " + powerMeasure.getMeasureDate().getDate() + "\n" + "Wert:"
-			+ powerMeasure.getMeasureValue());
+		PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+		if (powerMeasure.getMeasureValue() == null) {
+		    String msg = getUser().getFirstName() + ": measureValue ist: "
+			    + powerMeasure.getMeasureValue();
+		    LOG.info(msg);
+		    throw new WebApplicationException(msg);
+	
+		}
+		if (powerMeasure.getMeasureDate() == null) {
+		    String msg = getUser().getFirstName() + ": measureDate ist: "
+			    + powerMeasure.getMeasureDate();
+		    LOG.info(msg);
+		    throw new WebApplicationException(msg);
+	
+		}
+		LOG.info(getUser().getFirstName() + ": measureValue: " + powerMeasure.getMeasureValue()
+			+ " measureDate" + powerMeasure.getMeasureDate().getDate());
+	
+		// check measure valid
+		powerMeasure.setPowerMeasureType(powerMeasureType);
+		powerMeasureDao.save(powerMeasure);
+	
+		measureAddedMail.sendEmail(getUser().getEmail(), "e.costimizer@gmail.com",
+			"Eingabe einer neuen Messung für "
+				+ powerMeasure.getPowerMeasureType().getTypeName() + "-"
+				+ powerMeasure.getPowerMeasureType().getReferenceId(),
+			"Abgelesen am: " + powerMeasure.getMeasureDate().getDate() + "\n" + "Wert:"
+				+ powerMeasure.getMeasureValue());
     }
 
     @GET
@@ -156,68 +156,68 @@ public class PowerService {
     @Produces("application/json")
     public List<PowerMeasureHistoryDTO> getMeasure(
 	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-
-	return powerMeasureDao.getMeasureHistory(powerMeasureType);
+		PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+	
+		return powerMeasureDao.getMeasureHistory(powerMeasureType);
     }
 
     @GET
     @Path("/measure/{id}")
     @Produces("application/json")
     public PowerMeasure getMeasureById(@PathParam("id") Long id) {
-	return powerMeasureDao.get(id);
+    	return powerMeasureDao.get(id);
     }
 
     @GET
     @Path("/lastmeasure")
     @Produces("application/json")
     public List<PowerMeasureReminder> getAllLastMeasures() throws GeneralException {
-	List<PowerMeasure> lastMeasures = powerMeasureDao.getAllLastMeasures();
-	List<PowerMeasure> newReminders = new ArrayList<>();
-	List<PowerMeasureReminder> newPowerMeasureReminders = new ArrayList<>();
-	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getAllByUser(getUser());
-
-	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
-	    List<PowerMeasure> measureList = powerMeasureDao.getByType(powerMeasureType);
-
-	    if (measureList.size() > 0) {
-		PowerMeasure lastMeasure = measureList.get(0);
-
-		if (lastMeasure.getPowerMeasureType().getEnabled()
-			&& lastMeasure.getPowerMeasureType().getEntryNotification() != null) {
-
-		    Calendar lastMeasureCalendar = new GregorianCalendar();
-		    lastMeasureCalendar.setTime(lastMeasure.getMeasureDate());
-		    Calendar nowCalendar = new GregorianCalendar();
-		    nowCalendar.setTime(new Date());
-		    int diffYear = nowCalendar.get(Calendar.YEAR)
-			    - lastMeasureCalendar.get(Calendar.YEAR);
-		    int diffMonth = diffYear * 12 + nowCalendar.get(Calendar.MONTH)
-			    - lastMeasureCalendar.get(Calendar.MONTH);
-
-		    switch (lastMeasure.getPowerMeasureType().getEntryNotification()) {
-		    case NEVER:
-			break;
-		    case MONTHLY:
-			if (diffMonth == 1
-				&& nowCalendar.get(Calendar.DAY_OF_MONTH) >= lastMeasureCalendar
-					.get(Calendar.DAY_OF_MONTH)
-				|| diffMonth > 1) {
-			    List<PowerMeasureReminder> powerMeasureReminders = powerMeasureReminderDao
-				    .getByType(lastMeasure.getPowerMeasureType());
-			    if (powerMeasureReminders.size() == 0) {
-				PowerMeasureReminder powerMeasureReminder = new PowerMeasureReminder(
-					new Date(), ReminderType.MEASURE, powerMeasureType,
-					"Ableseerinnerung", "Bitte ablesen und erfassen", "4711");
-				powerMeasureReminderDao.save(powerMeasureReminder);
+		List<PowerMeasure> lastMeasures = powerMeasureDao.getAllLastMeasures();
+		List<PowerMeasure> newReminders = new ArrayList<>();
+		List<PowerMeasureReminder> newPowerMeasureReminders = new ArrayList<>();
+		List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getAllByUser(getUser());
+	
+		for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
+		    List<PowerMeasure> measureList = powerMeasureDao.getByType(powerMeasureType);
+	
+		    if (measureList.size() > 0) {
+			PowerMeasure lastMeasure = measureList.get(0);
+	
+			if (lastMeasure.getPowerMeasureType().getEnabled()
+				&& lastMeasure.getPowerMeasureType().getEntryNotification() != null) {
+	
+			    Calendar lastMeasureCalendar = new GregorianCalendar();
+			    lastMeasureCalendar.setTime(lastMeasure.getMeasureDate());
+			    Calendar nowCalendar = new GregorianCalendar();
+			    nowCalendar.setTime(new Date());
+			    int diffYear = nowCalendar.get(Calendar.YEAR)
+				    - lastMeasureCalendar.get(Calendar.YEAR);
+			    int diffMonth = diffYear * 12 + nowCalendar.get(Calendar.MONTH)
+				    - lastMeasureCalendar.get(Calendar.MONTH);
+	
+			    switch (lastMeasure.getPowerMeasureType().getEntryNotification()) {
+			    case NEVER:
+				break;
+			    case MONTHLY:
+				if (diffMonth == 1
+					&& nowCalendar.get(Calendar.DAY_OF_MONTH) >= lastMeasureCalendar
+						.get(Calendar.DAY_OF_MONTH)
+					|| diffMonth > 1) {
+				    List<PowerMeasureReminder> powerMeasureReminders = powerMeasureReminderDao
+					    .getByType(lastMeasure.getPowerMeasureType());
+				    if (powerMeasureReminders.size() == 0) {
+					PowerMeasureReminder powerMeasureReminder = new PowerMeasureReminder(
+						new Date(), ReminderType.MEASURE, powerMeasureType,
+						"Ableseerinnerung", "Bitte ablesen und erfassen", "4711");
+					powerMeasureReminderDao.save(powerMeasureReminder);
+				    }
+				}
 			    }
 			}
+	
 		    }
 		}
-
-	    }
-	}
-	return newPowerMeasureReminders;
+		return newPowerMeasureReminders;
     }
 
     @GET
@@ -225,16 +225,16 @@ public class PowerService {
     @Produces("application/json")
     public PowerMeasureHistoryDTO getLastMeasure(
 	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-
-	List<PowerMeasureHistoryDTO> historyList = powerMeasureDao
-		.getMeasureHistory(powerMeasureType);
-
-	if (historyList.size() > 0) {
-	    return historyList.get(0);
-	} else {
-	    return null;
-	}
+		PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+	
+		List<PowerMeasureHistoryDTO> historyList = powerMeasureDao
+			.getMeasureHistory(powerMeasureType);
+	
+		if (historyList.size() > 0) {
+		    return historyList.get(0);
+		} else {
+		    return null;
+		}
 
     }
 
@@ -243,15 +243,16 @@ public class PowerService {
     @Produces("application/json")
     public List<MenuItemDTO> getMenuItems() {
 
-	List<MenuItemDTO> listMenuItems = new ArrayList<>();
-	listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main", -1));
-	for (PowerMeasureType powerMeasureType : powerMeasureTypeDao.getEnabledByUser(getUser())) {
-	    listMenuItems.add(new MenuItemDTO(powerMeasureType.getTypeName(), "#page_power_aktuell",
-		    powerMeasureType.getId()));
-	}
-	listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general", -2));
-	listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index", -3));
-	return listMenuItems;
+		List<MenuItemDTO> listMenuItems = new ArrayList<>();
+
+		//listMenuItems.add(new MenuItemDTO("Übersicht", "#info-main", -1));
+		for (PowerMeasureType powerMeasureType : powerMeasureTypeDao.getEnabledByUser(getUser())) {
+		    listMenuItems.add(new MenuItemDTO(powerMeasureType.getTypeName(), "#page_power_aktuell",
+			    powerMeasureType.getId()));
+		}
+//		listMenuItems.add(new MenuItemDTO("Einstellungen", "#settings_general", -2));
+//		listMenuItems.add(new MenuItemDTO("Ausloggen", "#page-index", -3));
+		return listMenuItems;
     }
 
     @GET
@@ -259,7 +260,7 @@ public class PowerService {
     @Produces("application/json")
     public List<PowerMeasureType> getPowerMeasureTypes() {
 
-	return powerMeasureTypeDao.getAllByUser(getUser());
+    	return powerMeasureTypeDao.getAllByUser(getUser());
     }
 
     @GET
@@ -267,13 +268,13 @@ public class PowerService {
     @Produces("application/json")
     public PowerMeasureType getPowerMeasureType(@PathParam("id") Long id) {
 
-	return powerMeasureTypeDao.findById(id);
+    	return powerMeasureTypeDao.findById(id);
     }
 
     @DELETE
     @Path("/powermeasuretype/{id}")
     public void deletePowerMeasureType(@PathParam("id") Long id) throws GeneralException {
-	powerMeasureTypeDao.remove(id);
+    	powerMeasureTypeDao.remove(id);
     }
 
     @PUT
@@ -281,129 +282,129 @@ public class PowerService {
     @Produces("application/json")
     public PowerMeasureType updatePowerMeasureType(PowerMeasureType powerMeasureType) {
 	powerMeasureType.setUser(getUser());
-	return powerMeasureTypeDao.save(powerMeasureType);
+		return powerMeasureTypeDao.save(powerMeasureType);
     }
 
     @GET
     @Path("/type/{powerMeasureType}/measuregraph")
     @Produces("application/json")
     public ChartModel getMeasureGraphData(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-
-	// Create a data table,
-	DataTable data = new DataTable();
-
-	Date now = new Date();
-	int currentYear = now.getYear() + 1900;
-
-	// var data = {
-	// labels : [ "January", "February", "March", "April", "May", "June",
-	// "July", "August", "September", "October", "November",
-	// "December" ],
-	// datasets : [ {
-
-	// data : [ 65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55, 40 ]
-	// }, {
-	// label : "My Second dataset",
-	// fillColor : "rgba(151,187,205,0.5)",
-	// strokeColor : "rgba(151,187,205,0.8)",
-	// highlightFill : "rgba(151,187,205,0.75)",
-	// highlightStroke : "rgba(151,187,205,1)",
-	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
-	// }, {
-	// label : "My Third dataset",
-	// fillColor : "rgba(251,187,205,0.5)",
-	// strokeColor : "rgba(251,187,205,0.8)",
-	// highlightFill : "rgba(251,187,205,0.75)",
-	// highlightStroke : "rgba(251,187,205,1)",
-	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
-	// }, {
-	// label : "My Fourth dataset",
-	// fillColor : "rgba(51,187,205,0.5)",
-	// strokeColor : "rgba(51,187,205,0.8)",
-	// highlightFill : "rgba(51,187,205,0.75)",
-	// highlightStroke : "rgba(51,187,205,1)",
-	// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
-	// } ]
-	// };
-
-	ChartModel historyChart = new ChartModel();
-	List<String> labels = new ArrayList<>();
-	List<Dataset> datasets = new ArrayList<>();
-	labels.add("Jan");
-	labels.add("Feb");
-	labels.add("Mär");
-	labels.add("Apr");
-	labels.add("Mai");
-	labels.add("Jun");
-	labels.add("Jul");
-	labels.add("Aug");
-	labels.add("Sep");
-	labels.add("Okt");
-	labels.add("Nov");
-	labels.add("Dez");
-
-	historyChart.setLabels(labels);
-
-	List<PowerMeasureHistoryDTO> histList = powerMeasureDao.getMeasureHistory(powerMeasureType);
-
-	Dataset yearData = new Dataset();
-	yearData.setFillColor("rgba(220,220,20,0.5)");
-	yearData.setStrokeColor("rgba(220,220,20,0.8)");
-	yearData.setHighlightFill("rgba(220,220,20,0.75)");
-	yearData.setHighlightStroke("rgba(220,220,20,1)");
-	yearData.setLabel("Jahr " + currentYear + "");
-	historyChart.getDatasets().add(yearData);
-
-	yearData = new Dataset();
-	yearData.setFillColor("rgba(220,220,220,0.5)");
-	yearData.setStrokeColor("rgba(220,220,220,0.8)");
-	yearData.setHighlightFill("rgba(220,220,220,0.75)");
-	yearData.setHighlightStroke("rgba(220,220,220,1)");
-	yearData.setLabel("Jahr " + (currentYear - 1) + "");
-	historyChart.getDatasets().add(yearData);
-
-	yearData = new Dataset();
-	yearData.setFillColor("rgba(20,220,220,0.5)");
-	yearData.setStrokeColor("rgba(20,220,220,0.8)");
-	yearData.setHighlightFill("rgba(20,220,220,0.75)");
-	yearData.setHighlightStroke("rgba(20,220,220,1)");
-	yearData.setLabel("Jahr " + (currentYear - 2) + "");
-	historyChart.getDatasets().add(yearData);
-
-	yearData = new Dataset();
-	yearData.setFillColor("rgba(20,120,220,0.5)");
-	yearData.setStrokeColor("rgba(20,120,220,0.8)");
-	yearData.setHighlightFill("rgba(20,120,220,0.75)");
-	yearData.setHighlightStroke("rgba(20,120,220,1)");
-	yearData.setLabel("Jahr " + (currentYear - 3) + "");
-	historyChart.getDatasets().add(yearData);
-
-	for (int j = 0; j < historyChart.getDatasets().size(); j++) {
-	    List<Integer> yearMeasure = new ArrayList<>();
-	    for (int i = 0; i < 12; i++) {
-
-		Date searchDate = new Date(currentYear - 1900 - j, i, 1);
-		yearMeasure.add(powerMeasureDao.getEstimationForDate(searchDate, powerMeasureType));
-	    }
-	    historyChart.getDatasets().get(j).setData(yearMeasure);
-	}
-
-	String json = JsonRenderer.renderDataTable(data, true, false).toString();
-
-	System.out.println(json);
-	return historyChart;
+		PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+	
+		// Create a data table,
+		DataTable data = new DataTable();
+	
+		Date now = new Date();
+		int currentYear = now.getYear() + 1900;
+	
+		// var data = {
+		// labels : [ "January", "February", "March", "April", "May", "June",
+		// "July", "August", "September", "October", "November",
+		// "December" ],
+		// datasets : [ {
+	
+		// data : [ 65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55, 40 ]
+		// }, {
+		// label : "My Second dataset",
+		// fillColor : "rgba(151,187,205,0.5)",
+		// strokeColor : "rgba(151,187,205,0.8)",
+		// highlightFill : "rgba(151,187,205,0.75)",
+		// highlightStroke : "rgba(151,187,205,1)",
+		// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+		// }, {
+		// label : "My Third dataset",
+		// fillColor : "rgba(251,187,205,0.5)",
+		// strokeColor : "rgba(251,187,205,0.8)",
+		// highlightFill : "rgba(251,187,205,0.75)",
+		// highlightStroke : "rgba(251,187,205,1)",
+		// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+		// }, {
+		// label : "My Fourth dataset",
+		// fillColor : "rgba(51,187,205,0.5)",
+		// strokeColor : "rgba(51,187,205,0.8)",
+		// highlightFill : "rgba(51,187,205,0.75)",
+		// highlightStroke : "rgba(51,187,205,1)",
+		// data : [ 28, 48, 40, 19, 86, 27, 90, 48, 40, 19, 86, 27, 90 ]
+		// } ]
+		// };
+	
+		ChartModel historyChart = new ChartModel();
+		List<String> labels = new ArrayList<>();
+		List<Dataset> datasets = new ArrayList<>();
+		labels.add("Jan");
+		labels.add("Feb");
+		labels.add("Mär");
+		labels.add("Apr");
+		labels.add("Mai");
+		labels.add("Jun");
+		labels.add("Jul");
+		labels.add("Aug");
+		labels.add("Sep");
+		labels.add("Okt");
+		labels.add("Nov");
+		labels.add("Dez");
+	
+		historyChart.setLabels(labels);
+	
+		List<PowerMeasureHistoryDTO> histList = powerMeasureDao.getMeasureHistory(powerMeasureType);
+	
+		Dataset yearData = new Dataset();
+		yearData.setFillColor("rgba(220,220,20,0.5)");
+		yearData.setStrokeColor("rgba(220,220,20,0.8)");
+		yearData.setHighlightFill("rgba(220,220,20,0.75)");
+		yearData.setHighlightStroke("rgba(220,220,20,1)");
+		yearData.setLabel("Jahr " + currentYear + "");
+		historyChart.getDatasets().add(yearData);
+	
+		yearData = new Dataset();
+		yearData.setFillColor("rgba(220,220,220,0.5)");
+		yearData.setStrokeColor("rgba(220,220,220,0.8)");
+		yearData.setHighlightFill("rgba(220,220,220,0.75)");
+		yearData.setHighlightStroke("rgba(220,220,220,1)");
+		yearData.setLabel("Jahr " + (currentYear - 1) + "");
+		historyChart.getDatasets().add(yearData);
+	
+		yearData = new Dataset();
+		yearData.setFillColor("rgba(20,220,220,0.5)");
+		yearData.setStrokeColor("rgba(20,220,220,0.8)");
+		yearData.setHighlightFill("rgba(20,220,220,0.75)");
+		yearData.setHighlightStroke("rgba(20,220,220,1)");
+		yearData.setLabel("Jahr " + (currentYear - 2) + "");
+		historyChart.getDatasets().add(yearData);
+	
+		yearData = new Dataset();
+		yearData.setFillColor("rgba(20,120,220,0.5)");
+		yearData.setStrokeColor("rgba(20,120,220,0.8)");
+		yearData.setHighlightFill("rgba(20,120,220,0.75)");
+		yearData.setHighlightStroke("rgba(20,120,220,1)");
+		yearData.setLabel("Jahr " + (currentYear - 3) + "");
+		historyChart.getDatasets().add(yearData);
+	
+		for (int j = 0; j < historyChart.getDatasets().size(); j++) {
+		    List<Integer> yearMeasure = new ArrayList<>();
+		    for (int i = 0; i < 12; i++) {
+	
+			Date searchDate = new Date(currentYear - 1900 - j, i, 1);
+			yearMeasure.add(powerMeasureDao.getEstimationForDate(searchDate, powerMeasureType));
+		    }
+		    historyChart.getDatasets().get(j).setData(yearMeasure);
+		}
+	
+		String json = JsonRenderer.renderDataTable(data, true, false).toString();
+	
+		System.out.println(json);
+		return historyChart;
     }
 
     @GET
     @Path("/type/{powerMeasureType}/contract")
     @Produces("application/json")
     public Contract getContract(@PathParam("powerMeasureType") Long powerMeasureTypeId) {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-
-	LOG.info(getUser().getFirstName() + ": getMeasure");
-
-	return contractDao.getByType(powerMeasureType);
+		PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+	
+		LOG.info(getUser().getFirstName() + ": getMeasure");
+	
+		return contractDao.getByType(powerMeasureType);
     }
 
     @PUT
@@ -412,12 +413,12 @@ public class PowerService {
     @Produces("application/json")
     public Contract setContract(Contract contract,
 	    @PathParam("powerMeasureType") Long powerMeasureTypeId) {
-	PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
-
-	contract.setPowerMeasureType(powerMeasureType);
-	LOG.info(getUser().getFirstName() + ": getContract");
-
-	return contractDao.save(contract);
+		PowerMeasureType powerMeasureType = powerMeasureTypeDao.findById(powerMeasureTypeId);
+	
+		contract.setPowerMeasureType(powerMeasureType);
+		LOG.info(getUser().getFirstName() + ": getContract");
+	
+		return contractDao.save(contract);
     }
 
     @GET
@@ -425,20 +426,20 @@ public class PowerService {
     @Produces("application/json")
     public List<PowerMeasureHistoryDTO> getLastMeasures(@Context HttpServletRequest request)
 	    throws GeneralException {
-	List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getEnabledByUser(getUser());
-
-	List<PowerMeasureHistoryDTO> lastMeasures = new ArrayList<>();
-	for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
-	    List<PowerMeasureHistoryDTO> history = powerMeasureDao
-		    .getMeasureHistory(powerMeasureType);
-	    if (history.size() > 0) {
-		lastMeasures.add(history.get(0));
-	    }
-	}
-	LOG.info(request.toString());
-	LOG.info(getUser().getFirstName() + ": getMeasure last ");
-	LOG.info(getUser().getFirstName() + ": session: " + request.getSession().getId());
-	return lastMeasures;
+		List<PowerMeasureType> powerMeasureTypes = powerMeasureTypeDao.getEnabledByUser(getUser());
+	
+		List<PowerMeasureHistoryDTO> lastMeasures = new ArrayList<>();
+		for (PowerMeasureType powerMeasureType : powerMeasureTypes) {
+		    List<PowerMeasureHistoryDTO> history = powerMeasureDao
+			    .getMeasureHistory(powerMeasureType);
+		    if (history.size() > 0) {
+			lastMeasures.add(history.get(0));
+		    }
+		}
+		LOG.info(request.toString());
+		LOG.info(getUser().getFirstName() + ": getMeasure last ");
+		LOG.info(getUser().getFirstName() + ": session: " + request.getSession().getId());
+		return lastMeasures;
     }
 
     @GET

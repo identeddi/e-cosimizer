@@ -1,0 +1,28 @@
+<ion-header>
+
+  <ion-navbar>
+      <ion-title>Messung eingeben und bestätigen</ion-title>
+        <ion-buttons end>
+          <button ion-button (click)="closeModal()" icon-only>
+            <ion-icon name="close-circle"  color="danger"></ion-icon>
+          </button>
+          </ion-buttons>
+        </ion-navbar>
+  </ion-header>
+  
+  
+  <ion-content padding>
+    <ion-item>
+      <ion-label>Date</ion-label>
+      <ion-datetime displayFormat="DD.MM.YYYY" min="2000" max="2021-10-31" [(ngModel)]="bookingDate"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Messung</ion-label>
+      <ion-input type="number" placeholder="Messwert eingeben" [(ngModel)]="bookingMeasure"></ion-input>
+    </ion-item>
+    <ion-buttons end>
+      <button ion-button icon-only color="secondary" (click)="applyModal()" full>
+        <ion-icon name="checkmark-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-content>

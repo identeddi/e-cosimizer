@@ -5,6 +5,7 @@ import { AuthService } from '../../providers/auth-service';
 import { RegisterPage } from '../register/register';
 import { DashboardPage } from '../dashboard/dashboard';
 import { ActivationPage } from '../activation/activation';
+import { MenuService } from '../../providers/menu-service';
 
 @Component({
   selector: 'page-login',
@@ -15,7 +16,7 @@ export class LoginPage {
   registerCredentials = { email: '', password: '' };
 
   constructor(private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController,
-    public menuCtrl: MenuController) {
+    public menuCtrl: MenuController, private menuService: MenuService) {
     let activationCode: string = this.getActivationCodeFromURL();
     if (activationCode != null) {
       nav.push(ActivationPage, {
@@ -63,6 +64,7 @@ export class LoginPage {
 
           this.loading.dismiss();
           this.menuCtrl.enable(true, "mainMenu");
+          this.menuService.updateMenu(this.auth.currentUser.username);
           this.nav.setRoot(DashboardPage);
 
         });
@@ -92,7 +94,7 @@ export class LoginPage {
       subTitle: text,
       buttons: ['OK']
     });
-    alert.present(prompt);
+    alert.present();
   }
 
   ionViewDidLoad() {

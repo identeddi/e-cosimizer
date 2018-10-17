@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { MeasuresService } from '../../providers/measures-service';
+import { MeasuresService, PowerMeasureHistoryDTO } from '../../providers/measures-service';
 /**
  * Generated class for the Dashboard page.
  *
@@ -12,7 +12,7 @@ import { MeasuresService } from '../../providers/measures-service';
   templateUrl: 'dashboard.html',
 })
 export class DashboardPage {
-  lastMeasures: any;
+  lastMeasures: PowerMeasureHistoryDTO[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, measureService: MeasuresService) {
     measureService.getLastMeasures().subscribe(measures =>

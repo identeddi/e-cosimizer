@@ -17,6 +17,9 @@ import { SettingsOrderListsPage } from '../pages/settings-orderlists/settings-or
 import { MeasurePage } from '../pages/measure/measure';
 import { MeasureCurrentPage } from '../pages/measure-current/measure-current';
 import { IonicStorageModule } from '@ionic/storage';
+import { MenuService } from '../providers/menu-service';
+import { MeasureHistoryPage } from '../pages/measure-history/measure-history';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -28,7 +31,9 @@ import { IonicStorageModule } from '@ionic/storage';
     SettingsGeneralPage,
     SettingsOrderListsPage,
     MeasurePage,
-    MeasureCurrentPage
+    MeasureCurrentPage,
+    MeasureHistoryPage
+
   ],
   imports: [
     BrowserModule,
@@ -48,14 +53,17 @@ import { IonicStorageModule } from '@ionic/storage';
     SettingsGeneralPage,
     SettingsOrderListsPage,
     MeasurePage,
-    MeasureCurrentPage
+    MeasureCurrentPage,
+    MeasureHistoryPage
   ],
+
   providers: [
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     AuthService,
     MeasuresService,
+    MenuService,
 
   ]
 })

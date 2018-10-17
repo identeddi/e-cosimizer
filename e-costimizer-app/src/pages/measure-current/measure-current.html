@@ -10,5 +10,16 @@
 
 
 <ion-content padding>
-
+  <ion-card *ngIf='currentMeasure'>
+    <ion-card-header>
+      {{currentMeasure.powerMeasureType.typeName}} ({{currentMeasure.powerMeasureType.referenceId}})
+    </ion-card-header>
+    <ion-card-content>
+      <p>Zuletzt abgelesen: {{currentMeasure.measureDate | date: 'dd.MM.yyyy'}} </p>
+      <p>Aktueller Verbrauch: {{currentMeasure.dailyConsumption}} kWh</p>
+      <p>Zählerstand: {{currentMeasure.measureValue | number:'1.2-2'}} kWh</p>
+      <p>Nächste Ablesung: {{currentMeasure.nextMeasureDate | date: 'dd.MM.yyyy'}}</p>
+    </ion-card-content>
+  </ion-card>
+  <button ion-button full outline (click) ="addMeasureDialog();">Messung eingeben</button>
 </ion-content>
